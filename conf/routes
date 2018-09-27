@@ -1,0 +1,17 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Contacts
+GET                 /v1/contact                             controllers.ContactController.contacts(lastName: Option[String], startIndex: Option[Int], endIndex: Option[Int], showDeleted: Option[Boolean])
+POST                /v1/contact                             controllers.ContactController.postContact
+GET                 /v1/contact/:id                         controllers.ContactController.getContact(id : Long, showDeleted: Option[Boolean])
+DELETE              /v1/contact/:id                         controllers.ContactController.deleteContact(id : Long)
+PATCH               /v1/contact                             controllers.ContactController.patchContact
+PUT                 /v1/contact                             controllers.ContactController.putContact
+
+# Map static resources from the /public folder to the /assets URL path
+GET                 /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)
+
+#
+GET                 /v1/swagger.json                        controllers.ApiHelpController.getResources
