@@ -1,3 +1,4 @@
+
 // Database Migrations:
 // run with "sbt flywayMigrate"
 // http://flywaydb.org/getstarted/firststeps/sbt.html
@@ -9,6 +10,7 @@
 libraryDependencies += "org.flywaydb" % "flyway-core" % "5.0.3"
 libraryDependencies +=  "com.typesafe.play" %% "play-json" % "2.7.0-M1"
 */
+/*
 
 lazy val databaseHost = sys.env.getOrElse("DATABASE_HOST", "localhost")
 lazy val databasePort = sys.env.getOrElse("DATABASE_PORT", "5432")
@@ -17,9 +19,15 @@ lazy val databaseUrl = s"jdbc:postgresql://$databaseHost:$databasePort/$database
 lazy val databaseUser = sys.env.getOrElse("DATABASE_USER", "user")
 lazy val databasePassword = sys.env.getOrElse("DATABASE_PASSWORD", "password")
 
+
+
+val configF = ConfigFactory.load()
+flywayUrl := configF.getString("innSide.database.url")
+flywayUser := configF.getString("innSide.database.user")
+flywayPassword :=  configF.getString("innSide.database.password")
+*/
+
+
 flywayLocations := Seq("classpath:db/migration")
 
-flywayUrl := databaseUrl
-flywayUser := databaseUser
-flywayPassword := databasePassword
 

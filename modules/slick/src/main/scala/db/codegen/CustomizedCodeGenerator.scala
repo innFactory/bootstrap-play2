@@ -1,6 +1,6 @@
 package db.codegen
 
-import Config.{jdbcDriver, slickProfile, url}
+import db.codegen.Config.{jdbcDriver, slickProfile, url}
 import slick.sql.SqlProfile.ColumnOption
 
 import scala.concurrent.Await
@@ -16,11 +16,13 @@ object CustomizedCodeGenerator {
   val projectDir = System.getProperty("user.dir")
 
   def main(args: Array[String]): Unit = {
+    println(s"ARGS:")
+    args.foreach(println)
     // write the generated results to file
     Await.result(
       codegen.map(_.writeToFile(
         "db.codegen.XPostgresProfile", // use our customized postgres driver
-        s"$projectDir/target/scala-2.12/src_managed/slick/",
+        s"$projectDir/target/scala-2.12/src_managed/slick",
         "dbdata",
         "Tables",
         "Tables.scala"

@@ -1,6 +1,6 @@
 # Play2-Bootstrap
 
-[![codecov.io](https://img.shields.io/codecov/c/github/innFactory/bootstrap-akka-http/master.svg?style=flat)](https://codecov.io/github/innFactory/bootstrap-akka-http)
+[![codecov.io](test)](test)
 
 Bootstrap a rest service with Play2, isolated Slick and isolated Flyway
 
@@ -11,6 +11,13 @@ This project is built with:
    
    It needs a PostgresQL database
 
+## EnvVars for Configuration
+
+- DATABASE_DB = Database Endpoint (for example play)
+- DATABASE_HOST = Database Host (for example localhost)
+- DATABASE_PORT = Database Port
+- DATABASE_USER = Database User
+- DATABASE_PASSWORD = Database Password
 
 ## Database Migration
 
@@ -42,12 +49,12 @@ To run the project, start up Play:
 sbt run
 ```
 
-## Running
+## Building
 
 To create a docker Container:
 
 ```bash
-sbt docker:publishLocal
+./buildscript.sh
 ```
 
 And that's it!

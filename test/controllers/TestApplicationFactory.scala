@@ -30,11 +30,10 @@ class FlywayModule extends Module {
 class FlywayMigrator @Inject()(env: Environment, configuration: Configuration) {
   def onStart(): Unit = {
     Logger.info("Creating Flyway context")
-    val driver = configuration.get[String]("innSide.database.driver")
-    val url = configuration.get[String]("innSide.database.testUrl")
-    val user = configuration.get[String]("innSide.database.testUser")
-    val password =  configuration.get[String]("innSide.database.testPassword")
-
+    val driver = configuration.get[String]("bootstrapPlay2.database.driver")
+    val url = configuration.get[String]("bootstrapPlay2.database.testUrl")
+    val user = configuration.get[String]("bootstrapPlay2.database.testUser")
+    val password =  configuration.get[String]("bootstrapPlay2.database.testPassword")
     val flyway = new Flyway
     flyway.setDataSource(new DriverDataSource(env.classLoader, driver, url, user, password, new Properties()))
     flyway.setLocations("filesystem:test/resources/migration")
