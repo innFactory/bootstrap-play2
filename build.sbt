@@ -6,11 +6,19 @@ import sbt.{Def, _}
 name := """play2-bootstrap"""
 version := "1.0"
 scalaVersion := "2.12.6"
-crossScalaVersions := Seq("2.11.12", "2.12.6")
 
+val latest = Option(System.getProperty("branch")) match {
+  case Some(str) => if (str.equals("master")) true else false
+  case None => false
+}
+
+val buildVersion = Option(System.getProperty("version")) match {
+  case Some(str) => str
+  case None => version.key.toString()
+}
 
 val generatedFilePath: String = "/dbdata/Tables.scala"
-val flywayDbName: String = "bootstrapPlay2"
+val flywayDbName: String = "admin"
 
 val dbConf = settingKey[DbConf]("Typesafe config file with slick settings")
 val generateTables = taskKey[Seq[File]]("Generate slick code")
@@ -57,35 +65,51 @@ lazy val slick = (project in file("modules/slick"))
   .dependsOn(flyway)
   .settings(libraryDependencies ++= Dependencies.list)
 
+lazy val slickGen = taskKey[Seq[File]]("slickGen")
+slickGen := Def.taskDyn(generateTablesTask((dbConf  in Global).value)).value
+
 lazy val root = (project in file("."))
   .dependsOn(slick)
-  .enablePlugins(PlayScala, DockerPlugin)
+  .enablePlugins(PlayScala, SbtReactiveAppPlugin)
   .settings(
     dbConfSettings,
     libraryDependencies ++= Dependencies.list
   )
+  .settings(Seq(
+    maintainer := "innFactory",
+    version := buildVersion,
+    packageName := "innfactory-innside/innside",
+    endpoints += HttpEndpoint("http", HttpIngress(Vector(80, 443), Vector.empty, Vector.empty)),
+    deployMinikubeRpArguments ++= Vector(
+      "--ingress-annotation", "ingress.kubernetes.io/rewrite-target=/",
+      "--ingress-annotation", "nginx.ingress.kubernetes.io/rewrite-target=/"
+    ),
+    dockerUpdateLatest := latest, //change to latest val
+    dockerRepository := Some("eu.gcr.io"),
+    dockerExposedPorts := Seq(9000, 9000)
+  ))
 
 def generateTablesTask(conf: DbConf) = Def.task {
   val dir = sourceManaged.value
   val outputDir = (dir / "slick").getPath
   val fname = outputDir + generatedFilePath
   println (s"fname: $fname")
-    val generator = "db.codegen.CustomizedCodeGenerator"
-    val url = conf.url
-    val slickProfile = conf.profile.dropRight(1)
-    val jdbcDriver = conf.driver
-    val pkg = "db.Tables"
-    val cp = (dependencyClasspath in Compile).value
-    val username = conf.user
-    val password = conf.password
-    val s = streams.value
-    val r = (runner in Compile).value
-    r.run(
-        generator,
-      cp.files,
-        Array(outputDir, slickProfile, jdbcDriver, url, pkg, username, password),
-        s.log
-      )
+  val generator = "db.codegen.CustomizedCodeGenerator"
+  val url = conf.url
+  val slickProfile = conf.profile.dropRight(1)
+  val jdbcDriver = conf.driver
+  val pkg = "db.Tables"
+  val cp = (dependencyClasspath in Compile).value
+  val username = conf.user
+  val password = conf.password
+  val s = streams.value
+  val r = (runner in Compile).value
+  r.run(
+    generator,
+    cp.files,
+    Array(outputDir, slickProfile, jdbcDriver, url, pkg, username, password),
+    s.log
+  )
   Seq(file(fname))
 }
 
@@ -99,6 +123,4 @@ coverageExcludedPackages += "<empty>;Reverse.*;router.*;.*AuthService.*;models\\
 
 // Commands
 
-addCommandAlias("ciTest", "; clean; coverage; flyway/flywayMigrate; test; coverageReport")
-
-dockerExposedPorts := Seq(9000, 9000)
+addCommandAlias("ciTests", "; clean; coverage; flyway/flywayMigrate; test; coverageReport")

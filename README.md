@@ -1,6 +1,6 @@
 # Play2-Bootstrap
 
-[![codecov.io](test)](test)
+[![codecov](https://codecov.io/gh/innFactory/bootstrap-play2/branch/master/graph/badge.svg)](https://codecov.io/gh/innFactory/bootstrap-play2)
 
 Bootstrap a rest service with Play2, isolated Slick and isolated Flyway
 
@@ -18,8 +18,39 @@ This project is built with:
 - DATABASE_PORT = Database Port
 - DATABASE_USER = Database User
 - DATABASE_PASSWORD = Database Password
+- FIREBASE_JSON = Authentication Json from Google Firebase
+- FIREBASE_FILEPATH = Path to Firebase.json (Dont use in CI)
+
+In the Terminal those can be set by:
+
+```bash
+export ENV_VAR=Variable
+```
+
+Thereafter the variable could be checked by:
+
+```bash
+echo $ENV_VAR
+```
+
+## CircleCI
+
+EnvVars:
+
+- HOME = HomePath
+- GOOGLE_PROJECT_ID
+- GOOGLE_COMPUTE_ZONE
+- GOOGLE_CLUSTER_NAME
+- GCLOUD_SERVICE_KEY
+
+## Authentication
+
+- Each request is checked for a Firebase JWT token in the request headers.
+- The Firebase.json file has to be present and filled at ./conf/firebase.json
 
 ## Database Migration
+
+This has to be run first
 
 ```bash
 sbt flyway/flywayMigrate
@@ -27,7 +58,7 @@ sbt flyway/flywayMigrate
 
 ## Slick Code Generation
 
-You will need to run the flywayMigrate task first, and then you will be able to generate tables using sbt-codegen.
+You will need to run the flywayMigrate task first, and then you will be able to generate tables using slickGen.
 
 ```bash
 sbt slickGen
@@ -37,11 +68,21 @@ sbt slickGen
 
 You can run functional tests against an in memory database and Slick easily with Play from a clean slate:
 
+If a database is present:
+
 ```bash
 sbt ciTest
 ```
 
+If no database is available:
+
+```bash
+./runtest.sh
+```
+
 ## Running
+
+######Before Running this you have to run: slickGen and ciTest
 
 To run the project, start up Play:
 
@@ -49,9 +90,17 @@ To run the project, start up Play:
 sbt run
 ```
 
-## Building
+## Docker
 
-To create a docker Container:
+To create a local docker Container with the [Native Packager](https://github.com/sbt/sbt-native-packager) Plugin:
+
+If a database is present:
+
+```bash
+docker:publishlocal
+```
+
+If no database is available:
 
 ```bash
 ./buildscript.sh

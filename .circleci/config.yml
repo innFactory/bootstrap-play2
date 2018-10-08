@@ -1,0 +1,138 @@
+# Scala CircleCI 2.0 configuration file
+#
+version: 2
+jobs:
+  test:
+    docker:
+    - image: innfactory/gcloud-scala-ci:latest
+    - image: circleci/postgres:9.6-alpine
+      environment:
+        POSTGRES_USER: user
+        POSTGRES_DB: build
+        POSTGRES_PASSWORD: password
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+      DATABASE_PORT: 5432
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "build.sbt" }}
+        - v1-dependencies-
+    - run:
+        name: "test with sbt"
+        command: |
+          (
+           for i in `seq 1 10`;
+                       do
+                         nc -z localhost $DATABASE_PORT && echo Success && exit 0
+                         echo -n .
+                         sleep 1
+                       done
+                       echo Failed waiting for Postgres && exit 1
+           )
+           sbt ciTests
+    - save_cache:
+        paths:
+        - "~/.iv2/cache"
+        - "~/.sbt"
+        - "~/.m2"
+        key: v1-dependencies-{{ checksum "build.sbt" }}
+  build:
+    docker:
+    - image: innfactory/gcloud-scala-ci:latest
+    - image: circleci/postgres:9.6-alpine
+      environment:
+        POSTGRES_USER: user
+        POSTGRES_DB: build
+        POSTGRES_PASSWORD: password
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+      DATABASE_PORT: 5432
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+    steps:
+    - checkout
+    - setup_remote_docker:
+        version: 17.09.0-ce
+    - restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "build.sbt" }}
+        - v1-dependencies-
+    - run:
+        name: "Write Firebase Admin Key"
+        command: |
+          echo $FIREBASE_JSON > ./conf/firebase.json
+    - run:
+        name: "create google credentials"
+        command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+    - run:
+        name: "configure google cloud"
+        command: |
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+          gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
+          gcloud --quiet auth configure-docker
+    - run:
+        name: "Build with sbt"
+        command: |
+          (
+            for i in `seq 1 100`;
+             do
+              nc -z localhost $DATABASE_PORT && echo Success && exit 0
+                  echo -n .
+                  sleep 1
+                  done
+            echo Failed waiting for Postgres && exit 1
+           )
+          sbt flyway/flywayMigrate
+          sbt -Dbranch=$CIRCLE_BRANCH -Dversion=$CIRCLE_SHA1 docker:publish
+    - save_cache:
+        paths:
+        - "~/.iv2/cache"
+        - "~/.sbt"
+        - "~/.m2"
+        key: v1-dependencies-{{ checksum "build.sbt" }}
+  deploy:
+    docker:
+    - image: innfactory/gcloud-scala-ci:latest
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+    steps:
+    - checkout
+    - setup_remote_docker:
+        version: 17.09.0-ce
+    - run:
+        name: "Create google credentials"
+        command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+    - run:
+        name: "Configure google cloud"
+        command: |
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+          gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
+          gcloud --quiet auth configure-docker
+    - run:
+        name: "Deploy to Google Kubernetes"
+        command: |
+          chmod +x ./.circleci/deploy.sh
+          ./.circleci/deploy.sh
+workflows:
+  version: 2
+  bootstrap-play2-pipeline:
+    jobs:
+    - test:
+        filters:
+          branches:
+            only:
+            - master
