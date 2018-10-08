@@ -1,6 +1,6 @@
 # Play2-Bootstrap
 
-[![codecov](https://codecov.io/gh/innFactory/bootstrap-play2/branch/master/graph/badge.svg)](https://codecov.io/gh/innFactory/bootstrap-play2)
+[![codecov](https://codecov.io/gh/innFactory/bootstrap-play2/branch/master/graph/badge.svg)](https://codecov.io/gh/innFactory/bootstrap-play2) [![CircleCI](https://circleci.com/gh/innFactory/bootstrap-play2/tree/master.svg?style=svg)](https://circleci.com/gh/innFactory/bootstrap-play2/tree/master)
 
 Bootstrap a rest service with Play2, isolated Slick and isolated Flyway
 
