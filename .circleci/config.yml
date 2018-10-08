@@ -26,7 +26,7 @@ jobs:
     - run:
         name: "test with sbt"
         command: |
-          (
+           (
            for i in `seq 1 10`;
                        do
                          nc -z localhost $DATABASE_PORT && echo Success && exit 0
@@ -36,6 +36,7 @@ jobs:
                        echo Failed waiting for Postgres && exit 1
            )
            sbt ciTests
+           bash <(curl -s https://codecov.io/bash)
     - save_cache:
         paths:
         - "~/.iv2/cache"
