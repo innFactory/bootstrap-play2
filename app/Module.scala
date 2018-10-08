@@ -48,7 +48,7 @@ class FlywayMigrator @Inject()(env: Environment, configuration: Configuration) {
 }
 /** Creates FirebaseApp on Application creation */
 class firebaseCreationService @Inject() (config: Config) {
-  FirebaseJWTValidator.instanciateFirebase(config.getString("firebase.file"), "")
+  FirebaseJWTValidator.instanciateFirebase(config.getString("firebase.file"), "www.bootstrap-play2.com")
 }
 
 /** Deletes FirebaseApp safely. Important on dev restart. */
