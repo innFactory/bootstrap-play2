@@ -24,6 +24,10 @@ jobs:
         - v1-dependencies-{{ checksum "build.sbt" }}
         - v1-dependencies-
     - run:
+        name: "Write Firebase Admin Key"
+        command: |
+          echo $FIREBASE_JSON > ./conf/firebase.json
+    - run:
         name: "test with sbt"
         command: |
            (
