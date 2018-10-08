@@ -10,6 +10,9 @@ This project is built with:
    - Flyway 5.1.1
    
    It needs a PostgresQL database
+   
+   Swagger.json is available at /v1/swagger.json
+   
 
 ## EnvVars for Configuration
 

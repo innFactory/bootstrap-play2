@@ -115,7 +115,7 @@ sourceGenerators in Compile += Def.taskDyn(generateTablesTask((dbConf in Global)
 
 fork in Test := true
 
-coverageExcludedPackages += "<empty>;Reverse.*;router.*;.*AuthService.*;models\\\\.data\\\\..*;dbdata.Tables*;common.jwt.*;common.errorHandling.*;common.jwt.JwtFilter"
+coverageExcludedPackages += "<empty>;Reverse.*;router.*;.*AuthService.*;models\\\\.data\\\\..*;dbdata.Tables*;common.jwt.*;common.errorHandling.*;common.jwt.JwtFilter;db.codegen.*"
 
 // Commands
 
