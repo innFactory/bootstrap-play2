@@ -24,15 +24,10 @@ val dbConf = settingKey[DbConf]("Typesafe config file with slick settings")
 val generateTables = taskKey[Seq[File]]("Generate slick code")
 
 def createDbConf(dbConfFile: File): DbConf = {
-  println (s"dbConfFile: $dbConfFile")
   val configFactory = ConfigFactory.parseFile(dbConfFile)
-  println(configFactory)
   val configPath = s"$flywayDbName"
   val config = configFactory.getConfig(configPath).resolve
-  println(config)
   val url =  s"${config.getString("database.urlPrefix")}${ config.getString("database.host")}:${config.getString("database.port")}/${config.getString("database.db")}"
-  println(url, config)
-  println(sys.env.get("DATABASE_PORT"), System.getProperty("DATABASE_PORT"))
   DbConf(
     config.getString("profile"),
     config.getString("database.driver"),
@@ -80,7 +75,7 @@ lazy val root = (project in file("."))
   .settings(Seq(
     maintainer := "innFactory",
     version := buildVersion,
-    packageName := "innfactory-innside/innside",
+    packageName := "innfactory-bootstrap-play2/bootstrap-play2",
     endpoints += HttpEndpoint("http", HttpIngress(Vector(80, 443), Vector.empty, Vector.empty)),
     deployMinikubeRpArguments ++= Vector(
       "--ingress-annotation", "ingress.kubernetes.io/rewrite-target=/",
@@ -95,7 +90,6 @@ def generateTablesTask(conf: DbConf) = Def.task {
   val dir = sourceManaged.value
   val outputDir = (dir / "slick").getPath
   val fname = outputDir + generatedFilePath
-  println (s"fname: $fname")
   val generator = "db.codegen.CustomizedCodeGenerator"
   val url = conf.url
   val slickProfile = conf.profile.dropRight(1)
