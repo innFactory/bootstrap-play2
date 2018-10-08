@@ -15,6 +15,6 @@ for i in `seq 1 10`;
 #sbt -DDATABASE_DB="test" ciTest
 export DATABASE_PORT="5433"
 export DATABASE_DB="test"
-sbt ciTest
+sbt ciTests
 docker stop pgtestdata
 docker rm pgtestdata

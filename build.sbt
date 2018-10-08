@@ -18,24 +18,26 @@ val buildVersion = Option(System.getProperty("version")) match {
 }
 
 val generatedFilePath: String = "/dbdata/Tables.scala"
-val flywayDbName: String = "admin"
+val flywayDbName: String = "bootstrapplay2"
 
 val dbConf = settingKey[DbConf]("Typesafe config file with slick settings")
 val generateTables = taskKey[Seq[File]]("Generate slick code")
 
 def createDbConf(dbConfFile: File): DbConf = {
-  // println (s"dbConfFile: $dbConfFile")
+  println (s"dbConfFile: $dbConfFile")
   val configFactory = ConfigFactory.parseFile(dbConfFile)
+  println(configFactory)
   val configPath = s"$flywayDbName"
   val config = configFactory.getConfig(configPath).resolve
-  val url =  s"${config.getString("db.urlPrefix")}${ config.getString("db.host")}:${config.getString("db.port")}/${config.getString("db.db")}"
+  println(config)
+  val url =  s"${config.getString("database.urlPrefix")}${ config.getString("database.host")}:${config.getString("database.port")}/${config.getString("database.db")}"
   println(url, config)
   println(sys.env.get("DATABASE_PORT"), System.getProperty("DATABASE_PORT"))
   DbConf(
     config.getString("profile"),
-    config.getString("db.driver"),
-    config.getString("db.user"),
-    config.getString("db.password"),
+    config.getString("database.driver"),
+    config.getString("database.user"),
+    config.getString("database.password"),
     url
   )
 }
