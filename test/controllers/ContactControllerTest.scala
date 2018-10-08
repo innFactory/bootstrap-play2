@@ -24,7 +24,7 @@ class ContactControllerTest extends PlaySpec with BaseOneAppPerSuite with TestAp
   /** CONTACT CONTROLLER */
   /** ——————————————————— */
 
-  "OfferingController" should {
+  "ContactController" should {
     "accept and execute POST request" in {
       val future: Future[Result] = route(app, FakeRequest(POST, "/v1/contact").withJsonBody(Json.parse(
         s"""{
