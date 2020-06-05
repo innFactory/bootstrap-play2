@@ -1,0 +1,17 @@
+site_name: "bootstrapPlay2 Doc"
+theme:
+  logo: "/doc/innFactoryIcon.svg"
+  favicon: "/doc/innFactoryIcon.svg"
+  name: material
+  features:
+    - tabs
+  language: en
+  palette:
+    scheme: default
+    primary: red
+    accent: red
+repo_name: bootstrap-play2
+repo_url: https://github.com/innFactory/bootstrap-play2
+plugins:
+  - search
+  - awesome-pages

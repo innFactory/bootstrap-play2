@@ -1,0 +1,23 @@
+version: '3.1'
+
+services:
+  db:
+    container_name: bootstrapPlay2PG
+    image: mdillon/postgis:latest
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+      POSTGRES_USER: test
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgis-volume/data:/var/lib/postgresql/data
+  mkdocs:
+    container_name: bootstrapPlay2MkDocs
+    image: squidfunk/mkdocs-material
+    volumes:
+      - ../doc:/docs/docs/doc
+      - ./mkdocs.yml:/docs/mkdocs.yml
+      - ../README.md:/docs/docs/README.md
+    ports:
+       - 8000:8000

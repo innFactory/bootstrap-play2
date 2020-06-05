@@ -1,13 +1,6 @@
 <configuration>
 
-  <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel"/>
-
-  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>${application.home:-.}/logs/application.log</file>
-    <encoder>
-      <pattern>%date [%level] from %logger in %thread - %message%n%xException</pattern>
-    </encoder>
-  </appender>
+  <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
@@ -15,25 +8,40 @@
     </encoder>
   </appender>
 
-  <appender name="ASYNCFILE" class="ch.qos.logback.classic.AsyncAppender">
-    <appender-ref ref="FILE"/>
-  </appender>
-
   <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
-    <appender-ref ref="STDOUT"/>
+    <!-- increases the default queue size -->
+    <queueSize>512</queueSize>
+    <!-- don't discard messages -->
+    <discardingThreshold>0</discardingThreshold>
+    <!-- block when queue is full -->
+    <neverBlock>false</neverBlock>
+    <appender-ref ref="STDOUT" />
   </appender>
 
+  <logger name="scala.slick" level="INFO" />
+  <logger name="com.github.tminglei.slickpg" level="NONE" />
   <logger name="play" level="INFO"/>
   <logger name="application" level="INFO"/>
-
+  <logger name="AccessFilterLog" level="INFO"/>
+  <logger name="ControllerLog" level="INFO"/>
+  <logger name="ActorSystemLogger" level="DEBUG"/>
+  <logger name="BrokerServiceLogger" level="DEBUG"/>
+  <logger name="BrokerFilter" level="DEBUG"/>
   <!-- Useful debugging settings in slick -->
-  <logger name="slick.jdbc.JdbcBackend.statement" level="INFO"/>
-  <logger name="slick.jdbc.JdbcBackend.benchmark" level="INFO"/>
-  <logger name="com.zaxxer.hikari" level="WARN"/>
+  <logger name="slick.jdbc.JdbcBackend.statement" level="WARN"/>
+  <logger name="slick.jdbc.JdbcBackend.benchmark" level="WARN"/>
+  <logger name="com.zaxxer.hikari" level="WARN"
+          additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="slick" level="INFO" >
+    <appender-ref ref="STDOUT"/>
+  </logger>
 
   <root level="WARN">
-    <appender-ref ref="ASYNCFILE"/>
-    <appender-ref ref="ASYNCSTDOUT"/>
+    <appender-ref ref="ASYNCSTDOUT" />
   </root>
+
+  <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
 
 </configuration>

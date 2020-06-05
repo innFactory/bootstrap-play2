@@ -4,29 +4,31 @@ import sbt._
 object Dependencies {
 
   //Prod
-  val slickPg =  "com.github.tminglei" %% "slick-pg" % "0.16.3"
-  val slickPgPlayJson = "com.github.tminglei" %% "slick-pg_play-json" % "0.16.3"
-  val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper" % "2.3.0"
-  val playJson = "com.typesafe.play" %% "play-json" % "2.7.0-M1"
-  val playJsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.7.0-M1"
-  val slick = "com.typesafe.slick" %% "slick" % "3.2.3"
-  val slickCodegen = "com.typesafe.slick" %% "slick-codegen" % "3.2.3"
-  val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.2.3"
+  val slickPg =  "com.github.tminglei" %% "slick-pg" % "0.19.0"
+  val slickPgPlayJson = "com.github.tminglei" %% "slick-pg_play-json" % "0.19.0"
+  val slickPgJts= "com.github.tminglei" %% "slick-pg_jts" % "0.19.0"
+  val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper" % "2.4.0"
+  val playJson = "com.typesafe.play" %% "play-json" % "2.8.1"
+  val playJsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.8.1"
+  val slick = "com.typesafe.slick" %% "slick" % "3.3.2"
+  val slickCodegen = "com.typesafe.slick" %% "slick-codegen" % "3.3.2"
+  val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2"
   val HikariCP = "com.zaxxer" % "HikariCP" % "2.7.9"
   val Joda = "joda-time" % "joda-time" % "2.10"
-  val flyWayCore =  "org.flywaydb" % "flyway-core" % "5.1.1"
+  val flyWayCore =  "org.flywaydb" % "flyway-core" % "6.2.3"
   val postgresql = "org.postgresql" % "postgresql" % "42.2.5"
-  val swaggerPlay2 = "io.swagger" %% "swagger-play2" % "1.6.0"
+  val googlePubSub = "com.lightbend.akka" %% "akka-stream-alpakka-google-cloud-pub-sub" % "2.0.0-RC1"
+  val akkaStreams =  "com.typesafe.akka" %% "akka-stream" % "2.5.30"
 
-  // JWT
-  val firebaseAdmin = "com.google.firebase" % "firebase-admin" % "6.2.0"
-  val nimbusJoseJWT = "com.nimbusds" % "nimbus-jose-jwt" % "5.3"
+  val cats = "org.typelevel" %% "cats-core" % "2.2.0-M2"
 
+  // Influx
+  val influxClient =  "com.influxdb" % "influxdb-client-scala" % "1.7.0"
+  val influxFlux =  "com.influxdb" % "flux-dsl" % "1.7.0"
 
   //Test
   val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.6.15" % Test
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
-
   lazy val list = Seq(
     guice,
     slickPg,
@@ -41,12 +43,12 @@ object Dependencies {
     Joda,
     flyWayCore,
     postgresql,
-    swaggerPlay2,
-    firebaseAdmin,
-    nimbusJoseJWT,
+    googlePubSub,
     scalatestPlus,
-    playAhcWS
+    playAhcWS,
+    slickPgJts,
+    akkaStreams,
+    cats
   )
 
 }
-

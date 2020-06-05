@@ -2,16 +2,81 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Contacts
-GET                 /v1/contact                             controllers.ContactController.contacts(lastName: Option[String], startIndex: Option[Int], endIndex: Option[Int], showDeleted: Option[Boolean])
-POST                /v1/contact                             controllers.ContactController.postContact
-GET                 /v1/contact/:id                         controllers.ContactController.getContact(id : Long, showDeleted: Option[Boolean])
-DELETE              /v1/contact/:id                         controllers.ContactController.deleteContact(id : Long)
-PATCH               /v1/contact                             controllers.ContactController.patchContact
-PUT                 /v1/contact                             controllers.ContactController.putContact
+# - - - - - - - - HELLO WORLD ACTOR QUERY - - - - - - - -
+
+###
+#  summary: Hello World Actor Query
+#  tags:
+#    - public
+#  parameters:
+#    - in: path
+#      name: metricId
+#      schema:
+#         type: Long
+#      required: true
+#      description: Id of Metric
+#  responses:
+#     '200':
+#       description: Value of Metric
+#     '404':
+#       description: publicMetric not Found
+#     '500':
+#       description: InternalServerError
+###
+GET                 /v1/public/helloworld/:query                       actorsystem.controllers.ActorHelloWorldController.helloWorldActor(query: String)
+
+# - - - - - - - - PROBES - - - - - - - -
+
+###
+#  summary: Health check
+#  tags:
+#    - probes
+#  responses:
+#     '200':
+#       description: OK
+###
+GET                /                                                controllers.HealthController.ping
+
+###
+#  summary: Liveness check
+#  tags:
+#    - probes
+#  responses:
+#     '200':
+#       description: OK
+###
+GET                /liveness                                        controllers.HealthController.ping
+
+###
+#  summary: Readiness check
+#  tags:
+#    - probes
+#  responses:
+#     '200':
+#       description: OK
+###
+GET                /readiness                                       controllers.HealthController.ping
+
+# - - - - - - - - COMPANIES - - - - - - - -
+
+###
+#  summary: Get Me (Company)
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - companies
+#  responses:
+#     '200':
+#       description: success
+#       schema:
+#         $ref: '#/components/schemas/models.api.Company'
+#     '404':
+#       description: no company found
+###
+GET                 /v1/companies/me                                     controllers.CompaniesController.getMe
 
 # Map static resources from the /public folder to the /assets URL path
-GET                 /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)
-
-#
-GET                 /v1/swagger.json                        controllers.ApiHelpController.getResources
+### NoDocs ###
+GET                 /assets/*file                                   controllers.Assets.versioned(path="/public", file: Asset)
+### NoDocs ###
+GET                 /v1/assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
