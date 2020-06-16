@@ -45,7 +45,9 @@ trait CompaniesDAO {
  *    own internal thread pool, so Play's default execution context is fine here.
  */
 @Singleton
-class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionContext) extends BaseSlickDAO(db) with CompaniesDAO {
+class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
+    extends BaseSlickDAO(db)
+    with CompaniesDAO {
 
   // Class Name for identification in Database Errors
   override val currentClassForDatabaseError = "CompaniesDAO"
@@ -53,7 +55,7 @@ class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionConte
   override val profile: XPostgresProfile.type = XPostgresProfile
   import profile.api._
 
- /* - - - Compiled Queries - - - */
+  /* - - - Compiled Queries - - - */
 
   private val queryById = Compiled((id: Rep[UUID]) => Company.filter(_.id === id))
 

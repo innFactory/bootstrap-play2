@@ -4,6 +4,7 @@ import java.util.UUID
 
 import com.vividsolutions.jts.geom.Geometry
 import common.GeoPointFactory.GeoPointFactory
+import common.daos.BaseSlickDAO
 import common.results.Results.Result
 import common.results.errors.Errors.{ DatabaseError, NotFound }
 import db.codegen.XPostgresProfile
@@ -29,19 +30,12 @@ trait LocationsDAO {
     companyId: UUID
   ): Future[Result[Seq[LocationObject]]]
 
-  def all(from: Int, to: Int): Future[Result[Seq[LocationObject]]]
-
   def allFromDistance(
     from: Int,
     to: Int,
     point: Geometry,
     distance: Long
   ): Future[Result[Seq[LocationObject]]]
-
-  def allFromDistancePublic(
-    point: Geometry,
-    distance: Long
-  ): Future[Seq[LocationObject]]
 
   def create(locationObject: LocationObject): Future[Result[LocationObject]]
 
@@ -62,7 +56,9 @@ trait LocationsDAO {
  *    own internal thread pool, so Play's default execution context is fine here.
  */
 @Singleton
-class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext) extends LocationsDAO with Tables {
+class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
+    extends BaseSlickDAO(db)
+    with LocationsDAO {
 
   override val profile = XPostgresProfile
 
@@ -128,21 +124,6 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
   }
 
   /**
-   * All objects from(index) to(index)
-   * @param from
-   * @param to
-   * @return
-   */
-  def all(
-    from: Int,
-    to: Int,
-  ): Future[Result[Seq[LocationObject]]] =
-    db.run(Location.result)
-      .map(seq => {
-        Right(seq.slice(from, to + 1).map(locationRowToLocation))
-      })
-
-  /**
    * Query All by distance from to index
    * @param from
    * @param to
@@ -167,40 +148,6 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
           .map(x => locationRowToLocationWithDistance(x._1, x._2))
       )
 
-    })
-  }
-
-  /**
-   * Get total object count by distance public
-   * @param point
-   * @param distance
-   * @return
-   */
-  def getCountByDistancePublic(point: Geometry, distance: Float): Future[Int] = {
-    val query = querySortedWithDistanceFilterMaxDistance(point, distance).result
-    val l     = db.run(query)
-    val lengthMap: Future[Int] = l.map(s => {
-      s.length
-    })
-    lengthMap
-  }
-
-  /**
-   * Query All by distance for public
-   * @param point
-   * @param distance
-   * @return
-   */
-  def allFromDistancePublic(
-    point: Geometry,
-    distance: Long
-  ): Future[Seq[LocationObject]] = {
-
-    val query =
-      querySortedWithDistanceFilterMaxDistance(point, distance.toFloat).result
-    val f = db.run(query)
-    f.map(seq => {
-      seq.map(x => locationRowToLocationWithDistance(x._1, x._2))
     })
   }
 
@@ -242,22 +189,11 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
    * @param id
    * @return
    */
-  def delete(id: Long): Future[Result[Boolean]] = {
-    for {
-      dbQueryResult <- db.run(queryById(id).result.headOption)
-    } yield
-      for {
-        dbDeleteResult <- db.run(queryById(id).delete)
-      } yield {
-        dbDeleteResult
-      } match {
-        case 0 =>
-          Left(
-            DatabaseError("could not delete entity", slickLocation, "delete", "entity was deleted")
-          )
-        case _ => Right(true)
-      }
-  }.flatten
+  def delete(id: Long): Future[Result[Boolean]] =
+    deleteGeneric[LocationRow, LocationObject](
+      queryById(id).result.headOption,
+      queryById(id).delete
+    )
 
   /**
    * Create new Object
@@ -332,12 +268,5 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
       updated = Some(locationRow.updated),
       distance = Some(distance)
     )
-
-  /**
-   * Close db
-   * @return
-   */
-  def close(): Future[Unit] =
-    Future.successful(db.close())
 
 }

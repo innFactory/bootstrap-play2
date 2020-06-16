@@ -65,7 +65,13 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
                       db.run(update(patchedObject))
                         .map(x => {
                           if (x != 0) Right(patchedObject)
-                          else Left(DatabaseError("Could not replace entity", currentClassForDatabaseError, "update", "row not updated"))
+                          else
+                            Left(
+                              DatabaseError("Could not replace entity",
+                                            currentClassForDatabaseError,
+                                            "update",
+                                            "row not updated")
+                            )
                         })
                     )
     } yield patchResult
@@ -85,7 +91,9 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
       createdObject <- db.run(create(entityToSave))
       res <- Future(
               Option(rowToObject(createdObject))
-                .toEither(DatabaseError("Could not create entity", currentClassForDatabaseError, "create", "row not created"))
+                .toEither(
+                  DatabaseError("Could not create entity", currentClassForDatabaseError, "create", "row not created")
+                )
             )
     } yield res
     result
@@ -101,7 +109,12 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
                          if (x != 0)
                            Right(true)
                          else
-                           Left(DatabaseError("could not delete entity", currentClassForDatabaseError, "delete", "entity was deleted"))
+                           Left(
+                             DatabaseError("could not delete entity",
+                                           currentClassForDatabaseError,
+                                           "delete",
+                                           "entity was deleted")
+                           )
                        })
     } yield dbDeleteResult
     result
