@@ -7,7 +7,7 @@ import play.api.inject.ApplicationLifecycle
 import play.api.{ Configuration, Environment, Logger, Mode }
 import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
-import db.{ CompaniesDAO, LocationsDAO, SlickCompaniesDAO, SlickLocationsDAO }
+import db.{ CompaniesDAO, LocationsDAO, SlickCompaniesSlickDAO, SlickLocationsDAO }
 import org.flywaydb.core.internal.jdbc.DriverDataSource
 import play.api.libs.concurrent.AkkaGuiceSupport
 import play.api.mvc.AnyContent
@@ -34,7 +34,7 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     bind(classOf[LocationRepository]).to(classOf[LocationRepositoryImpl])
     bind(classOf[CompaniesRepository]).to(classOf[CompaniesRepositoryImpl])
     bind(classOf[LocationsDAOCloseHook]).asEagerSingleton()
-    bind(classOf[CompaniesDAO]).to(classOf[SlickCompaniesDAO])
+    bind(classOf[CompaniesDAO]).to(classOf[SlickCompaniesSlickDAO])
     bind(classOf[CompaniesDAOCloseHook]).asEagerSingleton()
 
     /**

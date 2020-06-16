@@ -1,6 +1,8 @@
 package db
 
 import java.util.UUID
+
+import common.daos.BaseSlickDAO
 import common.results.Results.Result
 import common.results.errors.Errors.{ DatabaseError, NotFound }
 import db.codegen.XPostgresProfile
@@ -43,13 +45,15 @@ trait CompaniesDAO {
  *    own internal thread pool, so Play's default execution context is fine here.
  */
 @Singleton
-class SlickCompaniesDAO @Inject()(db: Database)(implicit ec: ExecutionContext) extends CompaniesDAO with Tables {
+class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionContext) extends BaseSlickDAO(db) with CompaniesDAO {
+
+  // Class Name for identification in Database Errors
+  override val currentClassForDatabaseError = "CompaniesDAO"
 
   override val profile: XPostgresProfile.type = XPostgresProfile
-
   import profile.api._
 
-  private val slickLocation = "SlickCompaniesDAO"
+ /* - - - Compiled Queries - - - */
 
   private val queryById = Compiled((id: Rep[UUID]) => Company.filter(_.id === id))
 
@@ -67,14 +71,10 @@ class SlickCompaniesDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
    * @return
    */
   def lookup(id: UUID): Future[Result[CompanyObject]] =
-    db.run(queryById(id).result.headOption).map {
-      case Some(row) =>
-        Right(companyRowToCompanyObject(row))
-      case None =>
-        Left(
-          NotFound()
-        )
-    }
+    lookupGeneric[CompanyRow, CompanyObject](
+      companyRowToCompanyObject,
+      queryById(id).result.headOption
+    )
 
   /**
    * Lookup Company by Email
@@ -94,80 +94,44 @@ class SlickCompaniesDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
 
   /**
    * Patch object
-   * @param CompanyObject
+   * @param companyObject
    * @return
    */
-  def update(CompanyObject: CompanyObject): Future[Result[CompanyObject]] =
-    (db
-      .run(queryById(CompanyObject.id.getOrElse(UUID.randomUUID())).result.headOption))
-      .map {
-        case Some(option: CompanyRow) => {
-          val oldObject     = companyRowToCompanyObject(option)
-          val patchedObject = patch(CompanyObject, oldObject)
-          db.run(
-              queryById(CompanyObject.id.getOrElse(UUID.randomUUID()))
-                .update(companyObjectToCompanyRow(patchedObject))
-            )
-            .map {
-              case 0 =>
-                Left(
-                  DatabaseError("Could not replace entity", slickLocation, "update", "row not updated")
-                )
-              case _ => Right(patchedObject)
-            }
-        }
-        case None =>
-          Future(
-            Left(
-              DatabaseError("Could not find entity to update", slickLocation, "update", "entity not found")
-            )
-          )
-      }
-      .flatten
+  def update(companyObject: CompanyObject): Future[Result[CompanyObject]] =
+    updateGeneric[CompanyRow, CompanyObject](
+      companyRowToCompanyObject,
+      queryById(companyObject.id.getOrElse(UUID.randomUUID())).result.headOption,
+      (toPatch: CompanyObject) =>
+        queryById(companyObject.id.getOrElse(UUID.randomUUID())).update(companyObjectToCompanyRow(toPatch)),
+      (old: CompanyObject) => patch(companyObject, old)
+    )
 
   /**
    * Delete Object
    * @param id
    * @return
    */
-  def delete(id: UUID): Future[Result[Boolean]] = {
-    for {
-      dbQueryResult <- db.run(queryById(id).result.headOption)
-    } yield
-      for {
-        dbDeleteResult <- db.run(queryById(id).delete)
-      } yield {
-        dbDeleteResult
-      } match {
-        case 0 =>
-          Left(
-            DatabaseError("could not delete entity", slickLocation, "delete", "entity was deleted")
-          )
-        case _ => Right(true)
-      }
-  }.flatten
+  def delete(id: UUID): Future[Result[Boolean]] =
+    deleteGeneric[CompanyRow, CompanyObject](
+      queryById(id).result.headOption,
+      queryById(id).delete
+    )
 
   /**
    * Create new Object
-   * @param CompanyObject
+   * @param companyObject
    * @return
    */
-  def create(CompanyObject: CompanyObject): Future[Result[CompanyObject]] =
-    try {
-      val entityToSave = companyObjectToCompanyRow(CompanyObject)
-      val action       = (Company returning Company) += entityToSave
-      val actionResult = db.run(action)
-      actionResult.map { createdObject =>
-        Right(companyRowToCompanyObject(createdObject))
-      }
-    } catch {
-      case _: Throwable =>
-        Future(
-          Left(
-            DatabaseError("failed to create", slickLocation, "create", "could not create entity")
-          )
-        )
-    }
+  def create(companyObject: CompanyObject): Future[Result[CompanyObject]] =
+    createGeneric[CompanyRow, CompanyObject](
+      companyObject,
+      companyRowToCompanyObject,
+      companyObjectToCompanyRow,
+      queryById(companyObject.id.getOrElse(UUID.randomUUID())).result.headOption,
+      (entityToSave: CompanyRow) => (Company returning Company) += entityToSave
+    )
+
+  /* - - - Mapper Functions - - - */
 
   private def companyObjectToCompanyRow(CompanyObject: CompanyObject): CompanyRow =
     CompanyRow(
@@ -186,12 +150,5 @@ class SlickCompaniesDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
       created = Some(companyRow.created),
       updated = Some(companyRow.updated)
     )
-
-  /**
-   * Close db
-   * @return
-   */
-  def close(): Future[Unit] =
-    Future.successful(db.close())
 
 }
