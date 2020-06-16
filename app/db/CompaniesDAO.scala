@@ -50,7 +50,7 @@ class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionConte
     with CompaniesDAO {
 
   // Class Name for identification in Database Errors
-  override val currentClassForDatabaseError = "CompaniesDAO"
+  override val currentClassForDatabaseError = "SlickCompaniesDAO"
 
   override val profile: XPostgresProfile.type = XPostgresProfile
   import profile.api._

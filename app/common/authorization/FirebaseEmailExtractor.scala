@@ -18,8 +18,7 @@ class FirebaseEmailExtractor[A] @Inject()(val parser: BodyParsers.Default, envir
   /**
    * Get Email from request
    * Takes the request header "Authorization" and extracts the JWT token,
-   * then decodes the token to get the user_Id for a Database lookup of
-   * that id through the injected UsersDAO
+   * then decodes the token to get the user email
    * @param request
    * @tparam A
    * @return Option[String]

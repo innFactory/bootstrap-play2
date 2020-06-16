@@ -60,11 +60,13 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
     extends BaseSlickDAO(db)
     with LocationsDAO {
 
-  override val profile = XPostgresProfile
+  // Class Name for identification in Database Errors
+  override val currentClassForDatabaseError = "SlickLocationsDAO"
 
+  override val profile = XPostgresProfile
   import profile.api._
 
-  private val slickLocation = "SlickLocationsDAO"
+  /* - - - Compiled Queries - - - */
 
   private val queryById = Compiled((id: Rep[Long]) => Location.filter(_.id === id))
 
@@ -86,14 +88,10 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
    * @return
    */
   def lookup(id: Long): Future[Result[LocationObject]] =
-    db.run(queryById(id).result.headOption).map {
-      case Some(row) =>
-        Right(locationRowToLocation(row))
-      case None =>
-        Left(
-          NotFound()
-        )
-    }
+    lookupGeneric[LocationRow, LocationObject](
+      locationRowToLocation,
+      queryById(id).result.headOption
+    )
 
   /**
    * Lookup single object _internal use only
@@ -115,13 +113,11 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
    */
   def lookupByCompany(
     companyId: UUID,
-  ): Future[Result[Seq[LocationObject]]] = {
-    val query = queryByCompany(companyId).result
-    val f     = db.run(query)
-    f.map(seq => {
-      Right(seq.map(locationRowToLocation))
-    })
-  }
+  ): Future[Result[Seq[LocationObject]]] =
+    lookupSequenceGeneric[LocationRow, LocationObject](
+      locationRowToLocation,
+      queryByCompany(companyId).result
+    )
 
   /**
    * Query All by distance from to index
@@ -136,20 +132,15 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
     to: Int,
     point: Geometry,
     distance: Long
-  ): Future[Result[Seq[LocationObject]]] = {
-
-    val query =
-      querySortedWithDistanceFilterMaxDistance(point, distance.toFloat).result
-    val f = db.run(query)
-    f.map(seq => {
-      Right(
-        seq
-          .slice(from, to + 1)
-          .map(x => locationRowToLocationWithDistance(x._1, x._2))
-      )
-
-    })
-  }
+  ): Future[Result[Seq[LocationObject]]] =
+    db.run(querySortedWithDistanceFilterMaxDistance(point, distance.toFloat).result)
+      .map(seq => {
+        Right(
+          seq
+            .slice(from, to + 1)
+            .map(x => locationRowToLocationWithDistance(x._1, x._2))
+        )
+      })
 
   /**
    * Patch object
@@ -157,32 +148,13 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
    * @return
    */
   def update(locationObject: LocationObject): Future[Result[LocationObject]] =
-    (db
-      .run(queryById(locationObject.id.getOrElse(0)).result.headOption))
-      .map {
-        case Some(option: LocationRow) => {
-          val oldObject     = locationRowToLocation(option)
-          val patchedObject = patch(locationObject, oldObject)
-          db.run(
-              queryById(locationObject.id.getOrElse(0))
-                .update(locationObjectToLocationRow(patchedObject))
-            )
-            .map {
-              case 0 =>
-                Left(
-                  DatabaseError("Could not replace entity", slickLocation, "update", "row not updated")
-                )
-              case _ => Right(patchedObject)
-            }
-        }
-        case None =>
-          Future(
-            Left(
-              DatabaseError("Could not find entity to update", slickLocation, "update", "entity not found")
-            )
-          )
-      }
-      .flatten
+    updateGeneric[LocationRow, LocationObject](
+      locationRowToLocation,
+      queryById(locationObject.id.getOrElse(0)).result.headOption,
+      (toPatch: LocationObject) =>
+        queryById(locationObject.id.getOrElse(0)).update(locationObjectToLocationRow(toPatch)),
+      (old: LocationObject) => patch(locationObject, old)
+    )
 
   /**
    * Delete Object
@@ -201,21 +173,13 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
    * @return
    */
   def create(locationObject: LocationObject): Future[Result[LocationObject]] =
-    try {
-      val entityToSave = locationObjectToLocationRow(locationObject)
-      val action       = (Location returning Location) += entityToSave
-      val actionResult = db.run(action)
-      actionResult.map { createdObject =>
-        Right(locationRowToLocation(createdObject))
-      }
-    } catch {
-      case _: Throwable =>
-        Future(
-          Left(
-            DatabaseError("failed to create", slickLocation, "create", "could not create entity")
-          )
-        )
-    }
+    createGeneric[LocationRow, LocationObject](
+      locationObject,
+      locationRowToLocation,
+      locationObjectToLocationRow,
+      queryById(locationObject.id.getOrElse(0)).result.headOption,
+      (entityToSave: LocationRow) => (Location returning Location) += entityToSave
+    )
 
   private def locationObjectToLocationRow(locationObject: LocationObject): LocationRow =
     LocationRow(
