@@ -5,7 +5,7 @@ import java.util.UUID
 import com.vividsolutions.jts.geom.Geometry
 import common.GeoPointFactory.GeoPointFactory
 import common.results.Results.Result
-import common.results.errors.Errors.DatabaseError
+import common.results.errors.Errors.{ DatabaseError, NotFound }
 import db.codegen.XPostgresProfile
 import javax.inject.{ Inject, Singleton }
 import slick.jdbc.JdbcBackend.Database
@@ -28,12 +28,6 @@ trait LocationsDAO {
   def lookupByCompany(
     companyId: UUID
   ): Future[Result[Seq[LocationObject]]]
-
-  def getCount: Future[Int]
-
-  def getCountByDistance(point: Geometry, distance: Float): Future[Int]
-
-  def getCountByDistancePublic(point: Geometry, distance: Float): Future[Int]
 
   def all(from: Int, to: Int): Future[Result[Seq[LocationObject]]]
 
@@ -101,7 +95,7 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
         Right(locationRowToLocation(row))
       case None =>
         Left(
-          DatabaseError("Entity not Found", slickLocation, "lookup", "row not found")
+          NotFound()
         )
     }
 
@@ -131,30 +125,6 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
     f.map(seq => {
       Right(seq.map(locationRowToLocation))
     })
-  }
-
-  /**
-   * Get total object count
-   * @return
-   */
-  def getCount: Future[Int] = {
-    val lengthResult = db.run(Location.result)
-    lengthResult.map(_.length)
-  }
-
-  /**
-   * Get total object count by distance
-   * @param point
-   * @param distance
-   * @return
-   */
-  def getCountByDistance(point: Geometry, distance: Float): Future[Int] = {
-    val query = querySortedWithDistanceFilterMaxDistance(point, distance).result
-    val l     = db.run(query)
-    val lengthMap: Future[Int] = l.map(s => {
-      s.length
-    })
-    lengthMap
   }
 
   /**
@@ -272,26 +242,22 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
    * @param id
    * @return
    */
-  def delete(id: Long): Future[Result[Boolean]] =
-    db.run(queryById(id).result.headOption)
-      .map {
-        case Some(entity) => {
-          db.run(queryById(id).delete).map {
-            case 0 =>
-              Left(
-                DatabaseError("could not delete entity", slickLocation, "delete", "entity was deleted")
-              )
-            case _ => Right(true)
-          }
-        }
-        case None =>
-          Future(
-            Left(
-              DatabaseError("entity not found", slickLocation, "delete", "entity not found")
-            )
+  def delete(id: Long): Future[Result[Boolean]] = {
+    for {
+      dbQueryResult <- db.run(queryById(id).result.headOption)
+    } yield
+      for {
+        dbDeleteResult <- db.run(queryById(id).delete)
+      } yield {
+        dbDeleteResult
+      } match {
+        case 0 =>
+          Left(
+            DatabaseError("could not delete entity", slickLocation, "delete", "entity was deleted")
           )
+        case _ => Right(true)
       }
-      .flatten
+  }.flatten
 
   /**
    * Create new Object

@@ -17,18 +17,14 @@ object Dependencies {
   val Joda = "joda-time" % "joda-time" % "2.10"
   val flyWayCore =  "org.flywaydb" % "flyway-core" % "6.2.3"
   val postgresql = "org.postgresql" % "postgresql" % "42.2.5"
-  val googlePubSub = "com.lightbend.akka" %% "akka-stream-alpakka-google-cloud-pub-sub" % "2.0.0-RC1"
   val akkaStreams =  "com.typesafe.akka" %% "akka-stream" % "2.5.30"
 
   val cats = "org.typelevel" %% "cats-core" % "2.2.0-M2"
 
-  // Influx
-  val influxClient =  "com.influxdb" % "influxdb-client-scala" % "1.7.0"
-  val influxFlux =  "com.influxdb" % "flux-dsl" % "1.7.0"
-
   //Test
   val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.6.15" % Test
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
+
   lazy val list = Seq(
     guice,
     slickPg,
@@ -43,7 +39,6 @@ object Dependencies {
     Joda,
     flyWayCore,
     postgresql,
-    googlePubSub,
     scalatestPlus,
     playAhcWS,
     slickPgJts,

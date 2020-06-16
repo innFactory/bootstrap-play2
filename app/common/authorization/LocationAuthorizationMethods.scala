@@ -27,7 +27,6 @@ class LocationAuthorizationMethods[A] @Inject()(
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext,
   configuration: Configuration,
-  authorizationHelper: AuthorizationHelper[Any],
   firebaseEmailExtractor: FirebaseEmailExtractor[Request[Any]]) {
 
   def accessGet(request: RequestWithCompany[A], location: Location): Result[Boolean] = {

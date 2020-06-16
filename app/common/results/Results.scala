@@ -42,7 +42,7 @@ object Results {
     def mapToResult: play.api.mvc.Result = value match {
       case _: DatabaseError => MvcResults.Status(500)("")
       case _: Forbidden     => MvcResults.Status(403)("")
-      case _: BadRequest    => MvcResults.Status(403)("")
+      case _: BadRequest    => MvcResults.Status(400)("")
       case _: NotFound      => MvcResults.Status(404)("")
       case _                => MvcResults.Status(400)("")
     }

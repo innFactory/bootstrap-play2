@@ -46,8 +46,9 @@ class FirebaseEmailExtractor[A] @Inject()(val parser: BodyParsers.Default, envir
     }
 
   private def extractEmailFromToken(optionToken: Option[JwtToken]): Option[String] =
+    // In Test Environment the token will be returned as email
     optionToken match {
-      case Some(token) if environment.mode.toString() == "Test" =>
+      case Some(token) if environment.mode.toString == "Test" =>
         Some(token.content)
       case Some(token) => {
         val tokenCont = token.content.split('.')(1)

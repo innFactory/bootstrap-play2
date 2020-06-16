@@ -53,7 +53,7 @@ class CompaniesController @Inject()(
     val json  = request.body.asJson.get
     val stock = json.as[Company]
     val result: EitherT[Future, ErrorStatus, Company] = for {
-      _       <- EitherT(Future(json.validateFor))
+      _       <- EitherT(Future(json.validateFor[Company]))
       created <- EitherT(companiesRepository.post(stock, request))
     } yield created
     result.value.completeResult()

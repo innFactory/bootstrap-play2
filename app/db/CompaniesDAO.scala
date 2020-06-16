@@ -21,12 +21,8 @@ import scala.language.implicitConversions
 trait CompaniesDAO {
 
   def lookup(id: UUID): Future[Result[CompanyObject]]
-  def lookupByEmail(firebaseEmail: String): Future[Result[CompanyObject]]
+
   def internal_lookupByEmail(email: String): Future[Option[CompanyObject]]
-
-  def getCount: Future[Int]
-
-  def all: Future[Result[Seq[CompanyObject]]]
 
   def create(CompanyObject: CompanyObject): Future[Result[CompanyObject]]
 
@@ -85,24 +81,6 @@ class SlickCompaniesDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
    * @param email
    * @return
    */
-  def lookupByEmail(email: String): Future[Result[CompanyObject]] = {
-    val f: Future[Option[CompanyRow]] =
-      db.run(queryByEmail(email).result.headOption)
-    f.map {
-      case Some(row) =>
-        Right(companyRowToCompanyObject(row))
-      case None =>
-        Left(
-          DatabaseError("Entity not Found", "SlickCompaniesDAO", "lookup", "row not found")
-        )
-    }
-  }
-
-  /**
-   * Lookup Company by Email
-   * @param email
-   * @return
-   */
   def internal_lookupByEmail(email: String): Future[Option[CompanyObject]] = {
     val f: Future[Option[CompanyRow]] =
       db.run(queryByEmail(email).result.headOption)
@@ -113,25 +91,6 @@ class SlickCompaniesDAO @Inject()(db: Database)(implicit ec: ExecutionContext) e
         None
     }
   }
-
-  /**
-   * Get total object count
-   * @return
-   */
-  def getCount: Future[Int] = {
-    val lengthResult = db.run(Company.result)
-    lengthResult.map(_.length)
-  }
-
-  /**
-   * All objects
-   * @return
-   */
-  def all: Future[Result[Seq[CompanyObject]]] =
-    db.run(Company.result)
-      .map(seq => {
-        Right(seq.map(companyRowToCompanyObject))
-      })
 
   /**
    * Patch object

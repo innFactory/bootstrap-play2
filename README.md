@@ -70,6 +70,8 @@ You will need to run the flywayMigrate task first, and then you will be able to 
 sbt slickGen
 ```
 
+after that you will have to mark the folder target/scala-x.xx/scr_managed as "generated sources root"
+
 ## Testing
 
 You can run functional tests against an in memory database and Slick easily with Play from a clean slate:

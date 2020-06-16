@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import com.nimbusds.jwt.proc.BadJWTException
 import play.api.Environment
 import play.api.mvc.Results.Forbidden
+import play.api.mvc.Results.Unauthorized
 
 import scala.concurrent.{ ExecutionContext, Future }
 import play.api.mvc._
@@ -15,6 +16,8 @@ class JwtValidationAction @Inject()(parser: BodyParsers.Default, jwtValidator: J
   override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
     if (extractAndCheckAuthHeader(request.headers).getOrElse(false)) {
       block(request)
+    } else if (request.headers.get("Authorization").isEmpty) {
+      Future.successful(Unauthorized("Unauthorized"))
     } else {
       Future.successful(Forbidden("Forbidden"))
     }
@@ -37,6 +40,7 @@ class JwtValidationAction @Inject()(parser: BodyParsers.Default, jwtValidator: J
    * @return
    */
   def checkAuthHeader(authHeader: String): Boolean =
+    // In Test env, jwt will not be validated
     if (environment.mode.toString != "Test") {
       val jwtToken = authHeader match {
         case token: String if token.startsWith("Bearer") =>

@@ -17,6 +17,8 @@ import play.api.libs.json.JodaReads._
 import play.api.libs.json.Reads
 import common.utils.PagedGen._
 import play.api.test.CSRFTokenHelper._
+import testutils.BaseFakeRequest
+import testutils.BaseFakeRequest._
 
 import scala.concurrent.Future
 
@@ -34,4 +36,16 @@ class AuthenticationTest extends PlaySpec with BaseOneAppPerSuite with TestAppli
       status(route(app, FakeRequest(GET, "/liveness")).get) mustEqual 200
     }
   }
+
+  "Authentication on Company" must {
+    "get me" in {
+
+      BaseFakeRequest(GET, "/v1/companies/me").get checkStatus 401
+      BaseFakeRequest(GET, "/v1/companies/me").withHeader(("Authorization", "empty@empty")).get checkStatus 404
+      BaseFakeRequest(GET, "/v1/companies/me").withHeader(("Authorization", "test@test.de")).get checkStatus 200
+
+    }
+
+  }
+
 }

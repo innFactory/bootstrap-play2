@@ -12,13 +12,13 @@ class HealthControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApp
   /** ————————————————— */
   /** HEALTH CONTROLLER */
   /** ————————————————— */
-  "HeatlhController" should {
+  "HealthController" should {
     "accept GET request on base path" in {
       val future: Future[Result] =
         route(app, FakeRequest(GET, "/").withHeaders(("Authorization", "GlobalAdmin"))).get
       status(future) mustEqual 200
     }
-    "accept GET request on liveness_check path" in {
+    "accept GET request on liveness check path" in {
       val future: Future[Result] =
         route(app, FakeRequest(GET, "/liveness")).get
       status(future) mustEqual 200

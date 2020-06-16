@@ -1,5 +1,6 @@
 package controllers
 
+import common.results.errors.Errors.DatabaseError
 import common.utils.PagedGen
 import models.api._
 import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
@@ -13,6 +14,8 @@ import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 import play.api.libs.json.Reads
 import common.utils.PagedGen._
+import testutils.BaseFakeRequest
+import testutils.BaseFakeRequest._
 
 import scala.concurrent.Future
 
@@ -33,6 +36,12 @@ class FunctionalSpec extends PlaySpec with BaseOneAppPerSuite with TestApplicati
         FakeRequest(GET, "/").withHeaders(("Authorization", "GlobalAdmin"))
       ).get
       status(future) mustEqual 200
+    }
+  }
+
+  "SelfLoggingError" should {
+    "log" in {
+      DatabaseError("Test", "Test", "Test", "Test")
     }
   }
 

@@ -15,7 +15,7 @@ import cats.implicits._
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class LocationController @Inject()(
+class LocationsController @Inject()(
   cc: ControllerComponents,
   locationRepository: LocationRepository,
   jwtValidationAction: JwtValidationAction,

@@ -33,13 +33,15 @@ class HelloWorldActor(
 ) {
   implicit val ec: ExecutionContext = context.executionContext
 
-  private def queryHelloWorld(query: QueryHelloWorld): Future[Command] =
+  private def queryHelloWorld(query: QueryHelloWorld): Future[Command] = {
+    Thread.sleep(100) // Long running !!!
     if (query.query == "hello")
       Future(QueryHelloWorldResult(ResponseQueryHelloWorld(query.query, query.query + " you"), query.replyTo))
     else
       Future(
         QueryHelloWorldResult(ResponseQueryHelloWorldError(query.query, "the query was not 'hello'"), query.replyTo)
       )
+  }
 
   private def processQueryHelloWorldToBehavior(message: QueryHelloWorld): Behavior[Command] = {
     actorLogger.debug("Hello World Actor " + context.self.path.name + " received query " + message.query)

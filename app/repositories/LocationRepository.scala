@@ -64,7 +64,7 @@ class LocationRepositoryImpl @Inject()(
     val result: EitherT[Future, ErrorStatus, Location] = for {
       location <- EitherT(locationsDAO.lookup(id))
       _        <- EitherT(authorizationMethods.createDelete(request, location.company))
-      _        <- EitherT(locationsDAO.delete(id))
+      _        <- EitherT(locationsDAO.delete(location.id.get))
     } yield location
     result.value
   }
