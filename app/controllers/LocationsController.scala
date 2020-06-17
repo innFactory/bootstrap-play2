@@ -29,6 +29,14 @@ class LocationsController @Inject()(
     locationRepository.lookup(id, request).completeResult()
   }
 
+  def getByDistance(
+    distance: Long,
+    lat: Double,
+    lon: Double
+  ): Action[AnyContent] = jwtValidationAction.andThen(companyForUserExtractAction).async { implicit request =>
+    locationRepository.getByDistance(distance, lat, lon, request).completeResult
+  }
+
   def getByCompany(
     companyId: String
   ): Action[AnyContent] = jwtValidationAction.andThen(companyForUserExtractAction).async { implicit request =>

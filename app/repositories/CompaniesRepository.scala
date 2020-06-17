@@ -45,7 +45,7 @@ class CompaniesRepositoryImpl @Inject()(
   }
   def post(company: Company, request: RequestWithCompany[AnyContent]): Future[Result[Company]] = {
     val result: EitherT[Future, ErrorStatus, Company] = for {
-      _             <- EitherT(Future(authorizationMethods.canCreate(request)))
+      _             <- EitherT(Future(authorizationMethods.canCreate(request, company)))
       createdResult <- EitherT(companiesDAO.create(company))
     } yield createdResult
     result.value

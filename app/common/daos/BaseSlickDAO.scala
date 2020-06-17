@@ -33,8 +33,9 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
 
   import profile.api._
 
-  def lookupGeneric[R, T](rowToObject: R => T,
-                          queryHeadOption: DBIOAction[Option[R], NoStream, Nothing]): Future[Result[T]] = {
+  def lookupGeneric[R, T](
+    queryHeadOption: DBIOAction[Option[R], NoStream, Nothing]
+  )(implicit rowToObject: R => T): Future[Result[T]] = {
     val queryResult: Future[Option[R]] = db.run(queryHeadOption)
     queryResult.map { res: Option[R] =>
       if (res.isDefined)
@@ -46,18 +47,18 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
     }
   }
 
-  def lookupSequenceGeneric[R, T](rowToObject: R => T,
-                                  querySeq: DBIOAction[Seq[R], NoStream, Nothing]): Future[Result[Seq[T]]] = {
+  def lookupSequenceGeneric[R, T](
+    querySeq: DBIOAction[Seq[R], NoStream, Nothing]
+  )(implicit rowToObject: R => T): Future[Result[Seq[T]]] = {
     val queryResult: Future[Seq[R]] = db.run(querySeq)
     queryResult.map { res: Seq[R] =>
       Right(res.map(rowToObject))
     }
   }
 
-  def updateGeneric[R, T](rowToObject: R => T,
-                          queryById: DBIOAction[Option[R], NoStream, Nothing],
+  def updateGeneric[R, T](queryById: DBIOAction[Option[R], NoStream, Nothing],
                           update: T => DBIOAction[Int, NoStream, Effect.Write],
-                          patch: T => T): Future[Result[T]] = {
+                          patch: T => T)(implicit rowToObject: R => T): Future[Result[T]] = {
     val result = for {
       lookup        <- EitherT(db.run(queryById).map(_.toEither(BadRequest())))
       patchedObject <- EitherT(Future(Option(patch(rowToObject(lookup))).toEither(BadRequest())))
@@ -80,11 +81,9 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
 
   def createGeneric[R, T](
     entity: T,
-    rowToObject: R => T,
-    objectToRow: T => R,
     queryById: DBIOAction[Option[R], NoStream, Nothing],
     create: R => DBIOAction[R, NoStream, Effect.Write],
-  ): Future[Result[T]] = {
+  )(implicit rowToObject: R => T, objectToRow: T => R): Future[Result[T]] = {
     val entityToSave = objectToRow(entity)
     val result = for {
       _             <- db.run(queryById).map(_.toInverseEither(BadRequest()))
@@ -105,7 +104,7 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
   ): Future[Result[Boolean]] = {
     val result = for {
       _ <- db.run(queryById).map(_.toEither(BadRequest()))
-      dbDeleteResult <- (db.run(delete).map { x =>
+      dbDeleteResult <- db.run(delete).map { x =>
                          if (x != 0)
                            Right(true)
                          else
@@ -115,7 +114,7 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
                                            "delete",
                                            "entity was deleted")
                            )
-                       })
+                       }
     } yield dbDeleteResult
     result
   }

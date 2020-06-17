@@ -74,7 +74,6 @@ class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionConte
    */
   def lookup(id: UUID): Future[Result[CompanyObject]] =
     lookupGeneric[CompanyRow, CompanyObject](
-      companyRowToCompanyObject,
       queryById(id).result.headOption
     )
 
@@ -101,7 +100,6 @@ class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionConte
    */
   def update(companyObject: CompanyObject): Future[Result[CompanyObject]] =
     updateGeneric[CompanyRow, CompanyObject](
-      companyRowToCompanyObject,
       queryById(companyObject.id.getOrElse(UUID.randomUUID())).result.headOption,
       (toPatch: CompanyObject) =>
         queryById(companyObject.id.getOrElse(UUID.randomUUID())).update(companyObjectToCompanyRow(toPatch)),
@@ -127,15 +125,13 @@ class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionConte
   def create(companyObject: CompanyObject): Future[Result[CompanyObject]] =
     createGeneric[CompanyRow, CompanyObject](
       companyObject,
-      companyRowToCompanyObject,
-      companyObjectToCompanyRow,
       queryById(companyObject.id.getOrElse(UUID.randomUUID())).result.headOption,
       (entityToSave: CompanyRow) => (Company returning Company) += entityToSave
     )
 
   /* - - - Mapper Functions - - - */
 
-  private def companyObjectToCompanyRow(CompanyObject: CompanyObject): CompanyRow =
+  implicit private def companyObjectToCompanyRow(CompanyObject: CompanyObject): CompanyRow =
     CompanyRow(
       id = CompanyObject.id.getOrElse(UUID.randomUUID()),
       firebaseUser = CompanyObject.firebaseUser.getOrElse(List.empty[String]),
@@ -144,7 +140,7 @@ class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionConte
       updated = CompanyObject.updated.getOrElse(DateTime.now)
     )
 
-  private def companyRowToCompanyObject(companyRow: CompanyRow): CompanyObject =
+  implicit private def companyRowToCompanyObject(companyRow: CompanyRow): CompanyObject =
     CompanyObject(
       id = Some(companyRow.id),
       firebaseUser = Some(companyRow.firebaseUser),

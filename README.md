@@ -8,15 +8,14 @@
 Bootstrap a rest service with Play2, isolated Slick and isolated Flyway
 
 This project is built with:
-   - Play Framework 2.6
-   - Slick 3.2.3
-   - Flyway 5.1.1
+   - Play Framework 2.8.1
+   - Slick 3.3.2
+   - Flyway-sbt & Flyway-Core 6.2.3
    
    It needs a PostgresQL database
    
    Swagger.json is available at /v1/swagger.json
    
-
 ## EnvVars for Configuration
 
 - DATABASE_DB = Database Endpoint (for example play)

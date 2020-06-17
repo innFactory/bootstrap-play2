@@ -24,10 +24,11 @@ class CompanyAuthorizationMethods[A] @Inject()(
     }
 
   // Everyone can create owners
-  def canCreate(request: RequestWithCompany[A]): Result[Boolean] =
+  def canCreate(request: RequestWithCompany[A], company: Company): Result[Boolean] =
     request.company match {
-      case Some(_) => Left(BadRequest())
-      case None    => Right(true)
+      case Some(_)                                                                                       => Left(BadRequest())
+      case None if company.firebaseUser.getOrElse(List.empty).contains(request.email.getOrElse("empty")) => Right(true)
+      case _                                                                                             => Left(Forbidden())
     }
 
   def canDelete(request: RequestWithCompany[A], company: Company): Result[Boolean] =

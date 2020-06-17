@@ -81,12 +81,29 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
       result.firebaseUser.get.contains("test5@test5.de") mustEqual true
     }
 
+    "post duplicate" in {
+      BaseFakeRequest(POST, "/v1/companies")
+        .withHeader(("Authorization", "test@test.de"))
+        .withJsonBody(Json.parse(s"""
+                                    |{
+                                    |"id": "231f5e3d-31db-4be5-9db9-92955e03507c",
+                                    |"firebaseUser": [
+                                    |"test5@test5.de"
+                                    | ],
+                                    |"settings": {
+                                    |"test": "test"
+                                    |}
+                                    |}
+                                    |""".stripMargin))
+        .getWithBody checkStatus 400
+    }
+
     "patch" in {
       val result =
         BaseFakeRequest(PATCH, "/v1/companies")
           .withHeader(("Authorization", "test@test.de"))
           .withJsonBody(Json.parse(s"""
-                                                                          {
+                                     {
                                       | "id": "231f5e3d-31db-4be5-9db9-92955e03507c",
                                       | "firebaseUser": ["test@test.de"],
                                       | "settings": {"test2": "test2"}

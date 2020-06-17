@@ -38,16 +38,16 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     bind(classOf[CompaniesDAOCloseHook]).asEagerSingleton()
 
     /**
-     * Inject Modules Influx etc. depended on environment (Test, Prod, Dev)
+     * Inject Modules depended on environment (Test, Prod, Dev)
      */
     if (environment.mode == Mode.Test) {
       logger.info(s"- - - Binding Services for for Test Mode - - -")
       bind(classOf[JwtValidator])
-        .to(classOf[MockJWTValidator])
+        .to(classOf[MockJWTValidator]) // Bind Mock JWT Validator for Test Mode
     } else {
       logger.info(s"- - - Binding Services for for Prod/Dev Mode - - -")
       bind(classOf[JwtValidator])
-        .to(classOf[FirebaseJWTValidator])
+        .to(classOf[FirebaseJWTValidator]) // Bind Prod JWT Validator for Prod/Dev Mode
     }
 
   }
@@ -56,12 +56,12 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 
 /** Migrate Flyway on application start */
 class FlywayMigrator @Inject()(env: Environment, configuration: Configuration) {
-  val logger = Logger("application")
+  private val logger = Logger("application")
   logger.info("Creating Flyway context")
-  val driver = configuration.get[String]("bootstrap-play2.database.driver")
-  val url    = configuration.get[String]("bootstrap-play2.database.url")
-  val user   = configuration.get[String]("bootstrap-play2.database.user")
-  val password =
+  private val driver = configuration.get[String]("bootstrap-play2.database.driver")
+  private val url    = configuration.get[String]("bootstrap-play2.database.url")
+  private val user   = configuration.get[String]("bootstrap-play2.database.user")
+  private val password =
     configuration.get[String]("bootstrap-play2.database.password")
 
   import org.flywaydb.core.Flyway

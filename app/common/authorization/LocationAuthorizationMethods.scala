@@ -37,7 +37,7 @@ class LocationAuthorizationMethods[A] @Inject()(
     }
   }
 
-  def accessGetAll(id: UUID, request: RequestWithCompany[A]): Result[Boolean] = {
+  def accessGetAllByCompany(id: UUID, request: RequestWithCompany[A]): Result[Boolean] = {
     val companyOption: Option[Company] = request.company
     OptionAndCompanyId(companyOption, id) match {
       case CompanyIdEqualsId() => Right(true)

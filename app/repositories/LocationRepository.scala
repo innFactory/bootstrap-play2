@@ -10,12 +10,19 @@ import db.LocationsDAO
 import javax.inject.Inject
 import models.api.Location
 import cats.implicits._
+import common.GeoPointFactory.GeoPointFactory
+import common.results.errors.Errors.Forbidden
 import play.api.mvc.AnyContent
+import common.utils.OptionUtils._
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait LocationRepository {
   def lookup(id: Long, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
+  def getByDistance(distance: Long,
+                    lat: Double,
+                    lon: Double,
+                    request: RequestWithCompany[AnyContent]): Future[Result[Seq[Location]]]
   def lookupByCompany(id: UUID, request: RequestWithCompany[AnyContent]): Future[Result[Seq[Location]]]
   def patch(location: Location, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
   def post(location: Location, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
@@ -35,9 +42,25 @@ class LocationRepositoryImpl @Inject()(
     result.value
   }
 
+  override def getByDistance(distance: Long,
+                             lat: Double,
+                             lon: Double,
+                             request: RequestWithCompany[AnyContent]): Future[Result[Seq[Location]]] = {
+    val geometryPoint = GeoPointFactory.createPoint(lat, lon)
+    val result = for {
+      company <- EitherT(Future(request.company.toEither(Forbidden())))
+      _       <- EitherT(Future(authorizationMethods.accessGetAllByCompany(company.id.getOrElse(UUID.randomUUID()), request)))
+      lookupResult <- EitherT(
+                       locationsDAO
+                         .allFromDistanceByCompany(company.id.getOrElse(UUID.randomUUID()), geometryPoint, distance)
+                     )
+    } yield lookupResult
+    result.value
+  }
+
   def lookupByCompany(id: UUID, request: RequestWithCompany[AnyContent]): Future[Result[Seq[Location]]] = {
     val result = for {
-      _            <- EitherT(Future(authorizationMethods.accessGetAll(id, request)))
+      _            <- EitherT(Future(authorizationMethods.accessGetAllByCompany(id, request)))
       lookupResult <- EitherT(locationsDAO.lookupByCompany(id))
     } yield lookupResult
     result.value

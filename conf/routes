@@ -240,6 +240,45 @@ GET                 /v1/companies/:id/locations                                 
 GET                 /v1/locations/:id                                   controllers.LocationsController.getSingle(id: Long)
 
 ###
+#  summary: Get Locations By Distance
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - locations
+#  parameters:
+#    - in: path
+#      name: distance
+#      schema:
+#         type: Long
+#      required: true
+#      description: Distance in meters
+#    - in: query
+#      name: lat
+#      schema:
+#         type: Double
+#      required: true
+#      description: Latitude
+#    - in: query
+#      name: lon
+#      schema:
+#         type: Double
+#      required: true
+#      description: Longitude
+#  responses:
+#     '200':
+#       description: success
+#       schema:
+#         $ref: '#/components/schemas/models.api.Location'
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+###
+GET                 /v1/locations/distance/:distance                               controllers.LocationsController.getByDistance(distance: Long, lat: Double, lon: Double)
+
+###
 #  summary: Delete Location
 #  security:
 #    - bearerAuth: []

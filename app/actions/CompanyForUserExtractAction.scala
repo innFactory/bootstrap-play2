@@ -8,7 +8,8 @@ import play.api.mvc.{ ActionBuilder, ActionTransformer, AnyContent, BodyParsers,
 
 import scala.concurrent.{ ExecutionContext, Future }
 
-class RequestWithCompany[A](val company: Option[Company], request: Request[A]) extends WrappedRequest[A](request)
+class RequestWithCompany[A](val company: Option[Company], val email: Option[String], request: Request[A])
+    extends WrappedRequest[A](request)
 
 class CompanyForUserExtractAction @Inject()(
   val parser: BodyParsers.Default,
@@ -19,15 +20,18 @@ class CompanyForUserExtractAction @Inject()(
     with ActionTransformer[Request, RequestWithCompany] {
   def transform[A](request: Request[A]): Future[RequestWithCompany[A]] =
     Future.successful {
-      val result = for {
+      val result: Option[Future[Option[Company]]] = for {
         email <- firebaseEmailExtractor.extractEmail(request)
       } yield
         for {
           user <- companiesDAO.internal_lookupByEmail(email)
         } yield user
+
       result match {
-        case Some(v) => v.map(new RequestWithCompany(_, request))
-        case None    => Future(new RequestWithCompany(None, request))
+        case Some(v) => {
+          v.map(new RequestWithCompany(_, firebaseEmailExtractor.extractEmail(request), request))
+        }
+        case None => Future(new RequestWithCompany(None, firebaseEmailExtractor.extractEmail(request), request))
       }
     }.flatten
 }

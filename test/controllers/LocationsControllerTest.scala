@@ -32,6 +32,25 @@ class LocationsControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
       result.head.id.get mustBe 1
     }
 
+    "get by distance" in {
+      val result =
+        BaseFakeRequest(GET, "/v1/locations/distance/10000?lat=0&lon=0")
+          .withHeader(("Authorization", "test@test.de"))
+          .get
+          .parseContent[Seq[Location]]
+      result.length mustBe 1
+      result.head.id.get mustBe 1
+    }
+
+    "get by distance none" in {
+      val result =
+        BaseFakeRequest(GET, "/v1/locations/distance/100?lat=40&lon=40")
+          .withHeader(("Authorization", "test@test.de"))
+          .get
+          .parseContent[Seq[Location]]
+      result.length mustBe 0
+    }
+
     "post" in {
       val result =
         BaseFakeRequest(POST, "/v1/locations")

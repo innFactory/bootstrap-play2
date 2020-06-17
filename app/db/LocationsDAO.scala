@@ -30,9 +30,8 @@ trait LocationsDAO {
     companyId: UUID
   ): Future[Result[Seq[LocationObject]]]
 
-  def allFromDistance(
-    from: Int,
-    to: Int,
+  def allFromDistanceByCompany(
+    companyId: UUID,
     point: Geometry,
     distance: Long
   ): Future[Result[Seq[LocationObject]]]
@@ -73,8 +72,9 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
   private val queryByCompany = Compiled((id: Rep[UUID]) => Location.filter(_.company === id))
 
   private val querySortedWithDistanceFilterMaxDistance = Compiled(
-    (ref: Rep[Geometry], maxDistance: Rep[Float]) =>
+    (ref: Rep[Geometry], maxDistance: Rep[Float], companyId: Rep[UUID]) =>
       Location
+        .filter(_.company === companyId)
         .sortBy(_.position.distanceSphere(ref))
         .map(x => {
           (x, x.position.distanceSphere(ref))
@@ -89,7 +89,6 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
    */
   def lookup(id: Long): Future[Result[LocationObject]] =
     lookupGeneric[LocationRow, LocationObject](
-      locationRowToLocation,
       queryById(id).result.headOption
     )
 
@@ -115,30 +114,25 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
     companyId: UUID,
   ): Future[Result[Seq[LocationObject]]] =
     lookupSequenceGeneric[LocationRow, LocationObject](
-      locationRowToLocation,
       queryByCompany(companyId).result
     )
 
   /**
    * Query All by distance from to index
-   * @param from
-   * @param to
+
    * @param point
    * @param distance
    * @return
    */
-  def allFromDistance(
-    from: Int,
-    to: Int,
+  def allFromDistanceByCompany(
+    companyId: UUID,
     point: Geometry,
     distance: Long
   ): Future[Result[Seq[LocationObject]]] =
-    db.run(querySortedWithDistanceFilterMaxDistance(point, distance.toFloat).result)
+    db.run(querySortedWithDistanceFilterMaxDistance(point, distance.toFloat, companyId).result)
       .map(seq => {
         Right(
-          seq
-            .slice(from, to + 1)
-            .map(x => locationRowToLocationWithDistance(x._1, x._2))
+          seq.map(x => locationRowToLocationWithDistance(x._1, x._2))
         )
       })
 
@@ -149,7 +143,6 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
    */
   def update(locationObject: LocationObject): Future[Result[LocationObject]] =
     updateGeneric[LocationRow, LocationObject](
-      locationRowToLocation,
       queryById(locationObject.id.getOrElse(0)).result.headOption,
       (toPatch: LocationObject) =>
         queryById(locationObject.id.getOrElse(0)).update(locationObjectToLocationRow(toPatch)),
@@ -175,13 +168,11 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
   def create(locationObject: LocationObject): Future[Result[LocationObject]] =
     createGeneric[LocationRow, LocationObject](
       locationObject,
-      locationRowToLocation,
-      locationObjectToLocationRow,
       queryById(locationObject.id.getOrElse(0)).result.headOption,
       (entityToSave: LocationRow) => (Location returning Location) += entityToSave
     )
 
-  private def locationObjectToLocationRow(locationObject: LocationObject): LocationRow =
+  implicit private def locationObjectToLocationRow(locationObject: LocationObject): LocationRow =
     LocationRow(
       id = locationObject.id.getOrElse(0),
       company = locationObject.company,
@@ -197,7 +188,7 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
       updated = locationObject.updated.getOrElse(DateTime.now)
     )
 
-  private def locationRowToLocation(locationRow: LocationRow): LocationObject =
+  implicit private def locationRowToLocation(locationRow: LocationRow): LocationObject =
     LocationObject(
       id = Some(locationRow.id),
       company = locationRow.company,
@@ -215,7 +206,7 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
       distance = None
     )
 
-  private def locationRowToLocationWithDistance(locationRow: LocationRow, distance: Float): LocationObject =
+  implicit private def locationRowToLocationWithDistance(locationRow: LocationRow, distance: Float): LocationObject =
     LocationObject(
       id = Some(locationRow.id),
       company = locationRow.company,

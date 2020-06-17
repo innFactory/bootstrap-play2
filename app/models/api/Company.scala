@@ -36,7 +36,4 @@ object Company {
       updated = Some(DateTime.now)
     )
 
-  implicit class JsonConverter(company: Company) {
-    def toJson: JsValue = Json.toJson(company)
-  }
 }
