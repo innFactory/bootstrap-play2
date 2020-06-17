@@ -47,5 +47,7 @@ jobs:
       run: |
         sbt ciTests
         bash <(curl -s https://codecov.io/bash)
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
  
           
