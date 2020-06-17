@@ -44,6 +44,8 @@ jobs:
       env: 
         FIREBASE_JSON: ${{ secrets.FIREBASE_JSON_PRODUCTION }}
     - name: Run tests
-      run: sbt ciTests
+      run: |
+        sbt ciTests
+        bash <(curl -s https://codecov.io/bash)
  
           

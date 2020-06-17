@@ -12,12 +12,6 @@ for i in `seq 1 10`;
             echo Failed waiting for Postgres && exit 1
 )
 
-#sbt -DDATABASE_DB="test" ciTest
-export DATABASE_PORT="5432"
-export DATABASE_DB="test"
-
-pwd
-
 sbt ciTests
 docker stop bootstrapPlay2PGTest
 docker rm bootstrapPlay2PGTest

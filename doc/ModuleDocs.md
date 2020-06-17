@@ -1,6 +1,7 @@
-## Module Docs
+# Module Docs
+######Last Updated: 17.06.2020
 
-### Main Modules
+## Main Modules
 
 
 #### PlayService:
@@ -12,12 +13,16 @@
 
   - Main Application Service (common, controllers, models, Module.scala)
   
-    - Meta-Data Controllers with Database Connection
+    - Data Controllers with Database Connection
     - DAOs
   
-  - PublicMetrics (actorsystem):
+  - Actorsystem:
   
-    - Akka System bindng example for play
+    - Akka System binding example for play
+    
+  - Websockets
+   
+    - Demo Websocket Controller
   
 ___
 
@@ -32,3 +37,4 @@ ___
 
 - located 'slick/*'
 - Codegen for slick JDBC Database DAO
+

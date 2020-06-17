@@ -13,5 +13,5 @@
 #### /v1/public/*
 
 - Public
-- Only Locations with a "publicMetric" will be returned in the "/distance/" Query
-- Only Metrics which are "public" can be access in "/materialized" Query
+- Only Locations will be returned in the "/distance/" Query
+- Actorsystem is public

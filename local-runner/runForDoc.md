@@ -10,7 +10,7 @@ so that even if the container is deleted no data will be lost!
 
 ### Start
 
-The Script will check for both prerequisites (firebase.json, influx2.properties) and exit if not found:
+The Script will check for prerequisites (firebase.json) and exit if not found:
 
 ``` 
 ./local-runner/runFor.sh

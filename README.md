@@ -1,6 +1,6 @@
 # Play2-Bootstrap
 
-[![codecov](https://codecov.io/gh/innFactory/bootstrap-play2/branch/master/graph/badge.svg)](https://codecov.io/gh/innFactory/bootstrap-play2)
+[![codecov](https://codecov.io/gh/innFactory/bootstrap-play2/branch/master/graph/badge.svg)](https://codecov.io/gh/innFactory/bootstrap-play2)  ![Run Tests](https://github.com/innFactory/bootstrap-play2/workflows/Run%20Tests/badge.svg)
 
 ![Cats Friendly Badge](https://typelevel.org/cats/img/cats-badge-tiny.png)  
 
@@ -15,37 +15,24 @@ This project is built with:
    
    Swagger.json is available at /v1/swagger.json
    
-## EnvVars for Configuration
+## Documentation
 
-- DATABASE_DB = Database Endpoint (for example play)
-- DATABASE_HOST = Database Host (for example localhost)
-- DATABASE_PORT = Database Port
-- DATABASE_USER = Database User
-- DATABASE_PASSWORD = Database Password
-- FIREBASE_JSON = Authentication Json from Google Firebase
-- FIREBASE_FILEPATH = Path to Firebase.json (Dont use in CI)
+<img src="doc-assets/RequestFlow.svg" width="100%" alt="request-flow" />  
 
-In the Terminal those can be set by:
+######Request Flow 
+<br/>
 
-```bash
-export ENV_VAR=Variable
-```
+- [1. Filter ()](./doc/FilterDoc.md)
+    - [AccessLoggingFilter](./doc/FilterDoc.md#AccessLoggingFilter)
+    - [RouteBlacklistFilter](./doc/FilterDoc.md#RouteBlacklistFilter)
+- [2. Controller (Http Request Handling)](./doc/ControllerDoc.md)
+- [3. Repository (Data handling)](./doc/RepositoryDoc.md)
+- [4. DAOs (Database Access)](./doc/DaoDoc.md)
+    - [BaseDAO](./doc/DaoDoc.md#BaseSlickDAO)
 
-Thereafter the variable could be checked by:
+## Deployment and Environment
 
-```bash
-echo $ENV_VAR
-```
-
-## CircleCI
-
-EnvVars:
-
-- HOME = HomePath
-- GOOGLE_PROJECT_ID
-- GOOGLE_COMPUTE_ZONE
-- GOOGLE_CLUSTER_NAME
-- GCLOUD_SERVICE_KEY
+See here for [Deployment and Environment Documentation](./doc/Deployment.md)
 
 ## Authentication
 
@@ -108,22 +95,6 @@ To run the project, start up Play:
 sbt run
 ```
 
-## Docker
-
-To create a local docker Container with the [Native Packager](https://github.com/sbt/sbt-native-packager) Plugin:
-
-If a database is present:
-
-```bash
-docker:publishlocal
-```
-
-If no database is available:
-
-```bash
-./buildscript.sh
-```
-
 And that's it!
 
-Its locally aviable at: <http://localhost:9000>
+The service locally aviable at: <http://localhost:9000>

@@ -1,4 +1,4 @@
-package common.logging
+package filters.logging
 
 import javax.inject.Inject
 import akka.stream.Materializer
