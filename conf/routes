@@ -25,6 +25,18 @@
 ###
 GET                 /v1/public/helloworld/:query                       actorsystem.controllers.ActorHelloWorldController.helloWorldActor(query: String)
 
+# - - - - - - - - WEBSOCKET - - - - - - - -
+
+###
+#  summary: Websocket
+#  tags:
+#    - public
+#  responses:
+#     '200':
+#       description: Response
+###
+GET                 /v1/websocket                                   websockets.controllers.WebsocketController.socket
+
 # - - - - - - - - PROBES - - - - - - - -
 
 ###
