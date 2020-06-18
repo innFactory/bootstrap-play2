@@ -12,7 +12,7 @@ addSbtPlugin("com.github.tototoshi" % "sbt-slick-codegen" % "1.3.0")
 
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.1")
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.1")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.1")
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.7.0")
 addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.5.1")
 
