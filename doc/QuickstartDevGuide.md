@@ -21,7 +21,7 @@
 
 5. Bind the newly created DAO to the Trait for Dependency Injection in [Module](../app/Module.scala). A new Class Called ***DAOCloseHook has to be created and also bound to close the Database connection on application stop or restart (important for hot reload).
 
-   ```scala
+   ```
     bind(classOf[MyNewDAO]).to(classOf[SlickMyNewSlickDAO])
     bind(classOf[MyNewDAOCloseHook]).asEagerSingleton()
    ```
@@ -35,39 +35,34 @@
    The second entry is the method path excluding the domain. In Path Parameter can be added like shown in the example below with :parameterName and then bound to the Method with the same name and data type. 
    The third entry calls the controller method with controllerpackage.ControllerName.MethodName(id: DataType). Additional Query Parameter can be added by adding more parameters to the Method (Option[Datatype] or Datatype) for optional or required query parameters.
   
-     ```scala
+     ```
        GET       /v1/test/:id          controllers.TestController.test(id: String)
       ```
    
 9. Add Swagger Description above route. [iheartradio/play-swagger](https://github.com/iheartradio/play-swagger) 
  
-    ```bash
-    ###
-    #  summary: MethodName
-    #  tags:
-    #    - mydefinedtag
-    #  responses:
-    #     '200':
-    #       description: Response
-    ###
+    ```
+      summary: MethodName
+      tags:
+        - mydefinedtag
+      responses:
+         '200':
+           description: Response
     ```
 
     Models can be referenced after being defined in [build.sbt](../build.sbt).
-    ```bash
-    ###
-    ...
-    #  responses:
-    #     '200':
-    #       description: success
-    #       schema:
-    #         $ref: '#/components/schemas/models.api.Company'
-    ...
+    ```
+     responses:
+          '200':
+          description: success
+           schema:
+             $ref: '#/components/schemas/models.api.Company'
     ```
 10. To create Tests add a new ControllerTest to __./test/controllers/*__. Test Data can be added to the Database by editing the [V999__DATA.sql](../test/resources/migration/V999__DATA.sql) in __./test/resources/migration/*__. Flyway will then automatically migrate the data into the database before each Controller Test. So each controller starts with a freshly cleaned an migrated Database.
 
 11. Run test with the runForScript. Make sure no Docker database container is running with the port bound to 5432!  
 
-      ```bash
+      ```
         ./.deployment/runFor.sh
        ``` 
 
