@@ -15,7 +15,7 @@ object Dependencies {
   val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2"
   val HikariCP = "com.zaxxer" % "HikariCP" % "2.7.9"
   val Joda = "joda-time" % "joda-time" % "2.10"
-  val flyWayCore =  "org.flywaydb" % "flyway-core" % "6.2.3"
+  val flyWayCore =  "org.flywaydb" % "flyway-core" % "6.2.4"
   val postgresql = "org.postgresql" % "postgresql" % "42.2.5"
   val akkaStreams =  "com.typesafe.akka" %% "akka-stream" % "2.5.30"
 
