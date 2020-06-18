@@ -8,7 +8,7 @@ resolvers += Resolver.url("play-sbt-plugins", url("https://dl.bintray.com/playfr
 addSbtPlugin("io.github.davidmweber" % "flyway-sbt" % "6.2.3")
 
 // Slick code generation
-addSbtPlugin("com.github.tototoshi" % "sbt-slick-codegen" % "1.3.0")
+addSbtPlugin("com.github.tototoshi" % "sbt-slick-codegen" % "1.4.0")
 
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.1")
