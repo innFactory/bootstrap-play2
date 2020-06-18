@@ -1,8 +1,12 @@
 # Play2-Bootstrap
 
+### Status
+
 [![codecov](https://codecov.io/gh/innFactory/bootstrap-play2/branch/master/graph/badge.svg)](https://codecov.io/gh/innFactory/bootstrap-play2)  ![Run Tests](https://github.com/innFactory/bootstrap-play2/workflows/Run%20Tests/badge.svg)
 
 ![Cats Friendly Badge](https://typelevel.org/cats/img/cats-badge-tiny.png)  
+
+###### Scala, Akka, Play2, Slick, Flyway, Insomnia
 
 Bootstrap a rest service with Play2, isolated Slick and isolated Flyway
 
@@ -13,13 +17,96 @@ This project is built with:
    
   A PostgreSQL Database with activated postgis extensions is needed (for geolocation queries)
    
-   Swagger.json is available at /v1/swagger.json
+   **Swagger.json is available at /v1/swagger.json**
    
+## Table of Contents:
+
+- [Play2-Bootstrap](#play2-bootstrap)
+- [Status](#status)
+- [Getting Started](#getting-started)
+    - [MacOS/Linux/Unix](#macoslinuxunix)
+        - [Prerequisites](#prerequisites)
+        - [Run Locally](#run-locally)
+    - [Windows](#windows)
+- [Documentation](#documentation)
+- [Dependencies](#dependencies)
+    - [Service Accounts](#service-accounts)
+    - [Database](#database)
+- [Miscellaneous](#miscellaneous)
+    - [Testing](#testing)
+    - [Database Migration](#database-migration)
+    - [Code Generation Slick](#slick-code-generation)
+    - [Running](#running)
+- [Licenses](#licenses)
+- [Changes](#changes)
+- [Contributors](#contributors)
+
+## Getting Started
+
+#### Insomnia:
+
+- [Download Insomnia](https://insomnia.rest/download) | [Docs](https://support.insomnia.rest/)
+- Download and import Swagger.json to Insomnia:  
+<a href="https://github.com/innFactory/bootstrap-play2/blob/master/doc-assets/insomnia-workspace.json" target="_blank"><img src="https://insomnia.rest/images/run.svg" alt="Run in Insomnia"></a>
+
+- Configure Environment in Insomnia to match with local or prod/staging services
+
+#### MacOS/Linux/Unix: 
+
+##### Prerequisites: 
+
+- Install Docker
+- Install sbt
+- Install openJDK 11
+- firebase.json (Firebase Service-Account-Access json with firebase-admin-sdk rights) in __./conf/__
+
+##### Run locally:
+
+If prerequisites are met, the service can be started with:
+
+```bash
+cd ./local-runner
+
+./runFor.sh
+```
+
+- Name mentioned in logs:
+
+ ``` 
+ ./local-runner/runFor.sh -n Name
+ ```
+
+- Remove docker container volume mounted at __./local-runner/postigs__:
+
+``` 
+./local-runner/runFor.sh -r
+```
+
+Service is then locally available at: <http://localhost:9000>
+
+[RunForScriptDocs](local-runner/runForDoc.md)
+
+#### Windows:
+
+- Sorry, no out of the box solution
+
+## Dependencies:
+
+#### Service Accounts:
+
+##### ./conf/firebase.json
+
+Service Account from Google Cloud for the Firebase Admin Sdk. Needs **Editor** role.
+
+#### Databases:
+
+- **PostgresQl** Database with Password and User set. Needs Postgis Plugin fully installed.   
+
 ## Documentation
 
-<img src="doc-assets/RequestFlow.svg" width="100%" alt="request-flow" />  
+<img src="doc/RequestFlow.svg" width="100%" alt="request-flow" />  
 
-######Request Flow 
+###### Request Flow 
 <br/>
 
 - [1. Filter ()](./doc/FilterDoc.md)
@@ -39,15 +126,7 @@ See here for [Deployment and Environment Documentation](./doc/Deployment.md)
 - Some requests will require a Firebase JWT Token in the Authorization Header
 - The Firebase.json file has to be present and filled at ./conf/firebase.json
 
-## Running Locally
-
-```bash
-cd ./local-runner
-
-./runFor.sh
-```
-
-## Manually executing migrations or code-gen
+## Miscellaneous
 
 ### Database Migration
 
@@ -87,7 +166,7 @@ sbt ciTests
 
 ## Running
 
-######Before Running this you have to run: slickGen and ciTest
+###### Before Running this you have to run: slickGen and ciTest
 
 To run the project, start up Play:
 
@@ -98,3 +177,14 @@ sbt run
 And that's it!
 
 The service locally aviable at: <http://localhost:9000>
+
+## Licenses:
+Liceses Markdown: [Last updated (18.06.2020)](doc/licenses.md)
+
+## Changes:
+Changes Markdown: [Changes](doc/changes.md)
+
+## Contributors:
+
+<a href="https://github.com/jona7o"><img src="https://avatars2.githubusercontent.com/u/8403631?s=460&u=831a4265651db985e3a043ad0fec697f68130c04&v=4" title="jona7o" width="80" height="80"></a>
+<a href="https://github.com/patsta32"><img src="https://avatars2.githubusercontent.com/u/12295003?s=460&u=5f79d4aac3414271cd5393c3b97f413a417925aa&v=4" title="jona7o" width="80" height="80"></a>

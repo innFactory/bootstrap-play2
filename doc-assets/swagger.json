@@ -1,0 +1,637 @@
+{
+  "components" : {
+    "schemas" : {
+      "models.api.Company" : {
+        "properties" : {
+          "id" : {
+            "type" : "uuid"
+          },
+          "firebaseUser" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "settings" : {
+            "type" : "play.api.libs.json.jsvalue"
+          },
+          "created" : {
+            "type" : "integer",
+            "format" : "epoch"
+          },
+          "updated" : {
+            "type" : "integer",
+            "format" : "epoch"
+          }
+        }
+      },
+      "models.api.Location" : {
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "company" : {
+            "type" : "uuid"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "settings" : {
+            "type" : "play.api.libs.json.jsvalue"
+          },
+          "lat" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "lon" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "addressLine1" : {
+            "type" : "string"
+          },
+          "addressLine2" : {
+            "type" : "string"
+          },
+          "zip" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "country" : {
+            "type" : "string"
+          },
+          "created" : {
+            "type" : "integer",
+            "format" : "epoch"
+          },
+          "updated" : {
+            "type" : "integer",
+            "format" : "epoch"
+          },
+          "distance" : {
+            "type" : "number",
+            "format" : "float"
+          }
+        },
+        "required" : [ "company" ]
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    }
+  },
+  "security" : [ {
+    "bearerAuth" : [ ]
+  } ],
+  "servers" : [ {
+    "url" : "https://innfactory.de",
+    "description" : "Production server (uses live data)"
+  }, {
+    "url" : "http://localhost:9000",
+    "description" : "localhost"
+  } ],
+  "openapi" : "3.0.0",
+  "paths" : {
+    "/v1/public/helloworld/{query}" : {
+      "get" : {
+        "operationId" : "helloWorldActor",
+        "tags" : [ "public" ],
+        "summary" : "Hello World Actor Query",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "query",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        }, {
+          "in" : "path",
+          "name" : "Query",
+          "schema" : {
+            "type" : "String"
+          },
+          "required" : true,
+          "description" : "Query"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Response"
+          },
+          "404" : {
+            "description" : "publicMetric not Found"
+          },
+          "500" : {
+            "description" : "InternalServerError"
+          }
+        }
+      }
+    },
+    "/v1/websocket" : {
+      "get" : {
+        "operationId" : "socket",
+        "tags" : [ "public" ],
+        "summary" : "Websocket",
+        "responses" : {
+          "200" : {
+            "description" : "Response"
+          }
+        }
+      }
+    },
+    "/" : {
+      "get" : {
+        "operationId" : "ping",
+        "tags" : [ "probes" ],
+        "summary" : "Health check",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/liveness" : {
+      "get" : {
+        "operationId" : "ping",
+        "tags" : [ "probes" ],
+        "summary" : "Liveness check",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/readiness" : {
+      "get" : {
+        "operationId" : "ping",
+        "tags" : [ "probes" ],
+        "summary" : "Readiness check",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/v1/companies/me" : {
+      "get" : {
+        "operationId" : "getMe",
+        "tags" : [ "companies" ],
+        "summary" : "Get Me (Company)",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "schema" : {
+              "$ref" : "#/components/schemas/models.api.Company"
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          }
+        }
+      }
+    },
+    "/v1/companies/{id}" : {
+      "get" : {
+        "operationId" : "getSingle",
+        "tags" : [ "companies" ],
+        "summary" : "Get Single",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        }, {
+          "in" : "path",
+          "name" : "company Id",
+          "schema" : {
+            "type" : "UUID"
+          },
+          "required" : true,
+          "description" : "Id of Company"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "schema" : {
+              "$ref" : "#/components/schemas/models.api.Company"
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          }
+        }
+      },
+      "delete" : {
+        "operationId" : "delete",
+        "tags" : [ "companies" ],
+        "summary" : "Delete Company",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        }, {
+          "in" : "path",
+          "name" : "company Id",
+          "schema" : {
+            "type" : "UUID"
+          },
+          "required" : true,
+          "description" : "Id of Company"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "success"
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          }
+        }
+      }
+    },
+    "/v1/companies" : {
+      "patch" : {
+        "operationId" : "patch",
+        "tags" : [ "companies" ],
+        "summary" : "Patch Company",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "description" : "Company JSON Object",
+          "schema" : {
+            "$ref" : "#/components/schemas/models.api.Company"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "success"
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          },
+          "400" : {
+            "description" : "bad request"
+          }
+        },
+        "consumes" : [ "application/json" ]
+      },
+      "post" : {
+        "operationId" : "post",
+        "tags" : [ "companies" ],
+        "summary" : "Post Company",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "description" : "Comapyn JSON Object",
+          "schema" : {
+            "$ref" : "#/components/schemas/models.api.Company"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "success"
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          },
+          "400" : {
+            "description" : "bad request"
+          }
+        },
+        "consumes" : [ "application/json" ]
+      }
+    },
+    "/v1/companies/{id}/locations" : {
+      "get" : {
+        "operationId" : "getByCompany",
+        "tags" : [ "locations" ],
+        "summary" : "Get by Company",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        }, {
+          "in" : "path",
+          "name" : "company id",
+          "schema" : {
+            "type" : "String"
+          },
+          "required" : true,
+          "description" : "Id of Company"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "schema" : {
+              "$ref" : "#/components/schemas/models.api.Location"
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          }
+        }
+      }
+    },
+    "/v1/locations/{id}" : {
+      "get" : {
+        "operationId" : "getSingle",
+        "tags" : [ "locations" ],
+        "summary" : "Get Single",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "required" : true
+        }, {
+          "in" : "path",
+          "name" : "location Id",
+          "schema" : {
+            "type" : "Long"
+          },
+          "required" : true,
+          "description" : "Id of Locaiton"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "schema" : {
+              "$ref" : "#/components/schemas/models.api.Location"
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          }
+        }
+      },
+      "delete" : {
+        "operationId" : "delete",
+        "tags" : [ "locations" ],
+        "summary" : "Delete Location",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "required" : true
+        }, {
+          "in" : "path",
+          "name" : "location Id",
+          "schema" : {
+            "type" : "Long"
+          },
+          "required" : true,
+          "description" : "Id of Location"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "success"
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          }
+        }
+      }
+    },
+    "/v1/locations/distance/{distance}" : {
+      "get" : {
+        "operationId" : "getByDistance",
+        "tags" : [ "locations" ],
+        "summary" : "Get Locations By Distance",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "schema" : {
+            "format" : "int64",
+            "type" : "Long"
+          },
+          "in" : "path",
+          "name" : "distance",
+          "description" : "Distance in meters",
+          "required" : true
+        }, {
+          "schema" : {
+            "format" : "double",
+            "type" : "Double"
+          },
+          "in" : "query",
+          "name" : "lat",
+          "description" : "Latitude",
+          "required" : true
+        }, {
+          "schema" : {
+            "format" : "double",
+            "type" : "Double"
+          },
+          "in" : "query",
+          "name" : "lon",
+          "description" : "Longitude",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "schema" : {
+              "$ref" : "#/components/schemas/models.api.Location"
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          }
+        }
+      }
+    },
+    "/v1/locations" : {
+      "patch" : {
+        "operationId" : "patch",
+        "tags" : [ "locations" ],
+        "summary" : "Patch Location",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "description" : "Location JSON Object",
+          "schema" : {
+            "$ref" : "#/components/schemas/models.api.Location"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "success"
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          },
+          "400" : {
+            "description" : "bad request"
+          }
+        },
+        "consumes" : [ "application/json" ]
+      },
+      "post" : {
+        "operationId" : "post",
+        "tags" : [ "locations" ],
+        "summary" : "Post Location",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "description" : "Location JSON Object",
+          "schema" : {
+            "$ref" : "#/components/schemas/models.api.Location"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "success"
+          },
+          "404" : {
+            "description" : "not found"
+          },
+          "401" : {
+            "description" : "not authorized"
+          },
+          "403" : {
+            "description" : "forbidden"
+          },
+          "400" : {
+            "description" : "bad request"
+          }
+        },
+        "consumes" : [ "application/json" ]
+      }
+    }
+  },
+  "produces" : [ "application/json" ],
+  "tags" : [ {
+    "name" : "routes"
+  }, {
+    "name" : "probes",
+    "description" : "probe endpoints (health, liveness, readiness)"
+  }, {
+    "name" : "companies",
+    "description" : "companies endpoints"
+  }, {
+    "name" : "locations",
+    "description" : "locations endpoints"
+  } ],
+  "info" : {
+    "description" : "REST API",
+    "title" : "Bootstarp-Play2",
+    "version" : "0.0.1"
+  },
+  "consumes" : [ "application/json" ]
+}
