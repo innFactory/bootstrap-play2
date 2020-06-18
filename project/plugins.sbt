@@ -5,7 +5,7 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 resolvers += "Flyway" at "https://davidmweber.github.io/flyway-sbt.repo"
 resolvers += Resolver.url("play-sbt-plugins", url("https://dl.bintray.com/playframework/sbt-plugin-releases/"))(Resolver.ivyStylePatterns)
 // Database migration
-addSbtPlugin("io.github.davidmweber" % "flyway-sbt" % "6.2.3")
+addSbtPlugin("io.github.davidmweber" % "flyway-sbt" % "6.4.2")
 
 // Slick code generation
 addSbtPlugin("com.github.tototoshi" % "sbt-slick-codegen" % "1.3.0")
