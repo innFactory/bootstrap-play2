@@ -1,4 +1,1 @@
-
-flywayLocations := Seq("classpath:db/migration")
-
-
+flywayLocations := Seq("filesystem:conf/db/migration")

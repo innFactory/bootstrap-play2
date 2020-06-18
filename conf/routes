@@ -2,16 +2,373 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Contacts
-GET                 /v1/contact                             controllers.ContactController.contacts(lastName: Option[String], startIndex: Option[Int], endIndex: Option[Int], showDeleted: Option[Boolean])
-POST                /v1/contact                             controllers.ContactController.postContact
-GET                 /v1/contact/:id                         controllers.ContactController.getContact(id : Long, showDeleted: Option[Boolean])
-DELETE              /v1/contact/:id                         controllers.ContactController.deleteContact(id : Long)
-PATCH               /v1/contact                             controllers.ContactController.patchContact
-PUT                 /v1/contact                             controllers.ContactController.putContact
+# - - - - - - - - HELLO WORLD ACTOR QUERY - - - - - - - -
+
+###
+#  summary: Hello World Actor Query
+#  tags:
+#    - public
+#  parameters:
+#    - in: path
+#      name: Query
+#      schema:
+#         type: String
+#      required: true
+#      description: Query
+#  responses:
+#     '200':
+#       description: Response
+#     '404':
+#       description: publicMetric not Found
+#     '500':
+#       description: InternalServerError
+###
+GET                 /v1/public/helloworld/:query                       actorsystem.controllers.ActorHelloWorldController.helloWorldActor(query: String)
+
+# - - - - - - - - WEBSOCKET - - - - - - - -
+
+###
+#  summary: Websocket
+#  tags:
+#    - public
+#  responses:
+#     '200':
+#       description: Response
+###
+GET                 /v1/websocket                                   websockets.controllers.WebsocketController.socket
+
+# - - - - - - - - PROBES - - - - - - - -
+
+###
+#  summary: Health check
+#  tags:
+#    - probes
+#  responses:
+#     '200':
+#       description: OK
+###
+GET                /                                                controllers.HealthController.ping
+
+###
+#  summary: Liveness check
+#  tags:
+#    - probes
+#  responses:
+#     '200':
+#       description: OK
+###
+GET                /liveness                                        controllers.HealthController.ping
+
+###
+#  summary: Readiness check
+#  tags:
+#    - probes
+#  responses:
+#     '200':
+#       description: OK
+###
+GET                /readiness                                       controllers.HealthController.ping
+
+# - - - - - - - - COMPANIES - - - - - - - -
+
+###
+#  summary: Get Me (Company)
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - companies
+#  responses:
+#     '200':
+#       description: success
+#       schema:
+#         $ref: '#/components/schemas/models.api.Company'
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+###
+GET                 /v1/companies/me                                     controllers.CompaniesController.getMe
+
+###
+#  summary: Get Single
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - companies
+#  parameters:
+#    - in: path
+#      name: company Id
+#      schema:
+#         type: UUID
+#      required: true
+#      description: Id of Company
+#  responses:
+#     '200':
+#       description: success
+#       schema:
+#         $ref: '#/components/schemas/models.api.Company'
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+###
+GET                 /v1/companies/:id                                   controllers.CompaniesController.getSingle(id: String)
+
+###
+#  summary: Delete Company
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - companies
+#  parameters:
+#    - in: path
+#      name: company Id
+#      schema:
+#         type: UUID
+#      required: true
+#      description: Id of Company
+#  responses:
+#     '204':
+#       description: success
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+###
+DELETE               /v1/companies/:id                                   controllers.CompaniesController.delete(id: String)
+
+###
+#  summary: Post Company
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - companies
+#  parameters:
+#    - name: body
+#      required: true
+#      description: Comapyn JSON Object
+#      schema:
+#        $ref: '#/components/schemas/models.api.Company'
+#  responses:
+#     '204':
+#       description: success
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+#     '400':
+#       description: bad request
+###
+POST               /v1/companies                                   controllers.CompaniesController.post
+
+###
+#  summary: Patch Company
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - companies
+#  parameters:
+#    - name: body
+#      required: true
+#      description: Company JSON Object
+#      schema:
+#        $ref: '#/components/schemas/models.api.Company'
+#  responses:
+#     '204':
+#       description: success
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+#     '400':
+#       description: bad request
+###
+PATCH               /v1/companies                               controllers.CompaniesController.patch
+
+# - - - - - - - - LOCATIONS - - - - - - - -
+
+###
+#  summary: Get by Company
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - locations
+#  parameters:
+#    - in: path
+#      name: company id
+#      schema:
+#         type: String
+#      required: true
+#      description: Id of Company
+#  responses:
+#     '200':
+#       description: success
+#       schema:
+#         $ref: '#/components/schemas/models.api.Location'
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+###
+GET                 /v1/companies/:id/locations                                  controllers.LocationsController.getByCompany(id: String)
+
+###
+#  summary: Get Single
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - locations
+#  parameters:
+#    - in: path
+#      name: location Id
+#      schema:
+#         type: Long
+#      required: true
+#      description: Id of Locaiton
+#  responses:
+#     '200':
+#       description: success
+#       schema:
+#         $ref: '#/components/schemas/models.api.Location'
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+###
+GET                 /v1/locations/:id                                   controllers.LocationsController.getSingle(id: Long)
+
+###
+#  summary: Get Locations By Distance
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - locations
+#  parameters:
+#    - in: path
+#      name: distance
+#      schema:
+#         type: Long
+#      required: true
+#      description: Distance in meters
+#    - in: query
+#      name: lat
+#      schema:
+#         type: Double
+#      required: true
+#      description: Latitude
+#    - in: query
+#      name: lon
+#      schema:
+#         type: Double
+#      required: true
+#      description: Longitude
+#  responses:
+#     '200':
+#       description: success
+#       schema:
+#         $ref: '#/components/schemas/models.api.Location'
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+###
+GET                 /v1/locations/distance/:distance                               controllers.LocationsController.getByDistance(distance: Long, lat: Double, lon: Double)
+
+###
+#  summary: Delete Location
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - locations
+#  parameters:
+#    - in: path
+#      name: location Id
+#      schema:
+#         type: Long
+#      required: true
+#      description: Id of Location
+#  responses:
+#     '204':
+#       description: success
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+###
+DELETE               /v1/locations/:id                                   controllers.LocationsController.delete(id: Long)
+
+###
+#  summary: Post Location
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - locations
+#  parameters:
+#    - name: body
+#      required: true
+#      description: Location JSON Object
+#      schema:
+#        $ref: '#/components/schemas/models.api.Location'
+#  responses:
+#     '204':
+#       description: success
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+#     '400':
+#       description: bad request
+###
+POST               /v1/locations                                 controllers.LocationsController.post
+
+###
+#  summary: Patch Location
+#  security:
+#    - bearerAuth: []
+#  tags:
+#    - locations
+#  parameters:
+#    - name: body
+#      required: true
+#      description: Location JSON Object
+#      schema:
+#        $ref: '#/components/schemas/models.api.Location'
+#  responses:
+#     '204':
+#       description: success
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+#     '400':
+#       description: bad request
+###
+PATCH               /v1/locations                               controllers.LocationsController.patch
 
 # Map static resources from the /public folder to the /assets URL path
-GET                 /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)
-
-#
-GET                 /v1/swagger.json                        controllers.ApiHelpController.getResources
+### NoDocs ###
+GET                 /assets/*file                                   controllers.Assets.versioned(path="/public", file: Asset)
+### NoDocs ###
+GET                 /v1/assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)

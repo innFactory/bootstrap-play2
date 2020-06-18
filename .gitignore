@@ -39,3 +39,19 @@ test.mv.db
 
 #Firebase
 firebase.json
+
+influx2.properties
+
+#PubSub
+pubSub.json
+pubSub-dev.json
+.circleci/k8sdeploy.yaml
+.circleci/k8sdeploy.yaml-e
+.metals/*
+
+#puml
+out/doc
+
+.DS_Store
+
+local-runner/postgis-volume
