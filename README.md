@@ -24,6 +24,7 @@ This project is built with:
 - [Play2-Bootstrap](#play2-bootstrap)
 - [Status](#status)
 - [Getting Started](#getting-started)
+    - [Quickstart Dev Guide](#see-quickstart-dev-guidedocquickstartdevguidemd)
     - [MacOS/Linux/Unix](#macoslinuxunix)
         - [Prerequisites](#prerequisites)
         - [Run Locally](#run-locally)
@@ -42,6 +43,8 @@ This project is built with:
 - [Contributors](#contributors)
 
 ## Getting Started
+
+#### See [Quickstart Dev Guide](./doc/QuickstartDevGuide.md)
 
 #### Insomnia:
 
