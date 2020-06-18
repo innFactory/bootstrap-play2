@@ -17,7 +17,7 @@ object Dependencies {
   val Joda = "joda-time" % "joda-time" % "2.10"
   val flyWayCore =  "org.flywaydb" % "flyway-core" % "6.2.3"
   val postgresql = "org.postgresql" % "postgresql" % "42.2.5"
-  val akkaStreams =  "com.typesafe.akka" %% "akka-stream" % "2.5.30"
+  val akkaStreams =  "com.typesafe.akka" %% "akka-stream" % "2.5.31"
 
   val cats = "org.typelevel" %% "cats-core" % "2.2.0-M2"
 
