@@ -21,7 +21,7 @@ trait CompaniesRepository {
   def delete(id: UUID, request: RequestWithCompany[AnyContent]): Future[Result[Company]]
 }
 
-class CompaniesRepositoryImpl @Inject()(
+class CompaniesRepositoryImpl @Inject() (
   companiesDAO: CompaniesDAO,
   authorizationMethods: CompanyAuthorizationMethods[AnyContent]
 )(implicit ec: ExecutionContext)

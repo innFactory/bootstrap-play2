@@ -37,7 +37,7 @@ trait XPostgresProfile
       with PlayJsonImplicits
       with SearchImplicits
       with SearchAssistants {
-    implicit val strListTypeMapper =
+    implicit val strListTypeMapper       =
       new SimpleArrayJdbcType[String]("text").to(_.toList)
     implicit val playJsonArrayTypeMapper =
       new AdvancedArrayJdbcType[JsValue](

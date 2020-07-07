@@ -28,11 +28,10 @@ class ActorControllerTest extends PlaySpec with BaseOneAppPerSuite with TestAppl
     }
 
     "throughput" in {
-      for (_ <- 0 to 10) {
+      for (_ <- 0 to 10)
         BaseFakeRequest(GET, "/v1/public/helloworld/test")
           .withHeader(("Authorization", "test@test.de"))
           .get
-      }
     }
 
     "query hello " in {

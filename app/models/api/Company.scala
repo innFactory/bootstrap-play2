@@ -18,7 +18,7 @@ case class Company(
   firebaseUser: Option[List[String]],
   settings: Option[JsValue],
   created: Option[DateTime],
-  updated: Option[DateTime],
+  updated: Option[DateTime]
 ) extends ApiBaseModel {
   override def toJson: JsValue = Json.toJson(this)
 }

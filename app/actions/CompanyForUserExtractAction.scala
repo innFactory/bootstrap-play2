@@ -11,7 +11,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 class RequestWithCompany[A](val company: Option[Company], val email: Option[String], request: Request[A])
     extends WrappedRequest[A](request)
 
-class CompanyForUserExtractAction @Inject()(
+class CompanyForUserExtractAction @Inject() (
   val parser: BodyParsers.Default,
   companiesDAO: CompaniesDAO,
   firebaseEmailExtractor: FirebaseEmailExtractor[Any]
@@ -22,16 +22,14 @@ class CompanyForUserExtractAction @Inject()(
     Future.successful {
       val result: Option[Future[Option[Company]]] = for {
         email <- firebaseEmailExtractor.extractEmail(request)
-      } yield
-        for {
-          user <- companiesDAO.internal_lookupByEmail(email)
-        } yield user
+      } yield for {
+        user <- companiesDAO.internal_lookupByEmail(email)
+      } yield user
 
       result match {
-        case Some(v) => {
+        case Some(v) =>
           v.map(new RequestWithCompany(_, firebaseEmailExtractor.extractEmail(request), request))
-        }
-        case None => Future(new RequestWithCompany(None, firebaseEmailExtractor.extractEmail(request), request))
+        case None    => Future(new RequestWithCompany(None, firebaseEmailExtractor.extractEmail(request), request))
       }
     }.flatten
 }

@@ -10,7 +10,7 @@ import play.api.Logger
 import play.api.mvc._
 import play.api._
 
-class AccessLoggingFilter @Inject()(config: Config, implicit val mat: Materializer) extends Filter {
+class AccessLoggingFilter @Inject() (config: Config, implicit val mat: Materializer) extends Filter {
   val accessLogger = Logger("AccessFilterLog")
 
   /**
@@ -28,13 +28,14 @@ class AccessLoggingFilter @Inject()(config: Config, implicit val mat: Materializ
    */
   def apply(next: RequestHeader => Future[Result])(request: RequestHeader): Future[Result] = {
     val resultFuture = next(request)
-    resultFuture.foreach(result => {
+    resultFuture.foreach { result =>
       if (shouldBeLogged(result)) {
-        val msg = s"RequestID: status=${result.header.status} method=${request.method} uri=${request.uri} remote-address=${request.remoteAddress}" +
-          s" authorization-header=${request.headers.get("Authorization")}"
+        val msg =
+          s"RequestID: status=${result.header.status} method=${request.method} uri=${request.uri} remote-address=${request.remoteAddress}" +
+            s" authorization-header=${request.headers.get("Authorization")}"
         accessLogger.warn(msg)
       }
-    })
+    }
     resultFuture
   }
 

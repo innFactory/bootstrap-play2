@@ -18,15 +18,15 @@ trait HelloWorldService {
 }
 
 @Singleton
-class HelloWorldServiceImpl @Inject()(
-  )(implicit ec: ExecutionContext, system: ActorSystem)
+class HelloWorldServiceImpl @Inject() (
+)(implicit ec: ExecutionContext, system: ActorSystem)
     extends HelloWorldService {
   // asking someone requires a timeout if the timeout hits without response
   // the ask is failed with a TimeoutException
   private implicit val timeout: Timeout = 10.seconds
 
   // Convert classic actor system of play to typed
-  private val actorSystem: akka.actor.typed.ActorSystem[_] = system.toTyped
+  private val actorSystem: akka.actor.typed.ActorSystem[_]   = system.toTyped
   // define implicit scheduler
   private implicit val scheduler: akka.actor.typed.Scheduler =
     actorSystem.scheduler

@@ -43,37 +43,39 @@ object CustomizedCodeGenerator {
       )
   }.map { model =>
     new slick.codegen.SourceCodeGenerator(model) {
-      override def Table = new Table(_) { table =>
-        override def Column = new Column(_) { column =>
-          // customize db type -> scala type mapping, pls adjust it according to your environment
-          override def rawType: String =
-            model.options
-              .find(_.isInstanceOf[ColumnOption.SqlType])
-              .flatMap { tpe =>
-                tpe.asInstanceOf[ColumnOption.SqlType].typeName match {
-                  case "hstore" => Option("Map[String, String]")
-                  case "_text" | "text[]" | "_varchar" | "varchar[]" =>
-                    Option("List[String]")
-                  case "geometry" =>
-                    Option("com.vividsolutions.jts.geom.Geometry")
-                  case "_int8" | "int8[]" => Option("List[Long]")
-                  case "_int4" | "int4[]" => Option("List[Int]")
-                  case "_int2" | "int2[]" => Option("List[Short]")
-                  case _                  => None
-                }
-              }
-              .getOrElse {
-                model.tpe match {
-                  case "java.sql.Date"      => "org.joda.time.LocalDate"
-                  case "java.sql.Time"      => "org.joda.time.LocalTime"
-                  case "java.sql.Timestamp" => "org.joda.time.DateTime"
-                  case _ =>
-                    super.rawType
+      override def Table =
+        new Table(_) { table =>
+          override def Column =
+            new Column(_) { column =>
+              // customize db type -> scala type mapping, pls adjust it according to your environment
+              override def rawType: String =
+                model.options
+                  .find(_.isInstanceOf[ColumnOption.SqlType])
+                  .flatMap { tpe =>
+                    tpe.asInstanceOf[ColumnOption.SqlType].typeName match {
+                      case "hstore"                                      => Option("Map[String, String]")
+                      case "_text" | "text[]" | "_varchar" | "varchar[]" =>
+                        Option("List[String]")
+                      case "geometry"                                    =>
+                        Option("com.vividsolutions.jts.geom.Geometry")
+                      case "_int8" | "int8[]"                            => Option("List[Long]")
+                      case "_int4" | "int4[]"                            => Option("List[Int]")
+                      case "_int2" | "int2[]"                            => Option("List[Short]")
+                      case _                                             => None
+                    }
+                  }
+                  .getOrElse {
+                    model.tpe match {
+                      case "java.sql.Date"      => "org.joda.time.LocalDate"
+                      case "java.sql.Time"      => "org.joda.time.LocalTime"
+                      case "java.sql.Timestamp" => "org.joda.time.DateTime"
+                      case _                    =>
+                        super.rawType
 
-                }
-              }
+                    }
+                  }
+            }
         }
-      }
 
       // ensure to use our customized postgres driver at `import profile.simple._`
       override def packageCode(profile: String, pkg: String, container: String, parentType: Option[String]): String =
