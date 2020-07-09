@@ -23,7 +23,7 @@ object Dependencies {
 
   //Test
   val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.6.25" % Test
-  val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3" % Test
+  val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   lazy val list = Seq(
     guice,
