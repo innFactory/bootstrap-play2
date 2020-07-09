@@ -27,11 +27,10 @@ trait JwtValidator {
 class MockJWTValidator extends JwtValidator {
   override def validate(jwtToken: JwtToken): Either[BadJWTException, String] = {
     val decodedToken: Try[String] = {
-      if (jwtToken.content == "VerifiedUser") {
+      if (jwtToken.content == "VerifiedUser")
         Success("VerifiedUser")
-      } else {
+      else
         Failure(new BadJWTException("failure"))
-      }
     }
     decodedToken match {
       case Success(dt) => Right(dt)

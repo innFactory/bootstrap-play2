@@ -25,14 +25,14 @@ class FlywayModule extends Module {
     Seq(bind[FlywayMigrator].toSelf.eagerly())
 }
 
-class FlywayMigrator @Inject()(env: Environment, configuration: Configuration) {
+class FlywayMigrator @Inject() (env: Environment, configuration: Configuration) {
   val logger = Logger("application")
   def onStart(): Unit = {
 
     logger.info("Creating Flyway context")
-    val driver = configuration.get[String]("test.database.driver")
-    val url    = configuration.get[String]("test.database.testUrl")
-    val user   = configuration.get[String]("test.database.testUser")
+    val driver   = configuration.get[String]("test.database.driver")
+    val url      = configuration.get[String]("test.database.testUrl")
+    val user     = configuration.get[String]("test.database.testUser")
     val password =
       configuration.get[String]("test.database.testPassword")
     import org.flywaydb.core.Flyway

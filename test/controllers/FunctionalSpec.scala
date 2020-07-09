@@ -53,9 +53,9 @@ class FunctionalSpec extends PlaySpec with BaseOneAppPerSuite with TestApplicati
       val prevTwoLink  = PagedGen.prevGen(0, 0, 12, "test", None)
       val nextLink     = PagedGen.nextGen(8, 5, 12, "test", None)
       val nextZeroLink = PagedGen.nextGen(8, 5, 0, "test", None)
-      val nextOneLink =
+      val nextOneLink  =
         PagedGen.nextGen(10, 5, 12, "test", Some("&lat=0&lon=0"))
-      val nextTwoLink = PagedGen.nextGen(11, 11, 12, "test", None)
+      val nextTwoLink  = PagedGen.nextGen(11, 11, 12, "test", None)
       prevLink mustEqual "test?startIndex=1&endIndex=4"
       prevZeroLink mustEqual ""
       prevOneLink mustEqual "test?startIndex=0&endIndex=2"

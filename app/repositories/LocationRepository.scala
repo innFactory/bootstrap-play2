@@ -19,17 +19,19 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 trait LocationRepository {
   def lookup(id: Long, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
-  def getByDistance(distance: Long,
-                    lat: Double,
-                    lon: Double,
-                    request: RequestWithCompany[AnyContent]): Future[Result[Seq[Location]]]
+  def getByDistance(
+    distance: Long,
+    lat: Double,
+    lon: Double,
+    request: RequestWithCompany[AnyContent]
+  ): Future[Result[Seq[Location]]]
   def lookupByCompany(id: UUID, request: RequestWithCompany[AnyContent]): Future[Result[Seq[Location]]]
   def patch(location: Location, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
   def post(location: Location, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
   def delete(id: Long, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
 }
 
-class LocationRepositoryImpl @Inject()(
+class LocationRepositoryImpl @Inject() (
   locationsDAO: LocationsDAO,
   authorizationMethods: LocationAuthorizationMethods[AnyContent]
 )(implicit ec: ExecutionContext)
@@ -42,18 +44,20 @@ class LocationRepositoryImpl @Inject()(
     result.value
   }
 
-  override def getByDistance(distance: Long,
-                             lat: Double,
-                             lon: Double,
-                             request: RequestWithCompany[AnyContent]): Future[Result[Seq[Location]]] = {
+  override def getByDistance(
+    distance: Long,
+    lat: Double,
+    lon: Double,
+    request: RequestWithCompany[AnyContent]
+  ): Future[Result[Seq[Location]]] = {
     val geometryPoint = GeoPointFactory.createPoint(lat, lon)
-    val result = for {
-      company <- EitherT(Future(request.company.toEither(Forbidden())))
-      _       <- EitherT(Future(authorizationMethods.accessGetAllByCompany(company.id.getOrElse(UUID.randomUUID()), request)))
+    val result        = for {
+      company      <- EitherT(Future(request.company.toEither(Forbidden())))
+      _            <- EitherT(Future(authorizationMethods.accessGetAllByCompany(company.id.getOrElse(UUID.randomUUID()), request)))
       lookupResult <- EitherT(
-                       locationsDAO
-                         .allFromDistanceByCompany(company.id.getOrElse(UUID.randomUUID()), geometryPoint, distance)
-                     )
+                        locationsDAO
+                          .allFromDistanceByCompany(company.id.getOrElse(UUID.randomUUID()), geometryPoint, distance)
+                      )
     } yield lookupResult
     result.value
   }

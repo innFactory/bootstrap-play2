@@ -11,15 +11,16 @@ import websockets.actors.WebSocketActor
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class WebsocketController @Inject()(
+class WebsocketController @Inject() (
   cc: ControllerComponents
 )(implicit ec: ExecutionContext, implicit val system: ActorSystem, mat: Materializer)
     extends AbstractController(cc) {
 
-  def socket = WebSocket.accept[String, String] { request =>
-    ActorFlow.actorRef { out =>
-      WebSocketActor.props(out)
+  def socket =
+    WebSocket.accept[String, String] { request =>
+      ActorFlow.actorRef { out =>
+        WebSocketActor.props(out)
+      }
     }
-  }
 
 }

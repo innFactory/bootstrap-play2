@@ -55,7 +55,7 @@ trait LocationsDAO {
  *    own internal thread pool, so Play's default execution context is fine here.
  */
 @Singleton
-class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
+class SlickLocationsDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
     extends BaseSlickDAO(db)
     with LocationsDAO {
 
@@ -71,16 +71,16 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
 
   private val queryByCompany = Compiled((id: Rep[UUID]) => Location.filter(_.company === id))
 
-  private val querySortedWithDistanceFilterMaxDistance = Compiled(
-    (ref: Rep[Geometry], maxDistance: Rep[Float], companyId: Rep[UUID]) =>
+  private val querySortedWithDistanceFilterMaxDistance =
+    Compiled((ref: Rep[Geometry], maxDistance: Rep[Float], companyId: Rep[UUID]) =>
       Location
         .filter(_.company === companyId)
         .sortBy(_.position.distanceSphere(ref))
-        .map(x => {
+        .map { x =>
           (x, x.position.distanceSphere(ref))
-        })
+        }
         .filter(_._2 <= maxDistance)
-  )
+    )
 
   /**
    * Lookup single object
@@ -101,7 +101,7 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
     db.run(queryById(id).result.headOption).map {
       case Some(row) =>
         Some(locationRowToLocation(row))
-      case None =>
+      case None      =>
         None
     }
 
@@ -111,7 +111,7 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
    * @return
    */
   def lookupByCompany(
-    companyId: UUID,
+    companyId: UUID
   ): Future[Result[Seq[LocationObject]]] =
     lookupSequenceGeneric[LocationRow, LocationObject](
       queryByCompany(companyId).result
@@ -129,12 +129,11 @@ class SlickLocationsDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
     point: Geometry,
     distance: Long
   ): Future[Result[Seq[LocationObject]]] =
-    db.run(querySortedWithDistanceFilterMaxDistance(point, distance.toFloat, companyId).result)
-      .map(seq => {
-        Right(
-          seq.map(x => locationRowToLocationWithDistance(x._1, x._2))
-        )
-      })
+    db.run(querySortedWithDistanceFilterMaxDistance(point, distance.toFloat, companyId).result).map { seq =>
+      Right(
+        seq.map(x => locationRowToLocationWithDistance(x._1, x._2))
+      )
+    }
 
   /**
    * Patch object

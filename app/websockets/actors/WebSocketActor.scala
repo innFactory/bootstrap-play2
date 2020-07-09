@@ -7,12 +7,11 @@ object WebSocketActor {
 }
 
 class WebSocketActor(out: ActorRef) extends Actor {
-  var counter = 1
+  var counter                             = 1
   def receive: PartialFunction[Any, Unit] = {
-    case msg: String => {
+    case msg: String =>
       out ! ("I received your message: " + msg + " | This is message: " + counter)
       counter += 1
-    }
 
   }
 }
