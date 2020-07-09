@@ -13,7 +13,7 @@ import scala.concurrent.ExecutionContext
 /***
  * Auth Methods for Owner endpoint
  */
-class CompanyAuthorizationMethods[A] @Inject()(
+class CompanyAuthorizationMethods[A] @Inject() (
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext, configuration: Configuration) {
 

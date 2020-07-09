@@ -12,7 +12,7 @@ import play.api.Mode.Prod
 import play.api.mvc._
 import play.api._
 
-class RouteBlacklistFilter @Inject()(config: Config, implicit val mat: Materializer, environment: Environment)
+class RouteBlacklistFilter @Inject() (config: Config, implicit val mat: Materializer, environment: Environment)
     extends Filter {
 
   case class BlackListEntry(route: String, environment: Mode, method: String)
@@ -34,16 +34,13 @@ class RouteBlacklistFilter @Inject()(config: Config, implicit val mat: Materiali
     if (shouldBeBlocked(request.path, request.method)) {
       accessLogger.logger.warn("Illegal access to swagger.json in production")
       Future(NotFound(""))
-    } else {
+    } else
       nextFilter.apply(request)
-    }
 
   def shouldBeBlocked(path: String, method: String): Boolean = {
-    for (route <- blacklistedRoutes) {
-      if (environment.mode == route.environment && route.route.startsWith(path) && route.method == method) {
+    for (route <- blacklistedRoutes)
+      if (environment.mode == route.environment && route.route.startsWith(path) && route.method == method)
         return true
-      }
-    }
     false
   }
 

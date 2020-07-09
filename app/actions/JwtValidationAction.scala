@@ -10,17 +10,16 @@ import scala.concurrent.{ ExecutionContext, Future }
 import play.api.mvc._
 import firebaseAuth.{ JwtToken, JwtValidator }
 
-class JwtValidationAction @Inject()(parser: BodyParsers.Default, jwtValidator: JwtValidator, environment: Environment)(
+class JwtValidationAction @Inject() (parser: BodyParsers.Default, jwtValidator: JwtValidator, environment: Environment)(
   implicit ec: ExecutionContext
 ) extends ActionBuilderImpl(parser) {
   override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
-    if (extractAndCheckAuthHeader(request.headers).getOrElse(false)) {
+    if (extractAndCheckAuthHeader(request.headers).getOrElse(false))
       block(request)
-    } else if (request.headers.get("Authorization").isEmpty) {
+    else if (request.headers.get("Authorization").isEmpty)
       Future.successful(Unauthorized("Unauthorized"))
-    } else {
+    else
       Future.successful(Forbidden("Forbidden"))
-    }
 
   /**
    * Extract auth header from requestHeaders
@@ -30,9 +29,7 @@ class JwtValidationAction @Inject()(parser: BodyParsers.Default, jwtValidator: J
   def extractAndCheckAuthHeader(requestHeader: Headers) =
     for {
       header <- requestHeader.get("Authorization")
-    } yield {
-      checkAuthHeader(header)
-    }
+    } yield checkAuthHeader(header)
 
   /**
    * check and validate auth header
@@ -45,17 +42,15 @@ class JwtValidationAction @Inject()(parser: BodyParsers.Default, jwtValidator: J
       val jwtToken = authHeader match {
         case token: String if token.startsWith("Bearer") =>
           JwtToken(token.splitAt(7)._2)
-        case token => JwtToken(token)
+        case token                                       => JwtToken(token)
       }
 
       jwtValidator.validate(jwtToken) match {
-        case Left(error: BadJWTException) => {
+        case Left(error: BadJWTException) =>
           false
-        }
-        case Right(_) => true
+        case Right(_)                     => true
       }
-    } else {
+    } else
       true
-    }
 
 }

@@ -10,8 +10,8 @@ import scala.concurrent.{ ExecutionContext, Future }
 import play.api.mvc._
 import play.libs.Json
 
-class FirebaseEmailExtractor[A] @Inject()(val parser: BodyParsers.Default, environment: Environment)(
-  implicit val executionContext: ExecutionContext,
+class FirebaseEmailExtractor[A] @Inject() (val parser: BodyParsers.Default, environment: Environment)(implicit
+  val executionContext: ExecutionContext,
   configuration: Configuration
 ) {
 
@@ -39,7 +39,7 @@ class FirebaseEmailExtractor[A] @Inject()(val parser: BodyParsers.Default, envir
     header match {
       case x: String if x.startsWith("Bearer") =>
         Some(JwtToken(x.splitAt(7)._2))
-      case x => Some(JwtToken(x))
+      case x                                   => Some(JwtToken(x))
     }
 
   private def handleTestEnvToken(header: String): Option[JwtToken] =
@@ -51,8 +51,8 @@ class FirebaseEmailExtractor[A] @Inject()(val parser: BodyParsers.Default, envir
     optionToken match {
       case Some(token) if environment.mode.toString == "Test" =>
         Some(token.content)
-      case Some(token) => extractEmailFromProdToken(token)
-      case None        => None
+      case Some(token)                                        => extractEmailFromProdToken(token)
+      case None                                               => None
     }
 
   private def extractEmailFromProdToken(token: JwtToken): Some[String] = {

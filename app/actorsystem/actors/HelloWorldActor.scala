@@ -31,7 +31,7 @@ object HelloWorldActor {
 class HelloWorldActor(
   actorLogger: org.slf4j.Logger,
   context: ActorContext[Command],
-  buffer: StashBuffer[Command],
+  buffer: StashBuffer[Command]
 ) {
 
   implicit val ec: ExecutionContext = context.executionContext
@@ -43,10 +43,9 @@ class HelloWorldActor(
    */
   def ready(): Behavior[Command] =
     Behaviors.receiveMessage {
-      case message: QueryHelloWorld => {
+      case message: QueryHelloWorld =>
         processQueryHelloWorldToBehavior(message)
-      }
-      case _ => Behaviors.same
+      case _                        => Behaviors.same
     }
 
   private def processQueryHelloWorldToBehavior(message: QueryHelloWorld): Behavior[Command] = {
@@ -84,14 +83,12 @@ class HelloWorldActor(
 
   private def queryHandleHelloWorldResult(result: QueryHelloWorldResult): Behavior[Command] =
     result.response match {
-      case responseQueryHelloWorld: ResponseQueryHelloWorld => {
+      case responseQueryHelloWorld: ResponseQueryHelloWorld =>
         result.replyTo ! responseQueryHelloWorld // Complete request with replyTo
         buffer.unstashAll(ready())               // Unstash all messages to process and set behavior to "ready" with prevData
-      }
-      case err: ResponseQueryHelloWorldError => {
-        result.replyTo ! err       // Complete request with replyTo
+      case err: ResponseQueryHelloWorldError                =>
+        result.replyTo ! err // Complete request with replyTo
         buffer.unstashAll(ready()) // Unstash all messages to process and set behavior to "ready" without prevData
-      }
     }
 
   private def queryHandleQueryError(error: QueryError): Behavior[Command] = {

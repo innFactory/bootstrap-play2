@@ -21,12 +21,13 @@ object Results {
    * @param errorMethod
    * @param internalErrorMessage
    */
-  abstract class SelfLoggingError(message: String,
-                                  statusCode: Int,
-                                  errorClass: String,
-                                  errorMethod: String,
-                                  internalErrorMessage: String)
-      extends ErrorStatus {
+  abstract class SelfLoggingError(
+    message: String,
+    statusCode: Int,
+    errorClass: String,
+    errorMethod: String,
+    internalErrorMessage: String
+  ) extends ErrorStatus {
     var currentStackTrace = new Throwable()
     logger.error(
       s"DatabaseError | message=$message statusCode=$statusCode | Error in class $errorClass in method $errorMethod $internalErrorMessage!",
@@ -39,13 +40,14 @@ object Results {
   type Result[T] = Either[ErrorStatus, T]
 
   implicit class RichError(value: ErrorStatus)(implicit ec: ExecutionContext) {
-    def mapToResult: play.api.mvc.Result = value match {
-      case _: DatabaseError => MvcResults.Status(500)("")
-      case _: Forbidden     => MvcResults.Status(403)("")
-      case _: BadRequest    => MvcResults.Status(400)("")
-      case _: NotFound      => MvcResults.Status(404)("")
-      case _                => MvcResults.Status(400)("")
-    }
+    def mapToResult: play.api.mvc.Result =
+      value match {
+        case _: DatabaseError => MvcResults.Status(500)("")
+        case _: Forbidden     => MvcResults.Status(403)("")
+        case _: BadRequest    => MvcResults.Status(400)("")
+        case _: NotFound      => MvcResults.Status(404)("")
+        case _                => MvcResults.Status(400)("")
+      }
   }
 
   implicit class SeqApiBaseModel(value: Seq[ApiBaseModel]) {
@@ -53,22 +55,25 @@ object Results {
   }
 
   implicit class RichResult(value: Future[Either[ErrorStatus, ApiBaseModel]])(implicit ec: ExecutionContext) {
-    def completeResult(statusCode: Int = 200): Future[play.api.mvc.Result] = value.map {
-      case Left(error: ErrorStatus)   => error.mapToResult
-      case Right(value: ApiBaseModel) => MvcResults.Status(statusCode)(value.toJson)
-    }
+    def completeResult(statusCode: Int = 200): Future[play.api.mvc.Result] =
+      value.map {
+        case Left(error: ErrorStatus)   => error.mapToResult
+        case Right(value: ApiBaseModel) => MvcResults.Status(statusCode)(value.toJson)
+      }
 
-    def completeResultWithoutBody(statusCode: Int = 200): Future[play.api.mvc.Result] = value.map {
-      case Left(error: ErrorStatus)   => error.mapToResult
-      case Right(value: ApiBaseModel) => MvcResults.Status(statusCode)("")
-    }
+    def completeResultWithoutBody(statusCode: Int = 200): Future[play.api.mvc.Result] =
+      value.map {
+        case Left(error: ErrorStatus)   => error.mapToResult
+        case Right(value: ApiBaseModel) => MvcResults.Status(statusCode)("")
+      }
   }
 
   implicit class RichSeqResult(value: Future[Either[ErrorStatus, Seq[ApiBaseModel]]])(implicit ec: ExecutionContext) {
-    def completeResult: Future[play.api.mvc.Result] = value.map {
-      case Left(error: ErrorStatus)        => error.mapToResult
-      case Right(value: Seq[ApiBaseModel]) => MvcResults.Status(200)(value.toJson)
-    }
+    def completeResult: Future[play.api.mvc.Result] =
+      value.map {
+        case Left(error: ErrorStatus)        => error.mapToResult
+        case Right(value: Seq[ApiBaseModel]) => MvcResults.Status(200)(value.toJson)
+      }
   }
 
 }

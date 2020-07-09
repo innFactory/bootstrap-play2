@@ -56,25 +56,24 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
     }
   }
 
-  def updateGeneric[R, T](queryById: DBIOAction[Option[R], NoStream, Nothing],
-                          update: T => DBIOAction[Int, NoStream, Effect.Write],
-                          patch: T => T)(implicit rowToObject: R => T): Future[Result[T]] = {
+  def updateGeneric[R, T](
+    queryById: DBIOAction[Option[R], NoStream, Nothing],
+    update: T => DBIOAction[Int, NoStream, Effect.Write],
+    patch: T => T
+  )(implicit rowToObject: R => T): Future[Result[T]] = {
     val result = for {
       lookup        <- EitherT(db.run(queryById).map(_.toEither(BadRequest())))
       patchedObject <- EitherT(Future(Option(patch(rowToObject(lookup))).toEither(BadRequest())))
-      patchResult <- EitherT[Future, ErrorStatus, T](
-                      db.run(update(patchedObject))
-                        .map(x => {
-                          if (x != 0) Right(patchedObject)
-                          else
-                            Left(
-                              DatabaseError("Could not replace entity",
-                                            currentClassForDatabaseError,
-                                            "update",
-                                            "row not updated")
-                            )
-                        })
-                    )
+      patchResult   <-
+        EitherT[Future, ErrorStatus, T](
+          db.run(update(patchedObject)).map { x =>
+            if (x != 0) Right(patchedObject)
+            else
+              Left(
+                DatabaseError("Could not replace entity", currentClassForDatabaseError, "update", "row not updated")
+              )
+          }
+        )
     } yield patchResult
     result.value
   }
@@ -82,39 +81,41 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
   def createGeneric[R, T](
     entity: T,
     queryById: DBIOAction[Option[R], NoStream, Nothing],
-    create: R => DBIOAction[R, NoStream, Effect.Write],
+    create: R => DBIOAction[R, NoStream, Effect.Write]
   )(implicit rowToObject: R => T, objectToRow: T => R): Future[Result[T]] = {
     val entityToSave = objectToRow(entity)
-    val result = for {
+    val result       = for {
       _             <- db.run(queryById).map(_.toInverseEither(BadRequest()))
       createdObject <- db.run(create(entityToSave))
-      res <- Future(
-              Option(rowToObject(createdObject))
-                .toEither(
-                  DatabaseError("Could not create entity", currentClassForDatabaseError, "create", "row not created")
-                )
-            )
+      res           <- Future(
+               Option(rowToObject(createdObject))
+                 .toEither(
+                   DatabaseError("Could not create entity", currentClassForDatabaseError, "create", "row not created")
+                 )
+             )
     } yield res
     result
   }
 
   def deleteGeneric[R, T](
     queryById: DBIOAction[Option[R], NoStream, Nothing],
-    delete: DBIOAction[Int, NoStream, Effect.Write],
+    delete: DBIOAction[Int, NoStream, Effect.Write]
   ): Future[Result[Boolean]] = {
     val result = for {
-      _ <- db.run(queryById).map(_.toEither(BadRequest()))
+      _              <- db.run(queryById).map(_.toEither(BadRequest()))
       dbDeleteResult <- db.run(delete).map { x =>
-                         if (x != 0)
-                           Right(true)
-                         else
-                           Left(
-                             DatabaseError("could not delete entity",
-                                           currentClassForDatabaseError,
-                                           "delete",
-                                           "entity was deleted")
-                           )
-                       }
+                          if (x != 0)
+                            Right(true)
+                          else
+                            Left(
+                              DatabaseError(
+                                "could not delete entity",
+                                currentClassForDatabaseError,
+                                "delete",
+                                "entity was deleted"
+                              )
+                            )
+                        }
     } yield dbDeleteResult
     result
   }

@@ -16,10 +16,12 @@ case class CompanyCompanyIdAndOldCompanyId(company: Option[Company], companyId: 
 
 object CompanyIdsAreEqual {
   def unapply(o: CompanyCompanyIdAndOldCompanyId): Boolean =
-    if (o.company.isDefined && o.company.get.id.isDefined && o.company.get.id.get.equals(o.companyId) && o.companyId
-          .equals(
-            o.companyIdOld
-          )) true
+    if (
+      o.company.isDefined && o.company.get.id.isDefined && o.company.get.id.get.equals(o.companyId) && o.companyId
+        .equals(
+          o.companyIdOld
+        )
+    ) true
     else false
 }
 
@@ -27,7 +29,9 @@ case class OptionAndCompanyId(optionalCompany: Option[Company], companyId: UUID)
 
 object CompanyIdEqualsId {
   def unapply(o: OptionAndCompanyId): Boolean =
-    if (o.optionalCompany.isDefined && o.optionalCompany.get.id.isDefined && o.optionalCompany.get.id.get
-          .equals(o.companyId)) true
+    if (
+      o.optionalCompany.isDefined && o.optionalCompany.get.id.isDefined && o.optionalCompany.get.id.get
+        .equals(o.companyId)
+    ) true
     else false
 }

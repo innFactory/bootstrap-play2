@@ -15,40 +15,37 @@ case class PagedData[T](
  * nextGen Takes from, to, count and the api endpoint end generates next link
  */
 object PagedGen {
-  implicit val pagedDataWriter = Json.writes[PagedData[JsValue]]
-  implicit val pagedDataReader = Json.reads[PagedData[JsValue]]
+  implicit val pagedDataWriter                                                                  = Json.writes[PagedData[JsValue]]
+  implicit val pagedDataReader                                                                  = Json.reads[PagedData[JsValue]]
   def prevGen(to: Int, from: Int, count: Int, apiString: String, query: Option[String]): String =
-    if (count == 0) {
+    if (count == 0)
       ""
-    } else {
+    else {
       val lowerFrom = from - (to - from) - 1
       val lowerTo   = to - (to - from) - 1
-      if (from > 0) {
+      if (from > 0)
         if (lowerFrom >= 0) {
           var api = apiString.concat(
             "?startIndex=".concat(lowerFrom.toString.concat("&endIndex=".concat(lowerTo.toString)))
           )
-          if (query.isDefined) {
+          if (query.isDefined)
             api = api.concat(query.get)
-          }
           api
         } else {
           var api =
             apiString.concat("?startIndex=0&endIndex=".concat(lowerTo.toString))
-          if (query.isDefined) {
+          if (query.isDefined)
             api = api.concat(query.get)
-          }
           api
         }
-      } else {
+      else
         ""
-      }
     }
 
   def nextGen(to: Int, from: Int, count: Int, apiString: String, query: Option[String]) =
-    if (count == 0) {
+    if (count == 0)
       ""
-    } else {
+    else {
       val upperTo   = to + (to - from) + 1
       val upperFrom = from + (to - from) + 1
       val limit     = count - 1
@@ -56,22 +53,18 @@ object PagedGen {
         var api = apiString.concat(
           "?startIndex=".concat(upperFrom.toString.concat("&endIndex=".concat(upperTo.toString)))
         )
-        if (query.isDefined) {
+        if (query.isDefined)
           api = api.concat(query.get)
-        }
         api
-      } else {
-        if (upperFrom > limit) {
-          ""
-        } else {
-          var api = apiString.concat(
-            "?startIndex=".concat(upperFrom.toString.concat("&endIndex=".concat(limit.toString)))
-          )
-          if (query.isDefined) {
-            api = api.concat(query.get)
-          }
-          api
-        }
+      } else if (upperFrom > limit)
+        ""
+      else {
+        var api = apiString.concat(
+          "?startIndex=".concat(upperFrom.toString.concat("&endIndex=".concat(limit.toString)))
+        )
+        if (query.isDefined)
+          api = api.concat(query.get)
+        api
       }
     }
 

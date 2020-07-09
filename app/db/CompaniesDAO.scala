@@ -45,7 +45,7 @@ trait CompaniesDAO {
  *    own internal thread pool, so Play's default execution context is fine here.
  */
 @Singleton
-class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionContext)
+class SlickCompaniesSlickDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
     extends BaseSlickDAO(db)
     with CompaniesDAO {
 
@@ -59,12 +59,11 @@ class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionConte
 
   private val queryById = Compiled((id: Rep[UUID]) => Company.filter(_.id === id))
 
-  private val queryByEmail = Compiled(
-    (email: Rep[String]) =>
-      Company.filter(cs => {
-        // email === firebaseUser.any is like calling .includes(email)
-        email === cs.firebaseUser.any
-      })
+  private val queryByEmail = Compiled((email: Rep[String]) =>
+    Company.filter { cs =>
+      // email === firebaseUser.any is like calling .includes(email)
+      email === cs.firebaseUser.any
+    }
   )
 
   /**
@@ -88,7 +87,7 @@ class SlickCompaniesSlickDAO @Inject()(db: Database)(implicit ec: ExecutionConte
     f.map {
       case Some(row) =>
         Some(companyRowToCompanyObject(row))
-      case None =>
+      case None      =>
         None
     }
   }
