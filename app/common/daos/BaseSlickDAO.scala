@@ -88,11 +88,11 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
       _             <- db.run(queryById).map(_.toInverseEither(BadRequest()))
       createdObject <- db.run(create(entityToSave))
       res           <- Future(
-               Option(rowToObject(createdObject))
-                 .toEither(
-                   DatabaseError("Could not create entity", currentClassForDatabaseError, "create", "row not created")
-                 )
-             )
+                         Option(rowToObject(createdObject))
+                           .toEither(
+                             DatabaseError("Could not create entity", currentClassForDatabaseError, "create", "row not created")
+                           )
+                       )
     } yield res
     result
   }

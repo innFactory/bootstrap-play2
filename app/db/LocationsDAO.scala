@@ -119,7 +119,7 @@ class SlickLocationsDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
 
   /**
    * Query All by distance from to index
-
+   *
    * @param point
    * @param distance
    * @return

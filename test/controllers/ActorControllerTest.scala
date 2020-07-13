@@ -12,7 +12,7 @@ import testutils.BaseFakeRequest._
 class ActorControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
 
   /** —————————————————————— */
-  /**  ACTORSCONTROLLER      */
+  /** ACTORSCONTROLLER */
   /** —————————————————————— */
   "Actor" must {
     "query not hello" in {
