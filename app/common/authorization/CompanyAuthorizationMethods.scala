@@ -10,7 +10,8 @@ import play.api.Configuration
 
 import scala.concurrent.ExecutionContext
 
-/***
+/**
+ * *
  * Auth Methods for Owner endpoint
  */
 class CompanyAuthorizationMethods[A] @Inject() (

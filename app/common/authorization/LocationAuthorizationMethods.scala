@@ -20,7 +20,8 @@ import common.utils.{
 
 import scala.concurrent.{ ExecutionContext, Future }
 
-/***
+/**
+ * *
  * Auth Methods for Locations endpoint
  */
 class LocationAuthorizationMethods[A] @Inject() (

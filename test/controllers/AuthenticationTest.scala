@@ -31,7 +31,7 @@ class AuthenticationTest extends PlaySpec with BaseOneAppPerSuite with TestAppli
   val invalidEmail       = "empty@empty.de"
 
   /** ———————————————— */
-  /**  AUTHENTICATION  */
+  /** AUTHENTICATION */
   /** ———————————————— */
   "Authentication on HealthCheck" must {
     "accept probes" in {

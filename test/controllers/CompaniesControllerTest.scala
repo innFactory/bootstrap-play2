@@ -25,7 +25,7 @@ import scala.concurrent.Future
 class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
 
   /** ———————————————— */
-  /**  COMPANIES       */
+  /** COMPANIES */
   /** ———————————————— */
   "CompaniesController" must {
     "get by id" in {

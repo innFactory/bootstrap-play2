@@ -12,7 +12,7 @@ import testutils.BaseFakeRequest._
 class LocationsControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
 
   /** ———————————————— */
-  /**  LOCATIONS       */
+  /** LOCATIONS */
   /** ———————————————— */
   "LocationsController" must {
     "get by id" in {
