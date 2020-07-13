@@ -39,7 +39,7 @@ class RouteBlacklistFilter @Inject() (config: Config, implicit val mat: Material
 
   def shouldBeBlocked(path: String, method: String): Boolean = {
     for (route <- blacklistedRoutes)
-      if (environment.mode == route.environment && route.route.startsWith(path) && route.method == method)
+      if (environment.mode == route.environment && path.startsWith(route.route) && route.method == method)
         return true
     false
   }
