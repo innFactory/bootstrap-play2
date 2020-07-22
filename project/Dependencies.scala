@@ -24,7 +24,7 @@ object Dependencies {
   val postgresql = "org.postgresql" % "postgresql" % "42.2.14"
   val akkaStreams =  "com.typesafe.akka" %% "akka-stream" % "2.6.8"
 
-  val cats = "org.typelevel" %% "cats-core" % "2.2.0-RC1"
+  val cats = "org.typelevel" %% "cats-core" % "2.2.0-RC2"
 
   //Test
   val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.8.2" % Test
