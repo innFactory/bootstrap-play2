@@ -5,7 +5,7 @@ import sbt.{ Def, _ }
 //settings
 
 name := """bootstrap-play2"""
-scalaVersion := "2.13.3"
+scalaVersion := Dependencies.scalaVersion
 
 val latest = sys.env.get("BRANCH") match {
   case Some(str) => if (str.equals("master")) true else false
@@ -99,14 +99,14 @@ slickGen := Def.taskDyn(generateTablesTask((dbConf in Global).value)).value
 /*project definitions*/
 
 lazy val firebaseAuth = (project in file("modules/firebase-auth"))
-  .settings(scalaVersion := "2.13.3")
+  .settings(scalaVersion := Dependencies.scalaVersion)
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, DockerPlugin, SwaggerPlugin)
   .dependsOn(slick, firebaseAuth)
   .aggregate(firebaseAuth)
   .settings(
-    scalaVersion := "2.13.3",
+    scalaVersion := Dependencies.scalaVersion,
     dbConfSettings,
     libraryDependencies ++= Dependencies.list,
     // Adding Cache
@@ -135,14 +135,14 @@ lazy val root = (project in file("."))
 lazy val flyway = (project in file("modules/flyway"))
   .enablePlugins(FlywayPlugin)
   .settings(
-    scalaVersion := "2.13.3",
+    scalaVersion := Dependencies.scalaVersion,
     libraryDependencies ++= Dependencies.list,
     flywaySettings
   )
 
 lazy val slick = (project in file("modules/slick"))
   .settings(
-    scalaVersion := "2.13.3",
+    scalaVersion := Dependencies.scalaVersion,
     libraryDependencies ++= Dependencies.list
   )
 

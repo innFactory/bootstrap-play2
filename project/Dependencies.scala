@@ -3,12 +3,13 @@ import sbt._
 
 object Dependencies {
 
-  val AkkaVersion = "2.6.8"
-  val akkaTyped   = "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion
-  val akka        = "com.typesafe.akka" %% "akka-actor"       % AkkaVersion
-  val akkaJackson =
-    "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion // https://github.com/akka/akka/issues/29351
-  val akkaStreams = "com.typesafe.akka" %% "akka-stream" % AkkaVersion
+  val scalaVersion = "2.13.3"
+  val akkaVersion  = "2.6.8"
+  val akkaTyped    = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
+  val akka         = "com.typesafe.akka" %% "akka-actor"       % akkaVersion
+  val akkaJackson  =
+    "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion // https://github.com/akka/akka/issues/29351
+  val akkaStreams = "com.typesafe.akka" %% "akka-stream" % akkaVersion
 
   //Prod
   val slickPg         = "com.github.tminglei"  %% "slick-pg"           % "0.19.2"
@@ -20,8 +21,8 @@ object Dependencies {
   val slick           = "com.typesafe.slick"   %% "slick"              % "3.3.2"
   val slickCodegen    = "com.typesafe.slick"   %% "slick-codegen"      % "3.3.2"
   val slickHikaricp   = "com.typesafe.slick"   %% "slick-hikaricp"     % "3.3.2"
-  val HikariCP        = "com.zaxxer"            % "HikariCP"           % "3.4.5"
-  val Joda            = "joda-time"             % "joda-time"          % "2.10.6"
+  val hikariCP        = "com.zaxxer"            % "HikariCP"           % "3.4.5"
+  val joda            = "joda-time"             % "joda-time"          % "2.10.6"
   val flyWayCore      = "org.flywaydb"          % "flyway-core"        % "6.5.4"
   val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.14"
 
@@ -44,8 +45,8 @@ object Dependencies {
     slick,
     slickCodegen,
     slickHikaricp,
-    HikariCP,
-    Joda,
+    hikariCP,
+    joda,
     flyWayCore,
     postgresql,
     scalatestPlus,

@@ -2,18 +2,19 @@
 
 ### Status
 
-[![codecov](https://codecov.io/gh/innFactory/bootstrap-play2/branch/master/graph/badge.svg)](https://codecov.io/gh/innFactory/bootstrap-play2)  ![Run Tests](https://github.com/innFactory/bootstrap-play2/workflows/Run%20Tests/badge.svg)
+![Cats Friendly Badge](https://typelevel.org/cats/img/cats-badge-tiny.png) [![codecov](https://codecov.io/gh/innFactory/bootstrap-play2/branch/master/graph/badge.svg)](https://codecov.io/gh/innFactory/bootstrap-play2)  ![Run Tests](https://github.com/innFactory/bootstrap-play2/workflows/Run%20Tests/badge.svg)
 
-![Cats Friendly Badge](https://typelevel.org/cats/img/cats-badge-tiny.png)  
 
 ###### Scala, Akka, Play2, Slick, Flyway, Insomnia
 
 Bootstrap a rest service with Play2, isolated Slick and isolated Flyway
 
 This project is built with:
-   - Play Framework 2.8.1
-   - Slick 3.3.2
-   - Flyway-sbt & Flyway-Core 6.2.3
+   - Play Framework 2.8.X
+   - Slick 3.3.X
+   - Flyway-sbt & Flyway-Core 6.5.X
+   - Akka 2.6.X
+   - Scala 2.13.X
    
   A PostgreSQL Database with activated postgis extensions is needed (for geolocation queries)
    

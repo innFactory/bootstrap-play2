@@ -5,7 +5,7 @@ object Common {
 
   def projectSettings =
     Seq(
-      scalaVersion := "2.13.3", //todo fix several version statements in sbt files
+      scalaVersion := Dependencies.scalaVersion, //todo fix several version statements in sbt files
       // javacOptions ++= Seq("-source", "11", "-target", "11"),
       scalacOptions ++= Seq(
         "-encoding",
