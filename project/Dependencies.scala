@@ -8,6 +8,7 @@ object Dependencies {
   val akka        = "com.typesafe.akka" %% "akka-actor"       % AkkaVersion
   val akkaJackson =
     "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion // https://github.com/akka/akka/issues/29351
+  val akkaStreams = "com.typesafe.akka" %% "akka-stream" % AkkaVersion
 
   //Prod
   val slickPg         = "com.github.tminglei"  %% "slick-pg"           % "0.19.2"
@@ -23,7 +24,6 @@ object Dependencies {
   val Joda            = "joda-time"             % "joda-time"          % "2.10.6"
   val flyWayCore      = "org.flywaydb"          % "flyway-core"        % "6.5.4"
   val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.14"
-  val akkaStreams     = "com.typesafe.akka"    %% "akka-stream"        % "2.6.8"
 
   val cats = "org.typelevel" %% "cats-core" % "2.2.0-RC2"
 

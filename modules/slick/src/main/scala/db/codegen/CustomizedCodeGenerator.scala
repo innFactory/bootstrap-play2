@@ -21,7 +21,7 @@ object CustomizedCodeGenerator {
       codegen.map(
         _.writeToFile(
           "db.codegen.XPostgresProfile", // use our customized postgres driver
-          s"$projectDir/target/scala-2.12/src_managed/slick",
+          s"$projectDir/target/scala-2.13/src_managed/slick",
           "dbdata",
           "Tables",
           "Tables.scala"

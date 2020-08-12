@@ -1,31 +1,31 @@
 import com.typesafe.config.ConfigFactory
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.dockerEntrypoint
-import sbt.{Def, _}
+import sbt.{ Def, _ }
 
 //settings
 
 name := """bootstrap-play2"""
-scalaVersion := "2.12.11"
+scalaVersion := "2.13.3"
 
 val latest = sys.env.get("BRANCH") match {
-  case Some(str) => if(str.equals("master")) true else false
-  case None => false
+  case Some(str) => if (str.equals("master")) true else false
+  case None      => false
 }
 
 val buildVersion = sys.env.get("VERSION") match {
   case Some(str) => str
-  case None => version.key.toString()
+  case None      => version.key.toString()
 }
 
 val dockerRegistry = sys.env.get("DOCKER_REGISTRY") match {
   case Some(repo) => Some(repo)
-  case None => Some("localhost")
+  case None       => Some("localhost")
 }
 
 val generatedFilePath: String = "/dbdata/Tables.scala"
-val flywayDbName: String = "bootstrap-play2"
-val dbConf = settingKey[DbConf]("Typesafe config file with slick settings")
-val generateTables = taskKey[Seq[File]]("Generate slick code")
+val flywayDbName: String      = "bootstrap-play2"
+val dbConf                    = settingKey[DbConf]("Typesafe config file with slick settings")
+val generateTables            = taskKey[Seq[File]]("Generate slick code")
 
 // Testing
 
@@ -39,14 +39,15 @@ addCommandAlias("localTests", "; clean; flyway/flywayMigrate; test")
 
 /* TaskKeys */
 lazy val slickGen = taskKey[Seq[File]]("slickGen")
-lazy val copyRes = TaskKey[Unit]("copyRes")
+lazy val copyRes  = TaskKey[Unit]("copyRes")
 
 /* Create db config for flyway */
 def createDbConf(dbConfFile: File): DbConf = {
   val configFactory = ConfigFactory.parseFile(dbConfFile)
-  val configPath = s"$flywayDbName"
-  val config = configFactory.getConfig(configPath).resolve
-  val url = s"${config.getString("database.urlPrefix")}${config.getString("database.host")}:${config.getString("database.port")}/${config.getString("database.db")}"
+  val configPath    = s"$flywayDbName"
+  val config        = configFactory.getConfig(configPath).resolve
+  val url           = s"${config.getString("database.urlPrefix")}${config
+    .getString("database.host")}:${config.getString("database.port")}/${config.getString("database.db")}"
   DbConf(
     config.getString("profile"),
     config.getString("database.driver"),
@@ -56,82 +57,94 @@ def createDbConf(dbConfFile: File): DbConf = {
   )
 }
 
-def dbConfSettings = Seq(
-  dbConf in Global := createDbConf((resourceDirectory in Compile).value / "application.conf")
-)
-
-def flywaySettings = Seq(
-  flywayUrl := (dbConf in Global).value.url,
-  flywayUser := (dbConf in Global).value.user,
-  flywayPassword := (dbConf in Global).value.password,
-  flywaySchemas := (Seq("postgis")),
-)
-
-def generateTablesTask(conf: DbConf) = Def.task {
-  val dir = sourceManaged.value
-  val outputDir = (dir / "slick").getPath
-  val fname = outputDir + generatedFilePath
-  val generator = "db.codegen.CustomizedCodeGenerator"
-  val url = conf.url
-  val slickProfile = conf.profile.dropRight(1)
-  val jdbcDriver = conf.driver
-  val pkg = "db.Tables"
-  val cp = (dependencyClasspath in Compile).value
-  val username = conf.user
-  val password = conf.password
-  val s = streams.value
-  val r = (runner in Compile).value
-  r.run(
-    generator,
-    cp.files,
-    Array(outputDir, slickProfile, jdbcDriver, url, pkg, username, password),
-    s.log
+def dbConfSettings =
+  Seq(
+    dbConf in Global := createDbConf((resourceDirectory in Compile).value / "application.conf")
   )
-  Seq(file(fname))
-}
 
+def flywaySettings =
+  Seq(
+    flywayUrl := (dbConf in Global).value.url,
+    flywayUser := (dbConf in Global).value.user,
+    flywayPassword := (dbConf in Global).value.password,
+    flywaySchemas := (Seq("postgis"))
+  )
+
+def generateTablesTask(conf: DbConf) =
+  Def.task {
+    val dir          = sourceManaged.value
+    val outputDir    = (dir / "slick").getPath
+    val fname        = outputDir + generatedFilePath
+    val generator    = "db.codegen.CustomizedCodeGenerator"
+    val url          = conf.url
+    val slickProfile = conf.profile.dropRight(1)
+    val jdbcDriver   = conf.driver
+    val pkg          = "db.Tables"
+    val cp           = (dependencyClasspath in Compile).value
+    val username     = conf.user
+    val password     = conf.password
+    val s            = streams.value
+    val r            = (runner in Compile).value
+    r.run(
+      generator,
+      cp.files,
+      Array(outputDir, slickProfile, jdbcDriver, url, pkg, username, password),
+      s.log
+    )
+    Seq(file(fname))
+  }
 
 slickGen := Def.taskDyn(generateTablesTask((dbConf in Global).value)).value
 
 /*project definitions*/
 
 lazy val firebaseAuth = (project in file("modules/firebase-auth"))
+  .settings(scalaVersion := "2.13.3")
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, DockerPlugin, SwaggerPlugin)
   .dependsOn(slick, firebaseAuth)
   .aggregate(firebaseAuth)
   .settings(
+    scalaVersion := "2.13.3",
     dbConfSettings,
     libraryDependencies ++= Dependencies.list,
     // Adding Cache
     libraryDependencies ++= Seq(ehcache),
-    swaggerDomainNameSpaces := Seq("models", "publicmetrics"), // New Models have to be added here to be referencable in routes
+    swaggerDomainNameSpaces := Seq(
+      "models",
+      "publicmetrics"
+    ), // New Models have to be added here to be referencable in routes
     swaggerPrettyJson := true,
     swaggerV3 := true
   )
-  .settings(Seq(
-    maintainer := "innFactory",
-    version := buildVersion,
-    packageName in Docker := "bootstrap-play2",
-    dockerUpdateLatest := latest,
-    dockerRepository := dockerRegistry,
-    dockerExposedPorts := Seq(8080, 8080),
-    dockerEntrypoint := Seq(""),
-    dockerBaseImage := "openjdk:11.0.6-jre-slim",
-    dockerEntrypoint := Seq("/opt/docker/bin/bootstrap-play2", "-Dplay.server.pidfile.path=/dev/null")
-  ))
-
+  .settings(
+    Seq(
+      maintainer := "innFactory",
+      version := buildVersion,
+      packageName in Docker := "bootstrap-play2",
+      dockerUpdateLatest := latest,
+      dockerRepository := dockerRegistry,
+      dockerExposedPorts := Seq(8080, 8080),
+      dockerEntrypoint := Seq(""),
+      dockerBaseImage := "openjdk:11.0.6-jre-slim",
+      dockerEntrypoint := Seq("/opt/docker/bin/bootstrap-play2", "-Dplay.server.pidfile.path=/dev/null")
+    )
+  )
 
 lazy val flyway = (project in file("modules/flyway"))
   .enablePlugins(FlywayPlugin)
   .settings(
+    scalaVersion := "2.13.3",
     libraryDependencies ++= Dependencies.list,
     flywaySettings
   )
 
 lazy val slick = (project in file("modules/slick"))
-  .settings(libraryDependencies ++= Dependencies.list)
+  .settings(
+    scalaVersion := "2.13.3",
+    libraryDependencies ++= Dependencies.list
+  )
 
 lazy val globalResources = file("conf")
 
@@ -139,7 +152,7 @@ unmanagedResourceDirectories in Compile += globalResources
 unmanagedResourceDirectories in Runtime += globalResources
 
 // For Cats because of scala 2.12.11, can be removed 2.13+
-scalacOptions += "-Ypartial-unification"
+//scalacOptions += "-Ypartial-unification"
 
 /* Scala format */
 scalafmtOnCompile in ThisBuild := true // all projects
