@@ -55,3 +55,4 @@ out/doc
 .DS_Store
 
 local-runner/postgis-volume
+.bloop/
