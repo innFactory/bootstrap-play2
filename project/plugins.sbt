@@ -14,7 +14,7 @@ addSbtPlugin("com.github.tototoshi" % "sbt-slick-codegen" % "1.4.0")
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.2")
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.1")
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.7.4")
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.2")
 addSbtPlugin("com.iheart" % "sbt-play-swagger" % "0.9.1")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-license-report" % "1.2.0")
