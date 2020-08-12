@@ -9,9 +9,9 @@ object Dependencies {
   val akkaJackson = "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion // https://github.com/akka/akka/issues/29351
 
   //Prod
-  val slickPg =  "com.github.tminglei" %% "slick-pg" % "0.19.1"
-  val slickPgPlayJson = "com.github.tminglei" %% "slick-pg_play-json" % "0.19.1"
-  val slickPgJts= "com.github.tminglei" %% "slick-pg_jts" % "0.19.1"
+  val slickPg =  "com.github.tminglei" %% "slick-pg" % "0.19.2"
+  val slickPgPlayJson = "com.github.tminglei" %% "slick-pg_play-json" % "0.19.2"
+  val slickPgJts= "com.github.tminglei" %% "slick-pg_jts" % "0.19.2"
   val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper" % "2.4.2"
   val playJson = "com.typesafe.play" %% "play-json" % "2.9.0"
   val playJsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.9.0"
