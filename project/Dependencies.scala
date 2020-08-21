@@ -26,7 +26,7 @@ object Dependencies {
   val flyWayCore      = "org.flywaydb"          % "flyway-core"        % "6.5.5"
   val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.15"
 
-  val cats = "org.typelevel" %% "cats-core" % "2.2.0-RC3"
+  val cats = "org.typelevel" %% "cats-core" % "2.2.0-RC4"
 
   //Test
   val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.2" % Test
