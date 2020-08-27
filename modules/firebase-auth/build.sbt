@@ -9,3 +9,5 @@ libraryDependencies ++= Seq(
   firebaseAdmin,
   nimbusJoseJWT
 )
+
+skip in publish := true
