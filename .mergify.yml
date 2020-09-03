@@ -1,6 +1,7 @@
 pull_request_rules:
-  - name: Automatic merge on successful test
+  - name: Automatic merge on successful tests by PR from jona7o (Scala Steward)
     conditions:
+      - author=jona7o
       - status-success~=test
     actions:
       merge:
