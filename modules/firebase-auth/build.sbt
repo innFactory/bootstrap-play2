@@ -3,7 +3,7 @@ name := "firebase-auth"
 // JWT
 
 val firebaseAdmin = "com.google.firebase" % "firebase-admin" % "7.0.0"
-val nimbusJoseJWT = "com.nimbusds" % "nimbus-jose-jwt" % "9.0"
+val nimbusJoseJWT = "com.nimbusds" % "nimbus-jose-jwt" % "9.0.1"
 
 libraryDependencies ++= Seq(
   firebaseAdmin,
