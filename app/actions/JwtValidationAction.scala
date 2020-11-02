@@ -2,13 +2,13 @@ package actions
 
 import com.google.inject.Inject
 import com.nimbusds.jwt.proc.BadJWTException
+import de.innfactory.auth.firebase.validator.{ JwtToken, JwtValidator }
 import play.api.Environment
 import play.api.mvc.Results.Forbidden
 import play.api.mvc.Results.Unauthorized
 
 import scala.concurrent.{ ExecutionContext, Future }
 import play.api.mvc._
-import firebaseAuth.{ JwtToken, JwtValidator }
 
 class JwtValidationAction @Inject() (parser: BodyParsers.Default, jwtValidator: JwtValidator, environment: Environment)(
   implicit ec: ExecutionContext

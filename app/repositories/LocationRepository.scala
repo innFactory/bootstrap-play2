@@ -10,7 +10,7 @@ import db.LocationsDAO
 import javax.inject.Inject
 import models.api.Location
 import cats.implicits._
-import common.GeoPointFactory.GeoPointFactory
+import de.innfactory.common.geo.GeoPointFactory
 import common.results.errors.Errors.Forbidden
 import play.api.mvc.AnyContent
 import common.utils.OptionUtils._

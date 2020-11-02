@@ -3,7 +3,7 @@ package common.authorization
 import java.util.Base64
 
 import com.google.inject.Inject
-import firebaseAuth.JwtToken
+import de.innfactory.auth.firebase.validator.JwtToken
 import play.api.{ Configuration, Environment, Logger }
 
 import scala.concurrent.{ ExecutionContext, Future }

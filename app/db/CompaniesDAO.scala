@@ -5,12 +5,11 @@ import java.util.UUID
 import common.daos.BaseSlickDAO
 import common.results.Results.Result
 import common.results.errors.Errors.{ DatabaseError, NotFound }
-import db.codegen.XPostgresProfile
+import de.innfactory.play.db.codegen.XPostgresProfile
 import javax.inject.{ Inject, Singleton }
 import slick.jdbc.JdbcBackend.Database
 import play.api.libs.json.Json
 import models.api.{ Company => CompanyObject }
-import dbdata.Tables
 import org.joda.time.DateTime
 import models.api.Company.patch
 
@@ -52,7 +51,7 @@ class SlickCompaniesSlickDAO @Inject() (db: Database)(implicit ec: ExecutionCont
   // Class Name for identification in Database Errors
   override val currentClassForDatabaseError = "SlickCompaniesDAO"
 
-  override val profile: XPostgresProfile.type = XPostgresProfile
+  override val profile = XPostgresProfile
   import profile.api._
 
   /* - - - Compiled Queries - - - */

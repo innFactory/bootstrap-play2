@@ -1,19 +1,17 @@
 import java.util.Properties
 
-import javax.inject.{Inject, Provider, Singleton}
+import javax.inject.{ Inject, Provider, Singleton }
 import com.typesafe.config.Config
 import play.api.inject.ApplicationLifecycle
-import play.api.{Configuration, Environment, Logger, Mode}
+import play.api.{ Configuration, Environment, Logger, Mode }
 import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
-import db.{CompaniesDAO, LocationsDAO, SlickCompaniesSlickDAO, SlickLocationsDAO}
+import db.{ CompaniesDAO, LocationsDAO, SlickCompaniesSlickDAO, SlickLocationsDAO }
 import de.innfactory.auth.firebase.FirebaseBase
-import de.innfactory.auth.firebase.validator.{JWTValidatorMock, JwtValidator, JwtValidatorImpl}
+import de.innfactory.auth.firebase.validator.{ JWTValidatorMock, JwtValidator, JwtValidatorImpl }
 import de.innfactory.play.flyway.FlywayMigrator
-import org.flywaydb.core.internal.jdbc.DriverDataSource
 import play.api.libs.concurrent.AkkaGuiceSupport
-import play.api.mvc.AnyContent
-import repositories.{CompaniesRepository, CompaniesRepositoryImpl, LocationRepository, LocationRepositoryImpl}
+import repositories.{ CompaniesRepository, CompaniesRepositoryImpl, LocationRepository, LocationRepositoryImpl }
 
 import scala.concurrent.Future
 
@@ -31,7 +29,7 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     bind(classOf[Database]).toProvider(classOf[DatabaseProvider])
     bind(classOf[firebaseCreationService]).asEagerSingleton()
     bind(classOf[firebaseDeletionService]).asEagerSingleton()
-    bind(classOf[FlywayMigrator]).asEagerSingleton()
+    bind(classOf[FlywayMigratorImpl]).asEagerSingleton()
     bind(classOf[LocationsDAO]).to(classOf[SlickLocationsDAO])
     bind(classOf[LocationRepository]).to(classOf[LocationRepositoryImpl])
     bind(classOf[CompaniesRepository]).to(classOf[CompaniesRepositoryImpl])
@@ -57,11 +55,14 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 }
 
 /** Migrate Flyway on application start */
-class FlywayMigratorImpl @Inject() (env: Environment, configuration: Configuration) extends FlywayMigrator(configuration, env, configIdentifier = "bootstrap-play2")
+class FlywayMigratorImpl @Inject() (env: Environment, configuration: Configuration)
+    extends FlywayMigrator(configuration, env, configIdentifier = "bootstrap-play2")
 
 /** Creates FirebaseApp on Application creation */
-class firebaseCreationService @Inject() (config: Config) {
-  FirebaseBase.instantiateFirebase(config.getString("firebase.file"))
+class firebaseCreationService @Inject() (config: Config, env: Environment) {
+  if (env.mode == Mode.Prod || env.mode == Mode.Dev) {
+    FirebaseBase.instantiateFirebase(config.getString("firebase.file"))
+  }
 }
 
 /** Deletes FirebaseApp safely. Important on dev restart. */

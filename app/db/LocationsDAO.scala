@@ -3,11 +3,11 @@ package db
 import java.util.UUID
 
 import com.vividsolutions.jts.geom.Geometry
-import common.GeoPointFactory.GeoPointFactory
+import de.innfactory.common.geo.GeoPointFactory
 import common.daos.BaseSlickDAO
 import common.results.Results.Result
 import common.results.errors.Errors.{ DatabaseError, NotFound }
-import db.codegen.XPostgresProfile
+import de.innfactory.play.db.codegen.XPostgresProfile
 import javax.inject.{ Inject, Singleton }
 import slick.jdbc.JdbcBackend.Database
 import play.api.libs.json.Json

@@ -26,4 +26,5 @@ class FlywayModule extends Module {
     Seq(bind[FlywayMigrator].toSelf.eagerly())
 }
 
-class FlywayMigrator @Inject() (env: Environment, configuration: Configuration) extends TestFlywayMigrator(configuration, env)
+class FlywayMigrator @Inject() (env: Environment, configuration: Configuration)
+    extends TestFlywayMigrator(configuration, env)

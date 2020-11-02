@@ -6,19 +6,18 @@ import common.utils.OptionUtils._
 import cats.data.EitherT
 import cats.implicits._
 import com.vividsolutions.jts.geom.Geometry
-import common.GeoPointFactory.GeoPointFactory
+import de.innfactory.common.geo.GeoPointFactory
+import de.innfactory.play.db.codegen.XPostgresProfile
 import common.results.Results.{ ErrorStatus, Result }
 import common.results.errors.Errors.{ BadRequest, DatabaseError, NotFound }
-import db.codegen.XPostgresProfile
 import javax.inject.{ Inject, Singleton }
 import slick.jdbc.JdbcBackend.Database
 import play.api.libs.json.Json
 import models.api.{ ApiBaseModel, Location => LocationObject }
-import dbdata.Tables
 import org.joda.time.DateTime
 import slick.basic.BasicStreamingAction
 import slick.lifted.{ CompiledFunction, Query, Rep, TableQuery }
-
+import dbdata.Tables
 import scala.reflect.runtime.{ universe => ru }
 import ru._
 import scala.concurrent.{ ExecutionContext, Future }
