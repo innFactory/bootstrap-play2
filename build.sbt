@@ -98,13 +98,9 @@ slickGen := Def.taskDyn(generateTablesTask((dbConf in Global).value)).value
 
 /*project definitions*/
 
-lazy val firebaseAuth = (project in file("modules/firebase-auth"))
-  .settings(scalaVersion := Dependencies.scalaVersion)
-
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, DockerPlugin, SwaggerPlugin)
-  .dependsOn(slick, firebaseAuth)
-  .aggregate(firebaseAuth)
+  .dependsOn(slick)
   .settings(
     scalaVersion := Dependencies.scalaVersion,
     dbConfSettings,

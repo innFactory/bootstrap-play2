@@ -11,6 +11,10 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion // https://github.com/akka/akka/issues/29351
   val akkaStreams = "com.typesafe.akka" %% "akka-stream" % akkaVersion
 
+  // innFactory Utils
+
+  val scalaUtil = "de.innfactory" %% "scala-utils" % "1.0.69"
+
   //Prod
   val slickPg         = "com.github.tminglei"  %% "slick-pg"           % "0.19.3"
   val slickPgPlayJson = "com.github.tminglei"  %% "slick-pg_play-json" % "0.19.3"
@@ -33,6 +37,7 @@ object Dependencies {
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   lazy val list = Seq(
+    scalaUtil,
     akka,
     akkaTyped,
     akkaJackson,
