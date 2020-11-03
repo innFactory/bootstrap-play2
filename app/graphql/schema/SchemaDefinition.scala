@@ -19,10 +19,10 @@ object SchemaDefinition {
     )
   )
 
-  val BookingsSchema: Schema[GraphQLExecutionContext, Unit] =
+  val graphQLSchema: Schema[GraphQLExecutionContext, Unit] =
     Schema(
       Query,
-      Some(Mutations),
+      None,
       description = Some(
         "Schema for Familotel API "
       )

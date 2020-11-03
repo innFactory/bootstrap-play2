@@ -367,6 +367,9 @@ POST               /v1/locations                                 controllers.Loc
 ###
 PATCH               /v1/locations                               controllers.LocationsController.patch
 
+POST               /graphql                              graphql.GraphQLController.graphql
+POST               /graphql/schema                              graphql.GraphQLController.renderSchema
+
 # Map static resources from the /public folder to the /assets URL path
 ### NoDocs ###
 GET                 /assets/*file                                   controllers.Assets.versioned(path="/public", file: Asset)

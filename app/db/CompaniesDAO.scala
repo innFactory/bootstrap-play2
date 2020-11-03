@@ -23,6 +23,8 @@ trait CompaniesDAO {
 
   def lookup(id: UUID): Future[Result[CompanyObject]]
 
+  def all(): Future[Seq[CompanyObject]]
+
   def internal_lookupByEmail(email: String): Future[Option[CompanyObject]]
 
   def create(CompanyObject: CompanyObject): Future[Result[CompanyObject]]
@@ -73,6 +75,11 @@ class SlickCompaniesSlickDAO @Inject() (db: Database)(implicit ec: ExecutionCont
   def lookup(id: UUID): Future[Result[CompanyObject]] =
     lookupGeneric[CompanyRow, CompanyObject](
       queryById(id).result.headOption
+    )
+
+  def all(): Future[Seq[CompanyObject]] =
+    lookupSequenceGenericRawSequence(
+      Company.result
     )
 
   /**

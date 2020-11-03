@@ -46,6 +46,15 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables {
     }
   }
 
+  def lookupSequenceGenericRawSequence[R, T](
+    querySeq: DBIOAction[Seq[R], NoStream, Nothing]
+  )(implicit rowToObject: R => T): Future[Seq[T]] = {
+    val queryResult: Future[Seq[R]] = db.run(querySeq)
+    queryResult.map { res: Seq[R] =>
+      res.map(rowToObject)
+    }
+  }
+
   def lookupSequenceGeneric[R, T](
     querySeq: DBIOAction[Seq[R], NoStream, Nothing]
   )(implicit rowToObject: R => T): Future[Result[Seq[T]]] = {

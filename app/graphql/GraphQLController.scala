@@ -1,16 +1,21 @@
-package controllers
+package graphql
 
+import de.innfactory.grapqhl.play.controller.GraphQLControllerBase
+import graphql.schema.SchemaDefinition
 import javax.inject.{ Inject, Singleton }
 import play.api.mvc._
+
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class HealthController @Inject() (
-  cc: ControllerComponents
+class GraphQLController @Inject() (
+  cc: ControllerComponents,
+  executionServices: ExecutionServices,
+  requestExecutor: RequestExecutor
 )(implicit ec: ExecutionContext)
-    extends AbstractController(cc) {
-  def ping: Action[AnyContent] =
-    Action {
-      Ok("Ok")
-    }
-}
+    extends GraphQLControllerBase(cc)(
+      executionServices,
+      SchemaDefinition.graphQLSchema,
+      (request: Request[AnyContent]) => Right(true),
+      requestExecutor
+    ) {}

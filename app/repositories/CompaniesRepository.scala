@@ -8,14 +8,17 @@ import cats.data.EitherT
 import common.authorization.CompanyAuthorizationMethods
 import common.results.Results.{ ErrorStatus, Result }
 import db.CompaniesDAO
+import de.innfactory.grapqhl.play.result.implicits.GraphQlResult.EnhancedFutureResult
+import graphql.ErrorParserImpl
 import javax.inject.{ Inject, Singleton }
 import models.api.Company
-import play.api.mvc.AnyContent
+import play.api.mvc.{ AnyContent, Request }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait CompaniesRepository {
   def lookup(id: UUID, request: RequestWithCompany[AnyContent]): Future[Result[Company]]
+  def all(request: Request[AnyContent]): Future[Seq[Company]]
   def patch(company: Company, request: RequestWithCompany[AnyContent]): Future[Result[Company]]
   def post(company: Company, request: RequestWithCompany[AnyContent]): Future[Result[Company]]
   def delete(id: UUID, request: RequestWithCompany[AnyContent]): Future[Result[Company]]
@@ -24,7 +27,7 @@ trait CompaniesRepository {
 class CompaniesRepositoryImpl @Inject() (
   companiesDAO: CompaniesDAO,
   authorizationMethods: CompanyAuthorizationMethods[AnyContent]
-)(implicit ec: ExecutionContext)
+)(implicit ec: ExecutionContext, errorParser: ErrorParserImpl)
     extends CompaniesRepository {
 
   def lookup(id: UUID, request: RequestWithCompany[AnyContent]): Future[Result[Company]] = {
@@ -33,6 +36,13 @@ class CompaniesRepositoryImpl @Inject() (
       _            <- EitherT(Future(authorizationMethods.canGet(request, lookupResult)))
     } yield lookupResult
     result.value
+  }
+
+  def all(request: Request[AnyContent]): Future[Seq[Company]] = {
+    val result = for {
+      lookupResult <- EitherT(companiesDAO.all().map(_.asRight[ErrorStatus]))
+    } yield lookupResult
+    result.value.completeOrThrow
   }
 
   def patch(company: Company, request: RequestWithCompany[AnyContent]): Future[Result[Company]] = {
