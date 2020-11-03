@@ -1,11 +1,31 @@
 import com.typesafe.config.ConfigFactory
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.dockerEntrypoint
-import sbt.{ Def, _ }
-
+import sbt.{Def, Resolver, _}
 //settings
 
 name := """bootstrap-play2"""
 scalaVersion := Dependencies.scalaVersion
+
+resolvers += Resolver.githubPackages("innFactory")
+
+githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
+val token = sys.env.getOrElse("GITHUB_TOKEN", "5a5b5b1c28f2801a68eff3fb297ac6c9164c5bb1")
+
+val githubSettings = Seq(
+   githubOwner := "innFactory",
+    githubRepository := "bootstrap-play2",
+  credentials :=
+    Seq(Credentials(
+      "GitHub Package Registry",
+      "maven.pkg.github.com",
+      "innFactory",
+      token
+    ))
+)
+
+
+
+
 
 val latest = sys.env.get("BRANCH") match {
   case Some(str) => if (str.equals("master")) true else false
@@ -112,7 +132,8 @@ lazy val root = (project in file("."))
       "publicmetrics"
     ), // New Models have to be added here to be referencable in routes
     swaggerPrettyJson := true,
-    swaggerV3 := true
+    swaggerV3 := true,
+    githubSettings
   )
   .settings(
     Seq(
@@ -133,13 +154,15 @@ lazy val flyway = (project in file("modules/flyway"))
   .settings(
     scalaVersion := Dependencies.scalaVersion,
     libraryDependencies ++= Dependencies.list,
-    flywaySettings
+    flywaySettings,
+    githubSettings
   )
 
 lazy val slick = (project in file("modules/slick"))
   .settings(
     scalaVersion := Dependencies.scalaVersion,
-    libraryDependencies ++= Dependencies.list
+    libraryDependencies ++= Dependencies.list,
+    githubSettings
   )
 
 lazy val globalResources = file("conf")

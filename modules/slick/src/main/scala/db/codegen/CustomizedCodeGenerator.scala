@@ -8,7 +8,7 @@ class CodeGenConfig() extends Config[XPostgresProfile] {
 
 object CustomizedCodeGenerator
     extends CustomizedCodeGeneratorBase(
-      CustomizedCodeGeneratorConfig(profile = "de.innfactory.play.db.codegen.XPostgresProfile"),
+      CustomizedCodeGeneratorConfig(),
       new CodeGenConfig()
     ) {
 
