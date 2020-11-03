@@ -23,10 +23,6 @@ val githubSettings = Seq(
     ))
 )
 
-
-
-
-
 val latest = sys.env.get("BRANCH") match {
   case Some(str) => if (str.equals("master")) true else false
   case None      => false
@@ -169,9 +165,6 @@ lazy val globalResources = file("conf")
 
 unmanagedResourceDirectories in Compile += globalResources
 unmanagedResourceDirectories in Runtime += globalResources
-
-// For Cats because of scala 2.12.11, can be removed 2.13+
-//scalacOptions += "-Ypartial-unification"
 
 /* Scala format */
 scalafmtOnCompile in ThisBuild := true // all projects

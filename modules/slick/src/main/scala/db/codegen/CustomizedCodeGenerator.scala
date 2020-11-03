@@ -12,5 +12,8 @@ object CustomizedCodeGenerator
       new CodeGenConfig()
     ) {
 
+  // Update here if new Tables are added
+  // Each Database Table, which should be included in CodeGen
+  // has to be added here in UPPER-CASE
   override def included: Seq[String] = Seq("COMPANY", "LOCATION")
 }
