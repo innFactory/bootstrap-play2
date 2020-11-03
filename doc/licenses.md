@@ -45,7 +45,7 @@ Apache | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.
 Apache | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | io.netty # netty-buffer # 4.1.34.Final | <notextile></notextile>
 Apache | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | io.netty # netty-codec # 4.1.34.Final | <notextile></notextile>
 Apache | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | io.netty # netty-codec-http # 4.1.34.Final | <notextile></notextile>
-Apache | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | io.netty # netty-common # 4.1.34.Final | <notextile></notextile>
+Apache | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | io.netty # netty-de.innfactory.bootstrapplay2.common # 4.1.34.Final | <notextile></notextile>
 Apache | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | io.netty # netty-handler # 4.1.34.Final | <notextile></notextile>
 Apache | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | io.netty # netty-resolver # 4.1.34.Final | <notextile></notextile>
 Apache | [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | io.netty # netty-transport # 4.1.34.Final | <notextile></notextile>
@@ -74,11 +74,11 @@ Apache | [Apache Software License - Version 2.0](http://www.apache.org/licenses/
 Apache | [Apache Software License - Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | org.eclipse.jetty # jetty-xml # 9.4.20.v20190813 | <notextile></notextile>
 Apache | [Apache Software License - Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | org.eclipse.jetty.websocket # websocket-api # 9.4.20.v20190813 | <notextile></notextile>
 Apache | [Apache Software License - Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | org.eclipse.jetty.websocket # websocket-client # 9.4.20.v20190813 | <notextile></notextile>
-Apache | [Apache Software License - Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | org.eclipse.jetty.websocket # websocket-common # 9.4.20.v20190813 | <notextile></notextile>
+Apache | [Apache Software License - Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | org.eclipse.jetty.websocket # websocket-de.innfactory.bootstrapplay2.common # 9.4.20.v20190813 | <notextile></notextile>
 Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt) | com.google.api.grpc # proto-google-cloud-firestore-admin-v1 # 1.31.0 | <notextile></notextile>
 Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt) | com.google.api.grpc # proto-google-cloud-firestore-v1 # 1.31.0 | <notextile></notextile>
 Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt) | com.google.api.grpc # proto-google-cloud-firestore-v1beta1 # 0.84.0 | <notextile></notextile>
-Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt) | com.google.api.grpc # proto-google-common-protos # 1.17.0 | <notextile></notextile>
+Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt) | com.google.api.grpc # proto-google-de.innfactory.bootstrapplay2.common-protos # 1.17.0 | <notextile></notextile>
 Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt) | com.google.api.grpc # proto-google-iam-v1 # 0.13.0 | <notextile></notextile>
 Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt) | com.google.cloud # google-cloud-core # 1.91.3 | <notextile></notextile>
 Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt) | com.google.cloud # google-cloud-core-grpc # 1.91.3 | <notextile></notextile>
@@ -100,7 +100,7 @@ Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.html) | com.ty
 Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.html) | com.typesafe.akka # akka-slf4j_2.12 # 2.6.3 | <notextile></notextile>
 Apache | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.html) | com.typesafe.akka # akka-stream_2.12 # 2.6.3 | <notextile></notextile>
 Apache | [Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0.html) | com.typesafe.play # build-link # 2.8.1 | <notextile></notextile>
-Apache | [Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0.html) | com.typesafe.play # filters-helpers_2.12 # 2.8.1 | <notextile></notextile>
+Apache | [Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0.html) | com.typesafe.play # de.innfactory.bootstrapplay2.filters-helpers_2.12 # 2.8.1 | <notextile></notextile>
 Apache | [Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0.html) | com.typesafe.play # play-ahc-ws_2.12 # 2.6.15 | <notextile></notextile>
 Apache | [Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0.html) | com.typesafe.play # play-akka-http-server_2.12 # 2.8.1 | <notextile></notextile>
 Apache | [Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0.html) | com.typesafe.play # play-cache_2.12 # 2.8.1 | <notextile></notextile>
@@ -179,7 +179,7 @@ Apache | [the Apache License, ASL Version 2.0](http://www.apache.org/licenses/LI
 Apache | [the Apache License, ASL Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) | org.scalatest # scalatest_2.12 # 3.0.4 | <notextile></notextile>
 BSD | [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause) | com.google.protobuf # protobuf-java # 3.10.0 | <notextile></notextile>
 BSD | [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause) | com.google.protobuf # protobuf-java-util # 3.10.0 | <notextile></notextile>
-BSD | [BSD](https://github.com/googleapis/api-common-java/blob/master/LICENSE) | com.google.api # api-common # 1.8.1 | <notextile></notextile>
+BSD | [BSD](https://github.com/googleapis/api-common-java/blob/master/LICENSE) | com.google.api # api-de.innfactory.bootstrapplay2.common # 1.8.1 | <notextile></notextile>
 BSD | [BSD](https://github.com/googleapis/gax-java/blob/master/LICENSE) | com.google.api # gax # 1.49.1 | <notextile></notextile>
 BSD | [BSD](https://github.com/googleapis/gax-java/blob/master/LICENSE) | com.google.api # gax-grpc # 1.49.1 | <notextile></notextile>
 BSD | [BSD](https://github.com/googleapis/gax-java/blob/master/LICENSE) | com.google.api # gax-httpjson # 0.65.1 | <notextile></notextile>

@@ -6,12 +6,17 @@ import play.api.inject.ApplicationLifecycle
 import play.api.{ Configuration, Environment, Logger, Mode }
 import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
-import db.{ CompaniesDAO, LocationsDAO, SlickCompaniesSlickDAO, SlickLocationsDAO }
 import de.innfactory.auth.firebase.FirebaseBase
 import de.innfactory.auth.firebase.validator.{ JWTValidatorMock, JwtValidator, JwtValidatorImpl }
+import de.innfactory.bootstrapplay2.db.{ CompaniesDAO, LocationsDAO, SlickCompaniesSlickDAO, SlickLocationsDAO }
 import de.innfactory.play.flyway.FlywayMigrator
 import play.api.libs.concurrent.AkkaGuiceSupport
-import repositories.{ CompaniesRepository, CompaniesRepositoryImpl, LocationRepository, LocationRepositoryImpl }
+import de.innfactory.bootstrapplay2.repositories.{
+  CompaniesRepository,
+  CompaniesRepositoryImpl,
+  LocationRepository,
+  LocationRepositoryImpl
+}
 
 import scala.concurrent.Future
 
@@ -30,11 +35,7 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     bind(classOf[firebaseCreationService]).asEagerSingleton()
     bind(classOf[firebaseDeletionService]).asEagerSingleton()
     bind(classOf[FlywayMigratorImpl]).asEagerSingleton()
-    bind(classOf[LocationsDAO]).to(classOf[SlickLocationsDAO])
-    bind(classOf[LocationRepository]).to(classOf[LocationRepositoryImpl])
-    bind(classOf[CompaniesRepository]).to(classOf[CompaniesRepositoryImpl])
     bind(classOf[LocationsDAOCloseHook]).asEagerSingleton()
-    bind(classOf[CompaniesDAO]).to(classOf[SlickCompaniesSlickDAO])
     bind(classOf[CompaniesDAOCloseHook]).asEagerSingleton()
 
     /**

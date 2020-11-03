@@ -45,7 +45,7 @@ val generateTables            = taskKey[Seq[File]]("Generate slick code")
 
 // Testing
 
-coverageExcludedPackages += "<empty>;Reverse.*;router.*;.*AuthService.*;models\\\\.data\\\\..*;dbdata.Tables*;common.jwt.*;common.errorHandling.*;common.jwt.JwtFilter;db.codegen.*;common.pubSub.*;publicmetrics.influx.*"
+coverageExcludedPackages += "<empty>;Reverse.*;router.*;.*AuthService.*;models\\\\.data\\\\..*;dbdata.Tables*;de.innfactory.bootstrapplay2.common.jwt.*;de.innfactory.bootstrapplay2.common.errorHandling.*;de.innfactory.bootstrapplay2.common.jwt.JwtFilter;db.codegen.*;de.innfactory.bootstrapplay2.common.pubSub.*;publicmetrics.influx.*"
 fork in Test := true
 
 // Commands

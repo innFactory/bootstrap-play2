@@ -2,7 +2,7 @@ package controllers
 
 import java.util.UUID
 
-import models.api._
+import de.innfactory.bootstrapplay2.models.api._
 import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
 import play.api.libs.json._
 import play.api.test.Helpers._
