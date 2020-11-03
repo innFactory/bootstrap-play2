@@ -9,7 +9,7 @@ scalaVersion := Dependencies.scalaVersion
 resolvers += Resolver.githubPackages("innFactory")
 
 githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
-val token = sys.env.getOrElse("GITHUB_TOKEN", "5a5b5b1c28f2801a68eff3fb297ac6c9164c5bb1")
+val token = sys.env.getOrElse("GITHUB_TOKEN", "")
 
 val githubSettings = Seq(
    githubOwner := "innFactory",
