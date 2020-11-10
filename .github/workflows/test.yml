@@ -1,9 +1,9 @@
 name: Run Tests
 on:
   push:
-    branches: [ master, v2 ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, v2 ]
+    branches: [ master ]
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -49,5 +49,6 @@ jobs:
         bash <(curl -s https://codecov.io/bash)
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PUBLIC_GITHUB_TOKEN }}
  
           
