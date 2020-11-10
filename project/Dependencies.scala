@@ -11,6 +11,10 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion // https://github.com/akka/akka/issues/29351
   val akkaStreams = "com.typesafe.akka" %% "akka-stream" % akkaVersion
 
+  // innFactory Utils
+
+  val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "1.0.92"
+
   //Prod
   val slickPg         = "com.github.tminglei"  %% "slick-pg"           % "0.19.3"
   val slickPgPlayJson = "com.github.tminglei"  %% "slick-pg_play-json" % "0.19.3"
@@ -22,17 +26,16 @@ object Dependencies {
   val slickCodegen    = "com.typesafe.slick"   %% "slick-codegen"      % "3.3.3"
   val slickHikaricp   = "com.typesafe.slick"   %% "slick-hikaricp"     % "3.3.3"
   val hikariCP        = "com.zaxxer"            % "HikariCP"           % "3.4.5"
-  val joda            = "joda-time"             % "joda-time"          % "2.10.8"
-  val flyWayCore      = "org.flywaydb"          % "flyway-core"        % "6.5.7"
-  val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.18"
-
+  val joda            = "joda-time"             % "joda-time"          % "2.10.6"
+  val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.17"
   val cats = "org.typelevel" %% "cats-core" % "2.2.0"
 
   //Test
-  val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.4" % Test
+  val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.2" % Test
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   lazy val list = Seq(
+    scalaUtil,
     akka,
     akkaTyped,
     akkaJackson,
@@ -47,7 +50,6 @@ object Dependencies {
     slickHikaricp,
     hikariCP,
     joda,
-    flyWayCore,
     postgresql,
     scalatestPlus,
     playAhcWS,

@@ -2,17 +2,15 @@ import java.util.Properties
 
 import javax.inject.{ Inject, Provider, Singleton }
 import com.typesafe.config.Config
-import firebaseAuth.{ FirebaseJWTValidator, JwtValidator, MockJWTValidator }
 import play.api.inject.ApplicationLifecycle
 import play.api.{ Configuration, Environment, Logger, Mode }
 import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
-import db.{ CompaniesDAO, LocationsDAO, SlickCompaniesSlickDAO, SlickLocationsDAO }
-import org.flywaydb.core.internal.jdbc.DriverDataSource
+import de.innfactory.auth.firebase.FirebaseBase
+import de.innfactory.auth.firebase.validator.{ JWTValidatorMock, JwtValidator, JwtValidatorImpl }
+import de.innfactory.bootstrapplay2.db.{ CompaniesDAO, LocationsDAO }
+import de.innfactory.play.flyway.FlywayMigrator
 import play.api.libs.concurrent.AkkaGuiceSupport
-import play.api.mvc.AnyContent
-import repositories.{ CompaniesRepository, CompaniesRepositoryImpl, LocationRepository, LocationRepositoryImpl }
-
 import scala.concurrent.Future
 
 /**
@@ -29,12 +27,8 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     bind(classOf[Database]).toProvider(classOf[DatabaseProvider])
     bind(classOf[firebaseCreationService]).asEagerSingleton()
     bind(classOf[firebaseDeletionService]).asEagerSingleton()
-    bind(classOf[FlywayMigrator]).asEagerSingleton()
-    bind(classOf[LocationsDAO]).to(classOf[SlickLocationsDAO])
-    bind(classOf[LocationRepository]).to(classOf[LocationRepositoryImpl])
-    bind(classOf[CompaniesRepository]).to(classOf[CompaniesRepositoryImpl])
+    bind(classOf[FlywayMigratorImpl]).asEagerSingleton()
     bind(classOf[LocationsDAOCloseHook]).asEagerSingleton()
-    bind(classOf[CompaniesDAO]).to(classOf[SlickCompaniesSlickDAO])
     bind(classOf[CompaniesDAOCloseHook]).asEagerSingleton()
 
     /**
@@ -43,11 +37,11 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     if (environment.mode == Mode.Test) {
       logger.info(s"- - - Binding Services for for Test Mode - - -")
       bind(classOf[JwtValidator])
-        .to(classOf[MockJWTValidator]) // Bind Mock JWT Validator for Test Mode
+        .to(classOf[JWTValidatorMock]) // Bind Mock JWT Validator for Test Mode
     } else {
       logger.info(s"- - - Binding Services for for Prod/Dev Mode - - -")
       bind(classOf[JwtValidator])
-        .to(classOf[FirebaseJWTValidator]) // Bind Prod JWT Validator for Prod/Dev Mode
+        .to(classOf[JwtValidatorImpl]) // Bind Prod JWT Validator for Prod/Dev Mode
     }
 
   }
@@ -55,37 +49,20 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 }
 
 /** Migrate Flyway on application start */
-class FlywayMigrator @Inject() (env: Environment, configuration: Configuration) {
-  private val logger   = Logger("application")
-  logger.info("Creating Flyway context")
-  private val driver   = configuration.get[String]("bootstrap-play2.database.driver")
-  private val url      = configuration.get[String]("bootstrap-play2.database.url")
-  private val user     = configuration.get[String]("bootstrap-play2.database.user")
-  private val password =
-    configuration.get[String]("bootstrap-play2.database.password")
-
-  import org.flywaydb.core.Flyway
-
-  val flyway: Flyway = Flyway.configure
-    .dataSource(new DriverDataSource(env.classLoader, driver, url, user, password, new Properties()))
-    .schemas("postgis")
-    .baselineOnMigrate(true)
-    .locations("filesystem:conf/db/migration")
-    .load
-  logger.info("Flyway is migrating the database to the newest version")
-  flyway.migrate()
-  logger.info("Database migration complete")
-}
+class FlywayMigratorImpl @Inject() (env: Environment, configuration: Configuration)
+    extends FlywayMigrator(configuration, env, configIdentifier = "bootstrap-play2")
 
 /** Creates FirebaseApp on Application creation */
-class firebaseCreationService @Inject() (config: Config) {
-  FirebaseJWTValidator.instanciateFirebase(config.getString("firebase.file"), "")
+class firebaseCreationService @Inject() (config: Config, env: Environment) {
+  if (env.mode == Mode.Prod || env.mode == Mode.Dev) {
+    FirebaseBase.instantiateFirebase(config.getString("firebase.file"))
+  }
 }
 
 /** Deletes FirebaseApp safely. Important on dev restart. */
 class firebaseDeletionService @Inject() (lifecycle: ApplicationLifecycle) {
   lifecycle.addStopHook { () =>
-    Future.successful(FirebaseJWTValidator.deleteFirebase())
+    Future.successful(FirebaseBase.deleteFirebase())
   }
 }
 

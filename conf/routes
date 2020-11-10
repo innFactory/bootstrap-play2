@@ -23,7 +23,7 @@
 #     '500':
 #       description: InternalServerError
 ###
-GET                 /v1/public/helloworld/:query                       actorsystem.controllers.ActorHelloWorldController.helloWorldActor(query: String)
+GET                 /v1/public/helloworld/:query                       de.innfactory.bootstrapplay2.actorsystem.controllers.ActorHelloWorldController.helloWorldActor(query: String)
 
 # - - - - - - - - WEBSOCKET - - - - - - - -
 
@@ -35,7 +35,7 @@ GET                 /v1/public/helloworld/:query                       actorsyst
 #     '200':
 #       description: Response
 ###
-GET                 /v1/websocket                                   websockets.controllers.WebsocketController.socket
+GET                 /v1/websocket                                   de.innfactory.bootstrapplay2.websockets.controllers.WebsocketController.socket
 
 # - - - - - - - - PROBES - - - - - - - -
 
@@ -47,7 +47,7 @@ GET                 /v1/websocket                                   websockets.c
 #     '200':
 #       description: OK
 ###
-GET                /                                                controllers.HealthController.ping
+GET                /                                                de.innfactory.bootstrapplay2.controllers.HealthController.ping
 
 ###
 #  summary: Liveness check
@@ -57,7 +57,7 @@ GET                /                                                controllers.
 #     '200':
 #       description: OK
 ###
-GET                /liveness                                        controllers.HealthController.ping
+GET                /liveness                                        de.innfactory.bootstrapplay2.controllers.HealthController.ping
 
 ###
 #  summary: Readiness check
@@ -67,7 +67,7 @@ GET                /liveness                                        controllers.
 #     '200':
 #       description: OK
 ###
-GET                /readiness                                       controllers.HealthController.ping
+GET                /readiness                                       de.innfactory.bootstrapplay2.controllers.HealthController.ping
 
 # - - - - - - - - COMPANIES - - - - - - - -
 
@@ -81,7 +81,7 @@ GET                /readiness                                       controllers.
 #     '200':
 #       description: success
 #       schema:
-#         $ref: '#/components/schemas/models.api.Company'
+#         $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Company'
 #     '404':
 #       description: not found
 #     '401':
@@ -89,7 +89,7 @@ GET                /readiness                                       controllers.
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/companies/me                                     controllers.CompaniesController.getMe
+GET                 /v1/companies/me                                     de.innfactory.bootstrapplay2.controllers.CompaniesController.getMe
 
 ###
 #  summary: Get Single
@@ -108,7 +108,7 @@ GET                 /v1/companies/me                                     control
 #     '200':
 #       description: success
 #       schema:
-#         $ref: '#/components/schemas/models.api.Company'
+#         $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Company'
 #     '404':
 #       description: not found
 #     '401':
@@ -116,7 +116,7 @@ GET                 /v1/companies/me                                     control
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/companies/:id                                   controllers.CompaniesController.getSingle(id: String)
+GET                 /v1/companies/:id                                   de.innfactory.bootstrapplay2.controllers.CompaniesController.getSingle(id: String)
 
 ###
 #  summary: Delete Company
@@ -141,7 +141,7 @@ GET                 /v1/companies/:id                                   controll
 #     '403':
 #       description: forbidden
 ###
-DELETE               /v1/companies/:id                                   controllers.CompaniesController.delete(id: String)
+DELETE               /v1/companies/:id                                   de.innfactory.bootstrapplay2.controllers.CompaniesController.delete(id: String)
 
 ###
 #  summary: Post Company
@@ -154,7 +154,7 @@ DELETE               /v1/companies/:id                                   control
 #      required: true
 #      description: Comapyn JSON Object
 #      schema:
-#        $ref: '#/components/schemas/models.api.Company'
+#        $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Company'
 #  responses:
 #     '204':
 #       description: success
@@ -167,7 +167,7 @@ DELETE               /v1/companies/:id                                   control
 #     '400':
 #       description: bad request
 ###
-POST               /v1/companies                                   controllers.CompaniesController.post
+POST               /v1/companies                                  de.innfactory.bootstrapplay2.controllers.CompaniesController.post
 
 ###
 #  summary: Patch Company
@@ -180,7 +180,7 @@ POST               /v1/companies                                   controllers.C
 #      required: true
 #      description: Company JSON Object
 #      schema:
-#        $ref: '#/components/schemas/models.api.Company'
+#        $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Company'
 #  responses:
 #     '204':
 #       description: success
@@ -193,7 +193,7 @@ POST               /v1/companies                                   controllers.C
 #     '400':
 #       description: bad request
 ###
-PATCH               /v1/companies                               controllers.CompaniesController.patch
+PATCH               /v1/companies                               de.innfactory.bootstrapplay2.controllers.CompaniesController.patch
 
 # - - - - - - - - LOCATIONS - - - - - - - -
 
@@ -214,7 +214,7 @@ PATCH               /v1/companies                               controllers.Comp
 #     '200':
 #       description: success
 #       schema:
-#         $ref: '#/components/schemas/models.api.Location'
+#         $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Location'
 #     '404':
 #       description: not found
 #     '401':
@@ -222,7 +222,7 @@ PATCH               /v1/companies                               controllers.Comp
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/companies/:id/locations                                  controllers.LocationsController.getByCompany(id: String)
+GET                 /v1/companies/:id/locations                                  de.innfactory.bootstrapplay2.controllers.LocationsController.getByCompany(id: String)
 
 ###
 #  summary: Get Single
@@ -241,7 +241,7 @@ GET                 /v1/companies/:id/locations                                 
 #     '200':
 #       description: success
 #       schema:
-#         $ref: '#/components/schemas/models.api.Location'
+#         $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Location'
 #     '404':
 #       description: not found
 #     '401':
@@ -249,7 +249,7 @@ GET                 /v1/companies/:id/locations                                 
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/locations/:id                                   controllers.LocationsController.getSingle(id: Long)
+GET                 /v1/locations/:id                                   de.innfactory.bootstrapplay2.controllers.LocationsController.getSingle(id: Long)
 
 ###
 #  summary: Get Locations By Distance
@@ -280,7 +280,7 @@ GET                 /v1/locations/:id                                   controll
 #     '200':
 #       description: success
 #       schema:
-#         $ref: '#/components/schemas/models.api.Location'
+#         $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Location'
 #     '404':
 #       description: not found
 #     '401':
@@ -288,7 +288,7 @@ GET                 /v1/locations/:id                                   controll
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/locations/distance/:distance                               controllers.LocationsController.getByDistance(distance: Long, lat: Double, lon: Double)
+GET                 /v1/locations/distance/:distance                               de.innfactory.bootstrapplay2.controllers.LocationsController.getByDistance(distance: Long, lat: Double, lon: Double)
 
 ###
 #  summary: Delete Location
@@ -313,7 +313,7 @@ GET                 /v1/locations/distance/:distance                            
 #     '403':
 #       description: forbidden
 ###
-DELETE               /v1/locations/:id                                   controllers.LocationsController.delete(id: Long)
+DELETE               /v1/locations/:id                                   de.innfactory.bootstrapplay2.controllers.LocationsController.delete(id: Long)
 
 ###
 #  summary: Post Location
@@ -326,7 +326,7 @@ DELETE               /v1/locations/:id                                   control
 #      required: true
 #      description: Location JSON Object
 #      schema:
-#        $ref: '#/components/schemas/models.api.Location'
+#        $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Location'
 #  responses:
 #     '204':
 #       description: success
@@ -339,7 +339,7 @@ DELETE               /v1/locations/:id                                   control
 #     '400':
 #       description: bad request
 ###
-POST               /v1/locations                                 controllers.LocationsController.post
+POST               /v1/locations                                 de.innfactory.bootstrapplay2.controllers.LocationsController.post
 
 ###
 #  summary: Patch Location
@@ -352,7 +352,7 @@ POST               /v1/locations                                 controllers.Loc
 #      required: true
 #      description: Location JSON Object
 #      schema:
-#        $ref: '#/components/schemas/models.api.Location'
+#        $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Location'
 #  responses:
 #     '204':
 #       description: success
@@ -365,7 +365,10 @@ POST               /v1/locations                                 controllers.Loc
 #     '400':
 #       description: bad request
 ###
-PATCH               /v1/locations                               controllers.LocationsController.patch
+PATCH               /v1/locations                               de.innfactory.bootstrapplay2.controllers.LocationsController.patch
+
+POST               /graphql                              de.innfactory.bootstrapplay2.graphql.GraphQLController.graphql
+POST               /graphql/schema                              de.innfactory.bootstrapplay2.graphql.GraphQLController.renderSchema
 
 # Map static resources from the /public folder to the /assets URL path
 ### NoDocs ###

@@ -1,8 +1,8 @@
 package controllers
 
-import common.results.errors.Errors.DatabaseError
-import common.utils.PagedGen
-import models.api._
+import de.innfactory.bootstrapplay2.common.results.errors.Errors.DatabaseError
+import de.innfactory.bootstrapplay2.common.utils.PagedGen
+import de.innfactory.bootstrapplay2.models.api._
 import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
 import play.api.libs.json._
 import play.api.mvc.Result
@@ -13,7 +13,7 @@ import org.joda.time.format.DateTimeFormat
 import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 import play.api.libs.json.Reads
-import common.utils.PagedGen._
+import de.innfactory.bootstrapplay2.common.utils.PagedGen._
 import testutils.BaseFakeRequest
 import testutils.BaseFakeRequest._
 

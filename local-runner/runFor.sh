@@ -34,6 +34,12 @@ if [ $REMOVE -gt 0 ]; then
     printf "\n${GREEN}VOLUME REMOVED ${NC}\n\n"
 fi
 
+REMOVE=$GITHUB_TOKEN
+
+if [ "$REMOVE" == "" ]; then
+    printf "${RED}NO GITHUB TOKEN SET! ${NC} \n" && exit 1
+fi
+
 echo "Prerequisites:"
 
 _indented_influx=$(printf '%-20s' "$INFLUX")

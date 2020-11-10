@@ -1,11 +1,27 @@
 import com.typesafe.config.ConfigFactory
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.dockerEntrypoint
-import sbt.{ Def, _ }
-
+import sbt.{Def, Resolver, _}
 //settings
 
 name := """bootstrap-play2"""
 scalaVersion := Dependencies.scalaVersion
+
+resolvers += Resolver.githubPackages("innFactory")
+
+githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
+val token = sys.env.getOrElse("GITHUB_TOKEN", "")
+
+val githubSettings = Seq(
+   githubOwner := "innFactory",
+    githubRepository := "bootstrap-play2",
+  credentials :=
+    Seq(Credentials(
+      "GitHub Package Registry",
+      "maven.pkg.github.com",
+      "innFactory",
+      token
+    ))
+)
 
 val latest = sys.env.get("BRANCH") match {
   case Some(str) => if (str.equals("master")) true else false
@@ -29,7 +45,7 @@ val generateTables            = taskKey[Seq[File]]("Generate slick code")
 
 // Testing
 
-coverageExcludedPackages += "<empty>;Reverse.*;router.*;.*AuthService.*;models\\\\.data\\\\..*;dbdata.Tables*;common.jwt.*;common.errorHandling.*;common.jwt.JwtFilter;db.codegen.*;common.pubSub.*;publicmetrics.influx.*"
+coverageExcludedPackages += "<empty>;Reverse.*;router.*;.*AuthService.*;models\\\\.data\\\\..*;dbdata.Tables*;de.innfactory.bootstrapplay2.common.jwt.*;de.innfactory.bootstrapplay2.common.errorHandling.*;de.innfactory.bootstrapplay2.common.jwt.JwtFilter;db.codegen.*;de.innfactory.bootstrapplay2.common.pubSub.*;publicmetrics.influx.*"
 fork in Test := true
 
 // Commands
@@ -98,13 +114,9 @@ slickGen := Def.taskDyn(generateTablesTask((dbConf in Global).value)).value
 
 /*project definitions*/
 
-lazy val firebaseAuth = (project in file("modules/firebase-auth"))
-  .settings(scalaVersion := Dependencies.scalaVersion)
-
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, DockerPlugin, SwaggerPlugin)
-  .dependsOn(slick, firebaseAuth)
-  .aggregate(firebaseAuth)
+  .dependsOn(slick)
   .settings(
     scalaVersion := Dependencies.scalaVersion,
     dbConfSettings,
@@ -116,7 +128,8 @@ lazy val root = (project in file("."))
       "publicmetrics"
     ), // New Models have to be added here to be referencable in routes
     swaggerPrettyJson := true,
-    swaggerV3 := true
+    swaggerV3 := true,
+    githubSettings
   )
   .settings(
     Seq(
@@ -137,22 +150,21 @@ lazy val flyway = (project in file("modules/flyway"))
   .settings(
     scalaVersion := Dependencies.scalaVersion,
     libraryDependencies ++= Dependencies.list,
-    flywaySettings
+    flywaySettings,
+    githubSettings
   )
 
 lazy val slick = (project in file("modules/slick"))
   .settings(
     scalaVersion := Dependencies.scalaVersion,
-    libraryDependencies ++= Dependencies.list
+    libraryDependencies ++= Dependencies.list,
+    githubSettings
   )
 
 lazy val globalResources = file("conf")
 
 unmanagedResourceDirectories in Compile += globalResources
 unmanagedResourceDirectories in Runtime += globalResources
-
-// For Cats because of scala 2.12.11, can be removed 2.13+
-//scalacOptions += "-Ypartial-unification"
 
 /* Scala format */
 scalafmtOnCompile in ThisBuild := true // all projects

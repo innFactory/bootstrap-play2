@@ -8,15 +8,16 @@
 [mergify-status]: https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/innFactory/bootstrap-play2&style=flat
 
 
-###### Scala, Akka, Play2, Slick, Flyway, Insomnia
+###### Scala, Akka, Play2, Slick, Flyway, Insomnia, Sangria, GraphQL, Firebase
 
-Bootstrap a rest service with Play2, isolated Slick and isolated Flyway
+Bootstrap a REST and/or GraphQL(Sangria) service with Play2, isolated Slick and isolated Flyway
 
 This project is built with:
    - Play Framework 2.8.X
    - Slick 3.3.X
-   - Flyway-sbt & Flyway-Core 6.5.X
+   - Flyway-sbt & Flyway-Core 7.1.X
    - Akka 2.6.X
+   - Sangria 2.0 for GraphQL
    - Scala 2.13.X
    
   A PostgreSQL Database with activated postgis extensions is needed (for geolocation queries)
@@ -47,6 +48,11 @@ This project is built with:
 - [Contributors](#contributors)
 
 ## Getting Started
+
+#### IMPORTANT:
+
+To load innFactory-scala-utils a Github-Personal-Access-Token with package:read has to be exported as GITHUB_TOKEN.
+This is necessary to load the packages from Github-Package-Registry.
 
 #### See [Quickstart Dev Guide](./doc/QuickstartDevGuide.md)
 
