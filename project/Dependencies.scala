@@ -13,7 +13,7 @@ object Dependencies {
 
   // innFactory Utils
 
-  val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "1.0.90"
+  val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "1.0.92"
 
   //Prod
   val slickPg         = "com.github.tminglei"  %% "slick-pg"           % "0.19.3"
@@ -27,9 +27,7 @@ object Dependencies {
   val slickHikaricp   = "com.typesafe.slick"   %% "slick-hikaricp"     % "3.3.3"
   val hikariCP        = "com.zaxxer"            % "HikariCP"           % "3.4.5"
   val joda            = "joda-time"             % "joda-time"          % "2.10.6"
-  val flyWayCore      = "org.flywaydb"          % "flyway-core"        % "6.5.7"
   val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.17"
-
   val cats = "org.typelevel" %% "cats-core" % "2.2.0"
 
   //Test
@@ -52,7 +50,6 @@ object Dependencies {
     slickHikaricp,
     hikariCP,
     joda,
-    flyWayCore,
     postgresql,
     scalatestPlus,
     playAhcWS,

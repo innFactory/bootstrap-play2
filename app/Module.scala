@@ -8,16 +8,9 @@ import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
 import de.innfactory.auth.firebase.FirebaseBase
 import de.innfactory.auth.firebase.validator.{ JWTValidatorMock, JwtValidator, JwtValidatorImpl }
-import de.innfactory.bootstrapplay2.db.{ CompaniesDAO, LocationsDAO, SlickCompaniesSlickDAO, SlickLocationsDAO }
+import de.innfactory.bootstrapplay2.db.{ CompaniesDAO, LocationsDAO }
 import de.innfactory.play.flyway.FlywayMigrator
 import play.api.libs.concurrent.AkkaGuiceSupport
-import de.innfactory.bootstrapplay2.repositories.{
-  CompaniesRepository,
-  CompaniesRepositoryImpl,
-  LocationRepository,
-  LocationRepositoryImpl
-}
-
 import scala.concurrent.Future
 
 /**
