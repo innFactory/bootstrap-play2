@@ -48,6 +48,11 @@ This project is built with:
 
 ## Getting Started
 
+#### IMPORTANT:
+
+To load innFactory-scala-utils a Github-Personal-Access-Token with package:read has to be exported as GITHUB_TOKEN.
+This is necessary to load the packages from Github-Package-Registry.
+
 #### See [Quickstart Dev Guide](./doc/QuickstartDevGuide.md)
 
 #### Insomnia:
