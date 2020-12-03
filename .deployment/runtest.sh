@@ -13,7 +13,7 @@ if [ "$REMOVE" == "" ]; then
 fi
 
 
-docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=test -e POSTGRES_DB=test -e POSTGRES_USER=test --name bootstrapPlay2PGTest mdillon/postgis:latest
+docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=test -e POSTGRES_DB=test -e POSTGRES_USER=test --name bootstrapPlay2PGTest postgis/postgis:12-master
 
 
 
