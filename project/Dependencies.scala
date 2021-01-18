@@ -19,19 +19,19 @@ object Dependencies {
   val slickPg         = "com.github.tminglei"  %% "slick-pg"           % "0.19.4"
   val slickPgPlayJson = "com.github.tminglei"  %% "slick-pg_play-json" % "0.19.4"
   val slickPgJts      = "com.github.tminglei"  %% "slick-pg_jts"       % "0.19.4"
-  val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper"  % "2.5.0"
-  val playJson        = "com.typesafe.play"    %% "play-json"          % "2.9.1"
-  val playJsonJoda    = "com.typesafe.play"    %% "play-json-joda"     % "2.9.1"
+  val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper"  % "2.4.2"
+  val playJson        = "com.typesafe.play"    %% "play-json"          % "2.9.2"
+  val playJsonJoda    = "com.typesafe.play"    %% "play-json-joda"     % "2.9.2"
   val slick           = "com.typesafe.slick"   %% "slick"              % "3.3.3"
   val slickCodegen    = "com.typesafe.slick"   %% "slick-codegen"      % "3.3.3"
   val slickHikaricp   = "com.typesafe.slick"   %% "slick-hikaricp"     % "3.3.3"
   val hikariCP        = "com.zaxxer"            % "HikariCP"           % "3.4.5"
-  val joda            = "joda-time"             % "joda-time"          % "2.10.6"
+  val joda            = "joda-time"             % "joda-time"          % "2.10.9"
   val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.17"
-  val cats = "org.typelevel" %% "cats-core" % "2.3.0"
+  val cats = "org.typelevel" %% "cats-core" % "2.3.1"
 
   //Test
-  val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.6" % Test
+  val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.7" % Test
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   lazy val list = Seq(
