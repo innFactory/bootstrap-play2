@@ -17,10 +17,14 @@ case class Company(
   id: Option[UUID],
   firebaseUser: Option[List[String]],
   settings: Option[JsValue],
+  stringAttribute1: Option[String],
+  stringAttribute2: Option[String],
+  longAttribute1: Long,
+  booleanAttribute: Boolean,
   created: Option[DateTime],
   updated: Option[DateTime]
 ) extends ApiBaseModel {
-  override def toJson: JsValue = Json.toJson(this)
+  override def toJson: JsValue = Json.toJson(this)(Company.writes)
 }
 
 object Company {
@@ -33,6 +37,10 @@ object Company {
       settings = newObject.settings.getOrElseOld(oldObject.settings),
       firebaseUser = newObject.firebaseUser.getOrElseOld(oldObject.firebaseUser),
       created = oldObject.created,
+      stringAttribute1 = newObject.stringAttribute1,
+      stringAttribute2 = newObject.stringAttribute2,
+      longAttribute1 = newObject.longAttribute1,
+      booleanAttribute = newObject.booleanAttribute,
       updated = Some(DateTime.now)
     )
 

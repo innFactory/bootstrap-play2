@@ -1,6 +1,6 @@
 package controllers
 
-import de.innfactory.bootstrapplay2.common.results.errors.Errors.DatabaseError
+import de.innfactory.bootstrapplay2.common.results.errors.Errors.DatabaseResult
 import de.innfactory.bootstrapplay2.common.utils.PagedGen
 import de.innfactory.bootstrapplay2.models.api._
 import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
@@ -41,7 +41,7 @@ class FunctionalSpec extends PlaySpec with BaseOneAppPerSuite with TestApplicati
 
   "SelfLoggingError" should {
     "log" in {
-      DatabaseError("Test", "Test", "Test", "Test")
+      DatabaseResult("Test", "Test", "Test", "Test")
     }
   }
 

@@ -30,8 +30,7 @@ case class Location(
   updated: Option[DateTime],
   distance: Option[Float]
 ) extends ApiBaseModel {
-  val writes: Writes[Location] = implicitly
-  override def toJson: JsValue = Json.toJson(this)(writes)
+  override def toJson: JsValue = Json.toJson(this)(Location.writes)
 }
 
 object Location {

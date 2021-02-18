@@ -1,10 +1,10 @@
 package de.innfactory.bootstrapplay2.common.authorization
-import de.innfactory.bootstrapplay2.actions.RequestWithCompany
 import com.google.inject.Inject
-import de.innfactory.bootstrapplay2.common.results.Results.{ ErrorStatus, Result }
+import de.innfactory.bootstrapplay2.common.request.{ RequestContext, RequestContextWithCompany }
+import de.innfactory.bootstrapplay2.common.results.Results.{ Result, ResultStatus }
 import de.innfactory.bootstrapplay2.common.results.errors.Errors.{ BadRequest, Forbidden }
-import de.innfactory.bootstrapplay2.common.utils.{ CompanyIdEqualsId, OptionAndCompanyId }
 import de.innfactory.bootstrapplay2.models.api.Company
+import de.innfactory.implicits.BooleanImplicits.EnhancedBoolean
 import play.api.mvc.BodyParsers
 import play.api.Configuration
 
@@ -18,30 +18,17 @@ class CompanyAuthorizationMethods[A] @Inject() (
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext, configuration: Configuration) {
 
-  def canGet(request: RequestWithCompany[A], company: Company): Either[ErrorStatus, Boolean] =
-    OptionAndCompanyId(request.company, company.id.get) match {
-      case CompanyIdEqualsId() => Right(true)
-      case _                   => Left(Forbidden())
-    }
+  def canGet(company: Company)(implicit rc: RequestContextWithCompany): Either[ResultStatus, Boolean] =
+    company.id.get.equals(rc.company.id.get).toResult(Forbidden())
 
   // Everyone can create owners
-  def canCreate(request: RequestWithCompany[A], company: Company): Result[Boolean] =
-    request.company match {
-      case Some(_)                                                                                       => Left(BadRequest())
-      case None if company.firebaseUser.getOrElse(List.empty).contains(request.email.getOrElse("empty")) => Right(true)
-      case _                                                                                             => Left(Forbidden())
-    }
+  def canCreate(company: Company)(implicit rc: RequestContext): Result[Boolean] =
+    Right(true)
 
-  def canDelete(request: RequestWithCompany[A], company: Company): Result[Boolean] =
-    OptionAndCompanyId(request.company, company.id.get) match {
-      case CompanyIdEqualsId() => Right(true)
-      case _                   => Left(Forbidden())
-    }
+  def canDelete(company: Company)(implicit rc: RequestContextWithCompany): Result[Boolean] =
+    company.id.get.equals(rc.company.id.get).toResult(Forbidden())
 
-  def canUpdate(request: RequestWithCompany[A], company: Company): Result[Boolean] =
-    OptionAndCompanyId(request.company, company.id.get) match {
-      case CompanyIdEqualsId() => Right(true)
-      case _                   => Left(Forbidden())
-    }
+  def canUpdate(company: Company)(implicit rc: RequestContextWithCompany): Result[Boolean] =
+    company.id.get.equals(rc.company.id.get).toResult(Forbidden())
 
 }

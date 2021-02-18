@@ -11,7 +11,7 @@ object Results {
 
   private val logger = Logger("application")
 
-  trait ErrorStatus
+  trait ResultStatus
 
   /**
    * Extend from this error class to have the error logging itself
@@ -21,13 +21,13 @@ object Results {
    * @param errorMethod
    * @param internalErrorMessage
    */
-  abstract class SelfLoggingError(
+  abstract class SelfLoggingResult(
     message: String,
     statusCode: Int,
     errorClass: String,
     errorMethod: String,
     internalErrorMessage: String
-  ) extends ErrorStatus {
+  ) extends ResultStatus {
     var currentStackTrace = new Throwable()
     logger.error(
       s"DatabaseError | message=$message statusCode=$statusCode | Error in class $errorClass in method $errorMethod $internalErrorMessage!",
@@ -35,18 +35,18 @@ object Results {
     )
   }
 
-  abstract class NotLoggingError() extends ErrorStatus
+  abstract class NotLoggingResult() extends ResultStatus
 
-  type Result[T] = Either[ErrorStatus, T]
+  type Result[T] = Either[ResultStatus, T]
 
-  implicit class RichError(value: ErrorStatus)(implicit ec: ExecutionContext) {
+  implicit class RichError(value: ResultStatus)(implicit ec: ExecutionContext) {
     def mapToResult: play.api.mvc.Result =
       value match {
-        case _: DatabaseError => MvcResults.Status(500)("")
-        case _: Forbidden     => MvcResults.Status(403)("")
-        case _: BadRequest    => MvcResults.Status(400)("")
-        case _: NotFound      => MvcResults.Status(404)("")
-        case _                => MvcResults.Status(400)("")
+        case _: DatabaseResult => MvcResults.Status(500)("")
+        case _: Forbidden      => MvcResults.Status(403)("")
+        case _: BadRequest     => MvcResults.Status(400)("")
+        case _: NotFound       => MvcResults.Status(404)("")
+        case _                 => MvcResults.Status(400)("")
       }
   }
 
@@ -54,24 +54,24 @@ object Results {
     def toJson: JsValue = Json.toJson(value.map(_.toJson))
   }
 
-  implicit class RichResult(value: Future[Either[ErrorStatus, ApiBaseModel]])(implicit ec: ExecutionContext) {
+  implicit class RichResult(value: Future[Either[ResultStatus, ApiBaseModel]])(implicit ec: ExecutionContext) {
     def completeResult(statusCode: Int = 200): Future[play.api.mvc.Result] =
       value.map {
-        case Left(error: ErrorStatus)   => error.mapToResult
+        case Left(error: ResultStatus)  => error.mapToResult
         case Right(value: ApiBaseModel) => MvcResults.Status(statusCode)(value.toJson)
       }
 
     def completeResultWithoutBody(statusCode: Int = 200): Future[play.api.mvc.Result] =
       value.map {
-        case Left(error: ErrorStatus)   => error.mapToResult
+        case Left(error: ResultStatus)  => error.mapToResult
         case Right(value: ApiBaseModel) => MvcResults.Status(statusCode)("")
       }
   }
 
-  implicit class RichSeqResult(value: Future[Either[ErrorStatus, Seq[ApiBaseModel]]])(implicit ec: ExecutionContext) {
+  implicit class RichSeqResult(value: Future[Either[ResultStatus, Seq[ApiBaseModel]]])(implicit ec: ExecutionContext) {
     def completeResult: Future[play.api.mvc.Result] =
       value.map {
-        case Left(error: ErrorStatus)        => error.mapToResult
+        case Left(error: ResultStatus)       => error.mapToResult
         case Right(value: Seq[ApiBaseModel]) => MvcResults.Status(200)(value.toJson)
       }
   }

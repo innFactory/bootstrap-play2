@@ -1,6 +1,6 @@
 package de.innfactory.bootstrapplay2.common.utils
 
-import de.innfactory.bootstrapplay2.common.results.Results.{ ErrorStatus, Result }
+import de.innfactory.bootstrapplay2.common.results.Results.{ Result, ResultStatus }
 
 object OptionUtils {
   implicit class EnhancedOption[T](value: Option[T]) {
@@ -10,7 +10,7 @@ object OptionUtils {
         case None     => oldOption
       }
 
-    def toEither(leftResult: ErrorStatus): Result[T] =
+    def toEither(leftResult: ResultStatus): Result[T] =
       value match {
         case Some(v) => Right(v)
         case None    => Left(leftResult)

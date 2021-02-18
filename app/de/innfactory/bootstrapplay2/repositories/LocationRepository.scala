@@ -1,47 +1,46 @@
 package de.innfactory.bootstrapplay2.repositories
 
 import java.util.UUID
-
-import de.innfactory.bootstrapplay2.actions.RequestWithCompany
 import cats.data.EitherT
 import de.innfactory.bootstrapplay2.common.authorization.LocationAuthorizationMethods
-import de.innfactory.bootstrapplay2.common.results.Results.{ ErrorStatus, Result }
+import de.innfactory.bootstrapplay2.common.results.Results.{ Result, ResultStatus }
 import javax.inject.Inject
 import de.innfactory.bootstrapplay2.models.api.Location
 import cats.implicits._
 import com.google.inject.ImplementedBy
+import de.innfactory.bootstrapplay2.common.logging.ImplicitLogContext
+import de.innfactory.bootstrapplay2.common.repositories.{ Delete, Lookup, Patch, Post }
+import de.innfactory.bootstrapplay2.common.request.RequestContextWithCompany
 import de.innfactory.common.geo.GeoPointFactory
-import de.innfactory.bootstrapplay2.common.results.errors.Errors.Forbidden
 import play.api.mvc.AnyContent
-import de.innfactory.bootstrapplay2.common.utils.OptionUtils._
 import de.innfactory.bootstrapplay2.db.LocationsDAO
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 @ImplementedBy(classOf[LocationRepositoryImpl])
-trait LocationRepository {
-  def lookup(id: Long, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
+trait LocationRepository
+    extends Lookup[Long, RequestContextWithCompany, Location]
+    with Patch[RequestContextWithCompany, Location]
+    with Post[RequestContextWithCompany, Location]
+    with Delete[Long, RequestContextWithCompany, Location] {
   def getByDistance(
     distance: Long,
     lat: Double,
-    lon: Double,
-    request: RequestWithCompany[AnyContent]
-  ): Future[Result[Seq[Location]]]
-  def lookupByCompany(id: UUID, request: RequestWithCompany[AnyContent]): Future[Result[Seq[Location]]]
-  def patch(location: Location, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
-  def post(location: Location, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
-  def delete(id: Long, request: RequestWithCompany[AnyContent]): Future[Result[Location]]
+    lon: Double
+  )(implicit rc: RequestContextWithCompany): Future[Result[Seq[Location]]]
+  def lookupByCompany(id: UUID)(implicit rc: RequestContextWithCompany): Future[Result[Seq[Location]]]
 }
 
 class LocationRepositoryImpl @Inject() (
   locationsDAO: LocationsDAO,
   authorizationMethods: LocationAuthorizationMethods[AnyContent]
 )(implicit ec: ExecutionContext)
-    extends LocationRepository {
-  override def lookup(id: Long, request: RequestWithCompany[AnyContent]): Future[Result[Location]] = {
+    extends LocationRepository
+    with ImplicitLogContext {
+  override def lookup(id: Long)(implicit rc: RequestContextWithCompany): Future[Result[Location]] = {
     val result = for {
       lookupResult <- EitherT(locationsDAO.lookup(id))
-      _            <- EitherT(Future(authorizationMethods.accessGet(request, lookupResult)))
+      _            <- EitherT(Future(authorizationMethods.accessGet(lookupResult)))
     } yield lookupResult
     result.value
   }
@@ -49,50 +48,48 @@ class LocationRepositoryImpl @Inject() (
   override def getByDistance(
     distance: Long,
     lat: Double,
-    lon: Double,
-    request: RequestWithCompany[AnyContent]
-  ): Future[Result[Seq[Location]]] = {
+    lon: Double
+  )(implicit rc: RequestContextWithCompany): Future[Result[Seq[Location]]] = {
     val geometryPoint = GeoPointFactory.createPoint(lat, lon)
     val result        = for {
-      company      <- EitherT(Future(request.company.toEither(Forbidden())))
-      _            <- EitherT(Future(authorizationMethods.accessGetAllByCompany(company.id.getOrElse(UUID.randomUUID()), request)))
+      _            <- EitherT(Future(authorizationMethods.accessGetAllByCompany(rc.company.id.getOrElse(UUID.randomUUID()))))
       lookupResult <- EitherT(
                         locationsDAO
-                          .allFromDistanceByCompany(company.id.getOrElse(UUID.randomUUID()), geometryPoint, distance)
+                          .allFromDistanceByCompany(rc.company.id.getOrElse(UUID.randomUUID()), geometryPoint, distance)
                       )
     } yield lookupResult
     result.value
   }
 
-  def lookupByCompany(id: UUID, request: RequestWithCompany[AnyContent]): Future[Result[Seq[Location]]] = {
+  def lookupByCompany(id: UUID)(implicit rc: RequestContextWithCompany): Future[Result[Seq[Location]]] = {
     val result = for {
-      _            <- EitherT(Future(authorizationMethods.accessGetAllByCompany(id, request)))
+      _            <- EitherT(Future(authorizationMethods.accessGetAllByCompany(id)))
       lookupResult <- EitherT(locationsDAO.lookupByCompany(id))
     } yield lookupResult
     result.value
   }
 
-  def patch(location: Location, request: RequestWithCompany[AnyContent]): Future[Result[Location]] = {
+  def patch(location: Location)(implicit rc: RequestContextWithCompany): Future[Result[Location]] = {
     val result = for {
       oldLocation    <- EitherT(locationsDAO.lookup(location.id.getOrElse(0)))
-      _              <- EitherT(Future(authorizationMethods.update(request, location.company, oldLocation.company)))
+      _              <- EitherT(Future(authorizationMethods.update(location.company, oldLocation.company)))
       locationUpdate <- EitherT(locationsDAO.update(location.copy(id = oldLocation.id)))
     } yield locationUpdate
     result.value
   }
 
-  def post(location: Location, request: RequestWithCompany[AnyContent]): Future[Result[Location]] = {
-    val result: EitherT[Future, ErrorStatus, Location] = for {
-      _             <- EitherT(authorizationMethods.createDelete(request, location.company))
+  def post(location: Location)(implicit rc: RequestContextWithCompany): Future[Result[Location]] = {
+    val result: EitherT[Future, ResultStatus, Location] = for {
+      _             <- EitherT(Future(authorizationMethods.createDelete(location.company)))
       createdResult <- EitherT(locationsDAO.create(location))
     } yield createdResult
     result.value
   }
 
-  def delete(id: Long, request: RequestWithCompany[AnyContent]): Future[Result[Location]] = {
-    val result: EitherT[Future, ErrorStatus, Location] = for {
+  def delete(id: Long)(implicit rc: RequestContextWithCompany): Future[Result[Location]] = {
+    val result: EitherT[Future, ResultStatus, Location] = for {
       location <- EitherT(locationsDAO.lookup(id))
-      _        <- EitherT(authorizationMethods.createDelete(request, location.company))
+      _        <- EitherT(Future(authorizationMethods.createDelete(location.company)))
       _        <- EitherT(locationsDAO.delete(location.id.get))
     } yield location
     result.value

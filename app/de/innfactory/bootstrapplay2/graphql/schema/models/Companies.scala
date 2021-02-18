@@ -11,6 +11,6 @@ object Companies {
     ReplaceField(
       fieldName = "id",
       field = Field(name = "id", fieldType = StringType, resolve = c => c.value.id.get.toString)
-    )
+    ),
   )
 }

@@ -55,7 +55,6 @@ addCommandAlias("localTests", "; clean; flyway/flywayMigrate; test")
 
 /* TaskKeys */
 lazy val slickGen = taskKey[Seq[File]]("slickGen")
-lazy val copyRes  = TaskKey[Unit]("copyRes")
 
 /* Create db config for flyway */
 def createDbConf(dbConfFile: File): DbConf = {
