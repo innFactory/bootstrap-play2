@@ -28,7 +28,7 @@ object Dependencies {
   val hikariCP        = "com.zaxxer"            % "HikariCP"           % "4.0.2"
   val joda            = "joda-time"             % "joda-time"          % "2.10.10"
   val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.19"
-  val cats = "org.typelevel" %% "cats-core" % "2.4.1"
+  val cats = "org.typelevel" %% "cats-core" % "2.4.2"
 
   //Test
   val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.7" % Test
