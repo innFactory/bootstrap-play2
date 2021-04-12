@@ -31,7 +31,7 @@ object Dependencies {
   val cats = "org.typelevel" %% "cats-core" % "2.5.0"
 
   //Test
-  val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.7" % Test
+  val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.8" % Test
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   lazy val list = Seq(
