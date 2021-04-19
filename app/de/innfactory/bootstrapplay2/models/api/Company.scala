@@ -10,9 +10,6 @@ import play.api.libs.json.JodaReads._
 import play.api.libs.json.Reads
 import de.innfactory.bootstrapplay2.common.utils.OptionUtils._
 
-/**
- * Implementation independent aggregate root.
- */
 case class Company(
   id: Option[UUID],
   firebaseUser: Option[List[String]],
@@ -23,9 +20,7 @@ case class Company(
   booleanAttribute: Boolean,
   created: Option[DateTime],
   updated: Option[DateTime]
-) extends ApiBaseModel {
-  override def toJson: JsValue = Json.toJson(this)(Company.writes)
-}
+)
 
 object Company {
   implicit val reads  = Json.reads[Company]

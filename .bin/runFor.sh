@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAME="Dark Lord Toni"
+NAME="Development"
 REMOVE=0
 
 RED='\033[0;31m'

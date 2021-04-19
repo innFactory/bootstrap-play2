@@ -8,7 +8,6 @@ scalaVersion := Dependencies.scalaVersion
 
 resolvers += Resolver.githubPackages("innFactory")
 
-githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
 val token = sys.env.getOrElse("GITHUB_TOKEN", "")
 
 val githubSettings = Seq(
@@ -46,7 +45,7 @@ val generateTables            = taskKey[Seq[File]]("Generate slick code")
 // Testing
 
 coverageExcludedPackages += "<empty>;Reverse.*;router.*;.*AuthService.*;models\\\\.data\\\\..*;dbdata.Tables*;de.innfactory.bootstrapplay2.common.jwt.*;de.innfactory.bootstrapplay2.common.errorHandling.*;de.innfactory.bootstrapplay2.common.jwt.JwtFilter;db.codegen.*;de.innfactory.bootstrapplay2.common.pubSub.*;publicmetrics.influx.*"
-fork in Test := true
+Test / fork  := true
 
 // Commands
 
@@ -74,32 +73,32 @@ def createDbConf(dbConfFile: File): DbConf = {
 
 def dbConfSettings =
   Seq(
-    dbConf in Global := createDbConf((resourceDirectory in Compile).value / "application.conf")
+    Global / dbConf := createDbConf((Compile / resourceDirectory).value / "application.conf")
   )
 
 def flywaySettings =
   Seq(
-    flywayUrl := (dbConf in Global).value.url,
-    flywayUser := (dbConf in Global).value.user,
-    flywayPassword := (dbConf in Global).value.password,
+    flywayUrl := (Global / dbConf).value.url,
+    flywayUser := (Global / dbConf).value.user,
+    flywayPassword := (Global / dbConf).value.password,
     flywaySchemas := (Seq("postgis"))
   )
 
 def generateTablesTask(conf: DbConf) =
   Def.task {
     val dir          = sourceManaged.value
-    val outputDir    = (dir / "slick").getPath
+    val outputDir    = (dir / "slick/main").getPath
     val fname        = outputDir + generatedFilePath
     val generator    = "db.codegen.CustomizedCodeGenerator"
     val url          = conf.url
     val slickProfile = conf.profile.dropRight(1)
     val jdbcDriver   = conf.driver
     val pkg          = "db.Tables"
-    val cp           = (dependencyClasspath in Compile).value
+    val cp           = (Compile / dependencyClasspath).value
     val username     = conf.user
     val password     = conf.password
     val s            = streams.value
-    val r            = (runner in Compile).value
+    val r            = (Compile / runner).value
     r.run(
       generator,
       cp.files,
@@ -109,7 +108,7 @@ def generateTablesTask(conf: DbConf) =
     Seq(file(fname))
   }
 
-slickGen := Def.taskDyn(generateTablesTask((dbConf in Global).value)).value
+slickGen := Def.taskDyn(generateTablesTask((Global / dbConf).value)).value
 
 /*project definitions*/
 
@@ -122,6 +121,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Dependencies.list,
     // Adding Cache
     libraryDependencies ++= Seq(ehcache),
+    dependencyOverrides += Dependencies.sl4j, // Override to avoid problems with HikariCP 4.x
     swaggerDomainNameSpaces := Seq(
       "models",
       "publicmetrics"
@@ -134,7 +134,7 @@ lazy val root = (project in file("."))
     Seq(
       maintainer := "innFactory",
       version := buildVersion,
-      packageName in Docker := "bootstrap-play2",
+      Docker / packageName := "bootstrap-play2",
       dockerUpdateLatest := latest,
       dockerRepository := dockerRegistry,
       dockerExposedPorts := Seq(8080, 8080),
@@ -162,14 +162,11 @@ lazy val slick = (project in file("modules/slick"))
 
 lazy val globalResources = file("conf")
 
-unmanagedResourceDirectories in Compile += globalResources
-unmanagedResourceDirectories in Runtime += globalResources
-
 /* Scala format */
-scalafmtOnCompile in ThisBuild := true // all projects
+ThisBuild / scalafmtOnCompile := true // all projects
 
 /* Change compiling */
-sourceGenerators in Compile += Def.taskDyn(generateTablesTask((dbConf in Global).value)).taskValue
-compile in Compile := {
-  (compile in Compile).value
+Compile / sourceGenerators += Def.taskDyn(generateTablesTask((Global / dbConf).value)).taskValue
+Compile /compile  := {
+  (Compile / compile).value
 }

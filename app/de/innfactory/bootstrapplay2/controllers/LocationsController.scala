@@ -49,11 +49,11 @@ class LocationsController @Inject() (
   def patch: Action[AnyContent] =
     tracingCompanyAction("Patch Location").async { implicit request =>
       val json: JsValue                                   = request.body.asJson.get // Get the request body as json
-      val stock                                           = json.as[Location]       // Json to Location Object
+      val entity                                          = json.as[Location]       // Json to Location Object
       val result: EitherT[Future, ResultStatus, Location] = for {
         _       <- EitherT(Future(json.validateFor[Location])) // Validate Json
         updated <- EitherT(
-                     locationRepository.patch(stock)(requestContextWithCompany)
+                     locationRepository.patch(entity)(requestContextWithCompany)
                    ) // call locationRepository to patch the object
       } yield updated
       result.value
@@ -63,7 +63,7 @@ class LocationsController @Inject() (
   def post: Action[AnyContent] =
     tracingCompanyAction("Post Location").async { implicit request =>
       val json                                            = request.body.asJson.get
-      val entity                                           = json.as[Location]
+      val entity                                          = json.as[Location]
       val result: EitherT[Future, ResultStatus, Location] = for {
         _       <- EitherT(Future(json.validateFor[Location]))
         created <- EitherT(locationRepository.post(entity)(requestContextWithCompany))

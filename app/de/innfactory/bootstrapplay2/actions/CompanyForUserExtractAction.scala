@@ -4,13 +4,14 @@ import cats.implicits.catsSyntaxEitherId
 import com.google.inject.Inject
 import de.innfactory.bootstrapplay2.common.authorization.FirebaseEmailExtractor
 import de.innfactory.bootstrapplay2.common.request.TraceContext
+import de.innfactory.bootstrapplay2.common.results.ErrorResponse
 import de.innfactory.bootstrapplay2.db.CompaniesDAO
 import de.innfactory.bootstrapplay2.models.api.Company
 import de.innfactory.play.tracing.{ RequestWithTrace, TraceRequest, UserExtractionActionBase }
 import io.opencensus.trace.Span
 import play.api.Environment
-import play.api.mvc.Results.{ Forbidden, Unauthorized }
-import play.api.mvc.{ AnyContent, BodyParsers, Request, Result, WrappedRequest }
+import play.api.mvc.Results.Forbidden
+import play.api.mvc.{ BodyParsers, Request, Result, WrappedRequest }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -49,11 +50,11 @@ class CompanyForUserExtractAction @Inject() (
                 request.request,
                 request.traceSpan
               ).asRight[Result]
-            case None        => Forbidden("").asLeft[RequestWithCompany[A]]
+            case None        => Forbidden(ErrorResponse.fromMessage("Forbidden")).asLeft[RequestWithCompany[A]]
           }
         case None    =>
           Future(
-            Forbidden("").asLeft[RequestWithCompany[A]]
+            Forbidden(ErrorResponse.fromMessage("Forbidden")).asLeft[RequestWithCompany[A]]
           )
       }
     }.flatten

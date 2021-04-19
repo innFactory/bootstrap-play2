@@ -110,7 +110,7 @@ class StackdriverTracingCreator @Inject() (lifecycle: ApplicationLifecycle, conf
   val credentials: GoogleCredentials                                = GoogleCredentials.fromStream(serviceAccount)
   val stackDriverTraceExporterConfig: StackdriverTraceConfiguration = StackdriverTraceConfiguration
     .builder()
-    .setProjectId("bootstrap-play2")
+    .setProjectId(config.getString("project.id"))
     .setCredentials(credentials)
     .setFixedAttributes(
       Map(

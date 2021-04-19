@@ -15,7 +15,6 @@ import org.joda.time.format.DateTimeFormat
 import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 import play.api.libs.json.Reads
-import de.innfactory.bootstrapplay2.common.utils.PagedGen._
 import play.api.test.CSRFTokenHelper._
 import testutils.BaseFakeRequest
 import testutils.BaseFakeRequest._

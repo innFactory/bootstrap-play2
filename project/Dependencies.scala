@@ -6,7 +6,7 @@ object Dependencies {
   val scalaVersion = "2.13.3"
   val akkaVersion  = "2.6.14"
   val akkaTyped    = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
-  val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.1.13"
+  val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.1.14"
   val akka         = "com.typesafe.akka" %% "akka-actor"       % akkaVersion
   val akkaJackson  =
     "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion // https://github.com/akka/akka/issues/29351
@@ -45,8 +45,17 @@ object Dependencies {
   // If you want to use opencensus-scala inside an Akka HTTP project
   val opencensusAkkaHttp  = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
+  val sl4j        = "org.slf4j"        % "slf4j-api"                        % "1.7.30" intransitive
+  val sharedDeps  = "com.google.cloud" % "google-cloud-shared-dependencies" % "0.18.0"
+  val logback     = "ch.qos.logback"   % "logback-classic"                  % "1.2.3"
+  val logbackCore = "ch.qos.logback"   % "logback-core"                     % "1.2.3"
+
   lazy val list = Seq(
     scalaUtil,
+    sl4j,
+    sharedDeps,
+    logback,
+    logbackCore,
     akkaHttp,
     opencensusStackdriver,
     opencensusLoggging,

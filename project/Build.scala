@@ -26,8 +26,8 @@ object Common {
         "javax.inject"      % "javax.inject" % "1",
         "joda-time"         % "joda-time"    % "2.9.9",
         "org.joda"          % "joda-convert" % "1.9.2",
-        "com.google.inject" % "guice"        % "4.2.3"
+        "com.google.inject" % "guice"        % "5.0.1"
       ),
-      scalacOptions in Test ++= Seq("-Yrangepos")
+      Test / scalacOptions ++= Seq("-Yrangepos")
     )
 }

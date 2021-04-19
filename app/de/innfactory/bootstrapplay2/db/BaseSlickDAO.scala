@@ -1,37 +1,21 @@
 package de.innfactory.bootstrapplay2.db
 
-import java.util.UUID
 import de.innfactory.bootstrapplay2.common.utils.OptionUtils._
 import cats.data.EitherT
-import cats.implicits._
-import com.vividsolutions.jts.geom.Geometry
-import de.innfactory.common.geo.GeoPointFactory
 import de.innfactory.play.db.codegen.XPostgresProfile
 import de.innfactory.bootstrapplay2.common.results.Results.{ Result, ResultStatus }
 import de.innfactory.bootstrapplay2.common.results.errors.Errors.{ BadRequest, DatabaseResult, NotFound }
-
-import javax.inject.{ Inject, Singleton }
 import slick.jdbc.JdbcBackend.Database
-import play.api.libs.json.Json
-import de.innfactory.bootstrapplay2.models.api.{ ApiBaseModel, Location => LocationObject }
-import org.joda.time.DateTime
-import slick.basic.BasicStreamingAction
-import slick.lifted.{ CompiledFunction, Query, Rep, TableQuery }
 import dbdata.Tables
 import de.innfactory.bootstrapplay2.common.implicits.FutureTracingImplicits.EnhancedFuture
 import de.innfactory.bootstrapplay2.common.logging.ImplicitLogContext
-import de.innfactory.bootstrapplay2.common.request.{ RequestContext, TraceContext }
+import de.innfactory.bootstrapplay2.common.request.TraceContext
 import slick.dbio.{ DBIOAction, Effect, NoStream }
 
-import scala.reflect.runtime.{ universe => ru }
-import ru._
-import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.implicitConversions
 import scala.concurrent.{ ExecutionContext, Future }
 
 class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables with ImplicitLogContext {
-
-  val currentClassForDatabaseError = "BaseSlickDAO"
 
   override val profile = XPostgresProfile
 
@@ -143,10 +127,12 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables w
           db.run(update(patchedObject))
             .map { x =>
               if (x != 0) Right(patchedObject)
-              else
+              else {
+                tc.log.error("Database Result Updating entity")
                 Left(
-                  DatabaseResult("Could not replace entity", currentClassForDatabaseError, "update", "row not updated")
+                  DatabaseResult("Could not update entity")
                 )
+              }
             }
             .trace("updateGeneric update")
         )
@@ -194,15 +180,14 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Tables w
                           .map { x =>
                             if (x != 0)
                               Right(true)
-                            else
+                            else {
+                              tc.log.error("Database Error deleting entity")
                               Left(
                                 DatabaseResult(
-                                  "could not delete entity",
-                                  currentClassForDatabaseError,
-                                  "delete",
-                                  "entity was deleted"
+                                  "could not delete entity"
                                 )
                               )
+                            }
                           }
                           .trace("deleteGeneric delete")
     } yield dbDeleteResult

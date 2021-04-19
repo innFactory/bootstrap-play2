@@ -1,26 +1,12 @@
 package controllers
 
 import java.util.UUID
-
-import com.google.inject.Inject
-import com.typesafe.config.Config
 import de.innfactory.bootstrapplay2.models.api._
 import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
 import play.api.libs.json._
-import play.api.mvc.Result
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
-import play.api.libs.json.Reads
-import de.innfactory.bootstrapplay2.common.utils.PagedGen._
-import play.api.test.CSRFTokenHelper._
 import testutils.BaseFakeRequest
 import testutils.BaseFakeRequest._
-
-import scala.concurrent.Future
 
 class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
 
