@@ -6,7 +6,7 @@ object Dependencies {
   val scalaVersion = "2.13.3"
   val akkaVersion  = "2.6.12"
   val akkaTyped    = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
-  val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.1.12"
+  val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.1.13"
   val akka         = "com.typesafe.akka" %% "akka-actor"       % akkaVersion
   val akkaJackson  =
     "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion // https://github.com/akka/akka/issues/29351
@@ -26,7 +26,7 @@ object Dependencies {
   val slick           = "com.typesafe.slick"   %% "slick"              % "3.3.3"
   val slickCodegen    = "com.typesafe.slick"   %% "slick-codegen"      % "3.3.3"
   val slickHikaricp   = "com.typesafe.slick"   %% "slick-hikaricp"     % "3.3.3"
-  val hikariCP        = "com.zaxxer"            % "HikariCP"           % "4.0.2"
+  val hikariCP        = "com.zaxxer"            % "HikariCP"        % "4.0.3"  exclude("org.slf4j", "slf4j-api")
   val joda            = "joda-time"             % "joda-time"          % "2.10.10"
   val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.17"
   val cats = "org.typelevel" %% "cats-core" % "2.4.1"
@@ -40,6 +40,7 @@ object Dependencies {
   val opencensusLoggging = "io.opencensus" % "opencensus-exporter-trace-logging"     % "0.25.0"
   val opencensusJaeger = "io.opencensus" % "opencensus-exporter-trace-jaeger"     % "0.25.0"
 
+  val opencensusStatsStackdriver = "io.opencensus" % "opencensus-exporter-stats-stackdriver" % "0.28.3"
 
   // If you want to use opencensus-scala inside an Akka HTTP project
   val opencensusAkkaHttp  = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
@@ -49,6 +50,7 @@ object Dependencies {
     akkaHttp,
     opencensusStackdriver,
     opencensusLoggging,
+    opencensusStatsStackdriver,
     opencensusJaeger,
     opencensusAkkaHttp,
     akka,
