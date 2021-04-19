@@ -5,12 +5,15 @@ object Dependencies {
 
   val scalaVersion = "2.13.3"
   val akkaVersion  = "2.6.14"
+
   val akkaTyped    = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
-  val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.1.14"
+  val akkaHttp     = "com.typesafe.akka" %% "akka-http" % "10.1.14"
   val akka         = "com.typesafe.akka" %% "akka-actor"       % akkaVersion
-  val akkaJackson  =
-    "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion // https://github.com/akka/akka/issues/29351
-  val akkaStreams = "com.typesafe.akka" %% "akka-stream" % akkaVersion
+
+  // https://github.com/akka/akka/issues/29351
+  val akkaJackson  = "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion
+
+  val akkaStreams  = "com.typesafe.akka" %% "akka-stream" % akkaVersion
 
   // innFactory Utils
 

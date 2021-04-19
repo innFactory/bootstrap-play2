@@ -124,7 +124,6 @@ lazy val root = (project in file("."))
     dependencyOverrides += Dependencies.sl4j, // Override to avoid problems with HikariCP 4.x
     swaggerDomainNameSpaces := Seq(
       "models",
-      "publicmetrics"
     ), // New Models have to be added here to be referencable in routes
     swaggerPrettyJson := true,
     swaggerV3 := true,
