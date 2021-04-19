@@ -8,7 +8,7 @@ import de.innfactory.bootstrapplay2.common.authorization.CompanyAuthorizationMet
 import de.innfactory.bootstrapplay2.common.implicits.EitherTTracingImplicits.{ EnhancedTracingEitherT, TracedT }
 import de.innfactory.bootstrapplay2.common.logging.ImplicitLogContext
 import de.innfactory.bootstrapplay2.common.repositories.{ All, Delete, Lookup, Patch, Post }
-import de.innfactory.bootstrapplay2.common.request.{ RequestContext, RequestContextWithCompany }
+import de.innfactory.bootstrapplay2.common.request.{ RequestContext, RequestContextWithCompany, TraceContext }
 import de.innfactory.bootstrapplay2.common.results.Results.{ Result, ResultStatus }
 import de.innfactory.bootstrapplay2.common.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.common.utils.OptionUtils.EnhancedOption
@@ -20,6 +20,7 @@ import javax.inject.Inject
 import de.innfactory.bootstrapplay2.models.api.Company
 import de.innfactory.play.slick.enhanced.utils.filteroptions.FilterOptions
 import play.api.mvc.AnyContent
+import slick.basic.DatabasePublisher
 
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -33,6 +34,7 @@ trait CompaniesRepository
   def allGraphQl(filter: Seq[FilterOptions[_root_.dbdata.Tables.Company, _]])(implicit
     rc: RequestContext
   ): Future[Seq[Company]]
+  def streamedAll(implicit tc: TraceContext): Future[DatabasePublisher[Company]]
 }
 
 class CompaniesRepositoryImpl @Inject() (
@@ -55,6 +57,13 @@ class CompaniesRepositoryImpl @Inject() (
       lookupResult <- EitherT(companiesDAO.all.map(_.asRight[ResultStatus]))
     } yield lookupResult
     result.value
+  }
+
+  def streamedAll(implicit tc: TraceContext): Future[DatabasePublisher[Company]] = {
+    val result = for {
+      pub <- Future(companiesDAO.streamedAll)
+    } yield pub
+    result
   }
 
   def allGraphQl(

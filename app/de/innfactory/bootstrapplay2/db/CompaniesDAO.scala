@@ -2,16 +2,16 @@ package de.innfactory.bootstrapplay2.db
 
 import java.util.UUID
 import com.google.inject.ImplementedBy
-import de.innfactory.bootstrapplay2.common.request.{RequestContext, TraceContext}
+import de.innfactory.bootstrapplay2.common.request.{ RequestContext, TraceContext }
 import de.innfactory.bootstrapplay2.db.BaseSlickDAO
 import de.innfactory.bootstrapplay2.common.results.Results.Result
-import de.innfactory.bootstrapplay2.common.results.errors.Errors.{DatabaseResult, NotFound}
+import de.innfactory.bootstrapplay2.common.results.errors.Errors.{ DatabaseResult, NotFound }
 import de.innfactory.play.db.codegen.XPostgresProfile
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import slick.jdbc.JdbcBackend.Database
 import play.api.libs.json.Json
-import de.innfactory.bootstrapplay2.models.api.{Company => CompanyObject}
+import de.innfactory.bootstrapplay2.models.api.{ Company => CompanyObject }
 import org.joda.time.DateTime
 import de.innfactory.bootstrapplay2.models.api.Company.patch
 import de.innfactory.bootstrapplay2.repositories.LocationRepositoryImpl
@@ -20,8 +20,10 @@ import de.innfactory.play.slick.enhanced.query.EnhancedQuery._
 import dbdata.Tables
 import de.innfactory.bootstrapplay2.common.logging.ImplicitLogContext
 import slick.basic.DatabasePublisher
-import slick.dbio.{DBIOAction, NoStream}
-import scala.concurrent.{ExecutionContext, Future}
+import slick.dbio.{ DBIOAction, NoStream }
+import slick.jdbc.{ ResultSetConcurrency, ResultSetType }
+
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.implicitConversions
 
 /**
@@ -37,6 +39,8 @@ trait CompaniesDAO {
   def allWithFilter(filter: Seq[FilterOptions[Tables.Company, _]])(implicit
     tc: TraceContext
   ): Future[Seq[CompanyObject]]
+
+  def streamedAll(implicit tc: TraceContext): DatabasePublisher[CompanyObject]
 
   def internal_lookupByEmail(email: String)(implicit tc: TraceContext): Future[Option[CompanyObject]]
 
@@ -61,7 +65,8 @@ trait CompaniesDAO {
 @Singleton
 class SlickCompaniesSlickDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
     extends BaseSlickDAO(db)
-    with CompaniesDAO with ImplicitLogContext {
+    with CompaniesDAO
+    with ImplicitLogContext {
 
   // Class Name for identification in Database Errors
   override val currentClassForDatabaseError = "SlickCompaniesDAO"
@@ -89,6 +94,17 @@ class SlickCompaniesSlickDAO @Inject() (db: Database)(implicit ec: ExecutionCont
     lookupGeneric(
       queryById(id).result.headOption
     )
+
+  def streamedAll(implicit tc: TraceContext): DatabasePublisher[CompanyObject] =
+    db.stream(
+      Tables.Company.result
+        .withStatementParameters(
+          rsType = ResultSetType.ForwardOnly,
+          rsConcurrency = ResultSetConcurrency.ReadOnly,
+          fetchSize = 1000
+        )
+        .transactionally
+    ).mapResult(companyRowToCompanyObject)
 
   def all(implicit tc: TraceContext): Future[Seq[CompanyObject]] =
     lookupSequenceGenericRawSequence(

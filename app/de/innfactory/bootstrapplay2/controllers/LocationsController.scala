@@ -63,10 +63,10 @@ class LocationsController @Inject() (
   def post: Action[AnyContent] =
     tracingCompanyAction("Post Location").async { implicit request =>
       val json                                            = request.body.asJson.get
-      val stock                                           = json.as[Location]
+      val entity                                           = json.as[Location]
       val result: EitherT[Future, ResultStatus, Location] = for {
         _       <- EitherT(Future(json.validateFor[Location]))
-        created <- EitherT(locationRepository.post(stock)(requestContextWithCompany))
+        created <- EitherT(locationRepository.post(entity)(requestContextWithCompany))
       } yield created
       result.value.completeResult()
     }

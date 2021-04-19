@@ -92,6 +92,24 @@ GET                /readiness                                       de.innfactor
 GET                 /v1/companies/me                                     de.innfactory.bootstrapplay2.controllers.CompaniesController.getMe
 
 ###
+#  summary: Get All Companies
+#  tags:
+#    - companies
+#  responses:
+#     '200':
+#       description: success
+#       schema:
+#         $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Company'
+#     '404':
+#       description: not found
+#     '401':
+#       description: not authorized
+#     '403':
+#       description: forbidden
+###
+GET                 /v1/companies                                     de.innfactory.bootstrapplay2.controllers.CompaniesController.getStreamed
+
+###
 #  summary: Get Single
 #  security:
 #    - bearerAuth: []

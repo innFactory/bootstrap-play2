@@ -20,7 +20,7 @@ object Company {
           ctx.ctx.companiesRepository.allGraphQl(FilterOptionUtils.optionStringToFilterOptions(ctx arg FilterArg))(rc)
       )(ctx.ctx.ec)
     },
-    description = Some("Familotel Filter API hotels query. Query group by id")
+    description = Some("Bootstrap Filter API hotels query. Query group by id")
   )
 
 }

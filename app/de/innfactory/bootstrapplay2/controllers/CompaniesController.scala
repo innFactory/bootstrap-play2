@@ -1,5 +1,7 @@
 package de.innfactory.bootstrapplay2.controllers
 
+import akka.stream.scaladsl.{ Concat, Source }
+
 import java.util.UUID
 import de.innfactory.bootstrapplay2.actions.{ CompanyForUserExtractAction, JwtValidationAction, TracingCompanyAction }
 import cats.data.EitherT
@@ -7,12 +9,15 @@ import cats.implicits._
 import de.innfactory.bootstrapplay2.common.request.ReqConverterHelper.{ requestContext, requestContextWithCompany }
 import de.innfactory.bootstrapplay2.common.results.Results.ResultStatus
 import de.innfactory.play.tracing.TracingAction
+
 import javax.inject.{ Inject, Singleton }
 import de.innfactory.bootstrapplay2.models.api.Company
 import play.api.mvc._
 import de.innfactory.bootstrapplay2.repositories.CompaniesRepository
 import de.innfactory.bootstrapplay2.common.validators.JsonValidator._
 import de.innfactory.bootstrapplay2.common.utils.NilUtils._
+import play.api.http.Writeable
+import play.api.libs.json.Json
 
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -33,8 +38,16 @@ class CompaniesController @Inject() (
   def getSingle(
     id: String
   ): Action[AnyContent] =
-    tracingCompanyAction("get Single Company").async { implicit request =>
+    tracingCompanyAction("get Company").async { implicit request =>
       companiesRepository.lookup(UUID.fromString(id))(requestContextWithCompany).completeResult()
+    }
+
+  def getStreamed =
+    tracingAction("get companies streamed").async { implicit request =>
+      companiesRepository.streamedAll(requestContext).map { r =>
+        val source = Source.fromPublisher(r.mapResult(_.toJson.toString())).intersperse("[", ", ", "]")
+        Ok.chunked(source, Some("application/json"))
+      }
     }
 
   def patch: Action[AnyContent] =
@@ -51,10 +64,10 @@ class CompaniesController @Inject() (
   def post: Action[AnyContent] =
     tracingAction("post Company").async { implicit request =>
       val json                                           = request.body.asJson.get
-      val stock                                          = json.as[Company]
+      val entity                                          = json.as[Company]
       val result: EitherT[Future, ResultStatus, Company] = for {
         _       <- EitherT(Future(json.validateFor[Company]))
-        created <- EitherT(companiesRepository.post(stock)(requestContext))
+        created <- EitherT(companiesRepository.post(entity)(requestContext))
       } yield created
       result.value.completeResult()
     }

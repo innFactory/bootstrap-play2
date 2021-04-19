@@ -14,7 +14,8 @@ class FilterOptionsConfig {
     OptionStringOption(v => v.stringAttribute1, "stringAttribute1"),
     OptionStringOption(v => v.stringAttribute2, "stringAttribute2"),
     LongOption(v => v.longAttribute1, "longAttribute1"),
-    BooleanOption(v => v.booleanAttribute, "booleanAttribute")
+    BooleanOption(v => v.booleanAttribute, "booleanAttribute"),
+    LongOption(v => v.longAttribute1, "testAttribute1")
   )
 
 }

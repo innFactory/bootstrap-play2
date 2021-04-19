@@ -2,8 +2,8 @@ package de.innfactory.bootstrapplay2.graphql.schema.models
 
 import de.innfactory.bootstrapplay2.graphql.GraphQLExecutionContext
 import de.innfactory.bootstrapplay2.models.api.Location
-import sangria.macros.derive.{ReplaceField, deriveObjectType}
-import sangria.schema.{BigDecimalType, Field, ObjectType, OptionType, StringType}
+import sangria.macros.derive.{ deriveObjectType, ReplaceField }
+import sangria.schema.{ BigDecimalType, Field, ObjectType, OptionType, StringType }
 import de.innfactory.grapqhl.sangria.implicits.JsonScalarType._
 import de.innfactory.grapqhl.sangria.implicits.JodaScalarType._
 
@@ -28,7 +28,6 @@ object Locations {
             case None    => None
           }
         }
-
       )
     )
   )
