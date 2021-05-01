@@ -1,5 +1,6 @@
 package de.innfactory.bootstrapplay2.graphql.schema.models
 
+import de.innfactory.bootstrapplay2.graphql.GraphQLExecutionContext
 import de.innfactory.bootstrapplay2.models.api.Location
 import sangria.macros.derive.{ deriveObjectType, ReplaceField }
 import sangria.schema.{ BigDecimalType, Field, ObjectType, OptionType, StringType }
@@ -21,11 +22,12 @@ object Locations {
       field = Field(
         name = "distance",
         fieldType = OptionType(BigDecimalType),
-        resolve = c =>
+        resolve = c => {
           c.value.distance match {
             case Some(v) => Some(BigDecimal.decimal(v))
             case None    => None
           }
+        }
       )
     )
   )

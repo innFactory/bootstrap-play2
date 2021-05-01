@@ -15,7 +15,6 @@ import org.joda.time.format.DateTimeFormat
 import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 import play.api.libs.json.Reads
-import de.innfactory.bootstrapplay2.common.utils.PagedGen._
 import play.api.test.CSRFTokenHelper._
 import testutils.BaseFakeRequest
 import testutils.BaseFakeRequest._
@@ -44,7 +43,7 @@ class AuthenticationTest extends PlaySpec with BaseOneAppPerSuite with TestAppli
   "Authentication on Company" must {
     "get me" in {
       BaseFakeRequest(GET, "/v1/companies/me").get checkStatus 401
-      BaseFakeRequest(GET, "/v1/companies/me").withHeader(("Authorization", invalidEmail)).get checkStatus 404
+      BaseFakeRequest(GET, "/v1/companies/me").withHeader(("Authorization", invalidEmail)).get checkStatus 403
       BaseFakeRequest(GET, "/v1/companies/me").withHeader(("Authorization", company1ValidEmail)).get checkStatus 200
     }
 
@@ -65,10 +64,12 @@ class AuthenticationTest extends PlaySpec with BaseOneAppPerSuite with TestAppli
                                     | ],
                                     |"settings": {
                                     |"test": "test"
-                                    |}
+                                    | },
+                                    |"booleanAttribute": true,
+                                    |"longAttribute1": 9
                                     |}
                                     |""".stripMargin))
-        .getWithBody checkStatus 403
+        .getWithBody checkStatus 200
     }
 
     "patch" in {

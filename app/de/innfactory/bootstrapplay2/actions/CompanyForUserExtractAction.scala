@@ -1,35 +1,61 @@
 package de.innfactory.bootstrapplay2.actions
 
+import cats.implicits.catsSyntaxEitherId
 import com.google.inject.Inject
 import de.innfactory.bootstrapplay2.common.authorization.FirebaseEmailExtractor
+import de.innfactory.bootstrapplay2.common.request.TraceContext
+import de.innfactory.bootstrapplay2.common.results.ErrorResponse
 import de.innfactory.bootstrapplay2.db.CompaniesDAO
 import de.innfactory.bootstrapplay2.models.api.Company
-import play.api.mvc.{ ActionBuilder, ActionTransformer, AnyContent, BodyParsers, Request, WrappedRequest }
+import de.innfactory.play.tracing.{ RequestWithTrace, TraceRequest, UserExtractionActionBase }
+import io.opencensus.trace.Span
+import play.api.Environment
+import play.api.mvc.Results.Forbidden
+import play.api.mvc.{ BodyParsers, Request, Result, WrappedRequest }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
-class RequestWithCompany[A](val company: Option[Company], val email: Option[String], request: Request[A])
-    extends WrappedRequest[A](request)
+class RequestWithCompany[A](
+  val company: Company,
+  val email: Option[String],
+  val request: Request[A],
+  val traceSpan: Span
+) extends WrappedRequest[A](request)
+    with TraceRequest[A]
 
 class CompanyForUserExtractAction @Inject() (
-  val parser: BodyParsers.Default,
   companiesDAO: CompaniesDAO,
   firebaseEmailExtractor: FirebaseEmailExtractor[Any]
-)(implicit val executionContext: ExecutionContext)
-    extends ActionBuilder[RequestWithCompany, AnyContent]
-    with ActionTransformer[Request, RequestWithCompany] {
-  def transform[A](request: Request[A]): Future[RequestWithCompany[A]] =
+)(implicit executionContext: ExecutionContext, parser: BodyParsers.Default, environment: Environment)
+    extends UserExtractionActionBase[RequestWithTrace, RequestWithCompany] {
+
+  override def extractUserAndCreateNewRequest[A](request: RequestWithTrace[A])(implicit
+    environment: Environment,
+    parser: BodyParsers.Default,
+    executionContext: ExecutionContext
+  ): Future[Either[Result, RequestWithCompany[A]]] =
     Future.successful {
       val result: Option[Future[Option[Company]]] = for {
         email <- firebaseEmailExtractor.extractEmail(request)
       } yield for {
-        user <- companiesDAO.internal_lookupByEmail(email)
+        user <- companiesDAO.internal_lookupByEmail(email)(new TraceContext(request.traceSpan))
       } yield user
-
       result match {
         case Some(v) =>
-          v.map(new RequestWithCompany(_, firebaseEmailExtractor.extractEmail(request), request))
-        case None    => Future(new RequestWithCompany(None, firebaseEmailExtractor.extractEmail(request), request))
+          v.map {
+            case Some(value) =>
+              new RequestWithCompany(
+                value,
+                firebaseEmailExtractor.extractEmail(request),
+                request.request,
+                request.traceSpan
+              ).asRight[Result]
+            case None        => Forbidden(ErrorResponse.fromMessage("Forbidden")).asLeft[RequestWithCompany[A]]
+          }
+        case None    =>
+          Future(
+            Forbidden(ErrorResponse.fromMessage("Forbidden")).asLeft[RequestWithCompany[A]]
+          )
       }
     }.flatten
 }

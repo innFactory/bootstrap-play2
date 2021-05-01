@@ -18,6 +18,11 @@
     <appender-ref ref="STDOUT" />
   </appender>
 
+  <appender name="CLOUD" class="de.innfactory.play.logging.logback.LoggingAppender">
+    <credentialsFile>conf/firebase.json</credentialsFile>
+    <enhancer>de.innfactory.play.logging.logback.BaseEnhancer</enhancer>
+  </appender>
+
   <logger name="scala.slick" level="INFO" />
   <logger name="com.github.tminglei.slickpg" level="NONE" />
   <logger name="play" level="INFO"/>
@@ -39,6 +44,7 @@
   </logger>
 
   <root level="WARN">
+    <appender-ref ref="CLOUD" />
     <appender-ref ref="ASYNCSTDOUT" />
   </root>
 

@@ -4,7 +4,7 @@ The runFor.sh Script will start a Docker Postgis Container with [docker-compose.
 
 The Postgis data volume will be mounted to: 
 
-- __local-runner/postgis-volume__ 
+- __.bin/postgis-volume__ 
 
 so that even if the container is deleted no data will be lost!
 

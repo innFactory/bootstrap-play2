@@ -1,5 +1,7 @@
-import java.util.Properties
+import com.google.auth.Credentials
+import com.google.auth.oauth2.GoogleCredentials
 
+import java.util.Properties
 import javax.inject.{ Inject, Provider, Singleton }
 import com.typesafe.config.Config
 import play.api.inject.ApplicationLifecycle
@@ -7,11 +9,19 @@ import play.api.{ Configuration, Environment, Logger, Mode }
 import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
 import de.innfactory.auth.firebase.FirebaseBase
+import de.innfactory.auth.firebase.FirebaseBase.getClass
 import de.innfactory.auth.firebase.validator.{ JWTValidatorMock, JwtValidator, JwtValidatorImpl }
 import de.innfactory.bootstrapplay2.db.{ CompaniesDAO, LocationsDAO }
 import de.innfactory.play.flyway.FlywayMigrator
+import io.opencensus.exporter.trace.jaeger.{ JaegerExporterConfiguration, JaegerTraceExporter }
+import io.opencensus.exporter.trace.logging.LoggingTraceExporter
+import io.opencensus.exporter.trace.stackdriver.{ StackdriverTraceConfiguration, StackdriverTraceExporter }
+import io.opencensus.trace.AttributeValue
 import play.api.libs.concurrent.AkkaGuiceSupport
+
+import java.io.InputStream
 import scala.concurrent.Future
+import scala.jdk.CollectionConverters.MapHasAsJava
 
 /**
  * This module handles the bindings for the API to the Slick implementation.
@@ -24,28 +34,95 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 
   override def configure(): Unit = {
     logger.info(s"Configuring ${environment.mode}")
+
     bind(classOf[Database]).toProvider(classOf[DatabaseProvider])
-    bind(classOf[firebaseCreationService]).asEagerSingleton()
-    bind(classOf[firebaseDeletionService]).asEagerSingleton()
     bind(classOf[FlywayMigratorImpl]).asEagerSingleton()
-    bind(classOf[LocationsDAOCloseHook]).asEagerSingleton()
-    bind(classOf[CompaniesDAOCloseHook]).asEagerSingleton()
+    bind(classOf[DAOCloseHook]).asEagerSingleton()
 
     /**
      * Inject Modules depended on environment (Test, Prod, Dev)
      */
     if (environment.mode == Mode.Test) {
+
       logger.info(s"- - - Binding Services for for Test Mode - - -")
-      bind(classOf[JwtValidator])
-        .to(classOf[JWTValidatorMock]) // Bind Mock JWT Validator for Test Mode
+
+      // Bind Mock JWT Validator for Test Mode
+      bind(classOf[JwtValidator]).to(classOf[JWTValidatorMock])
+
+    } else if (environment.mode == Mode.Dev) {
+
+      logger.info(s"- - - Binding Services for for Dev Mode - - -")
+
+      // Firebase
+      bind(classOf[firebaseCreationService]).asEagerSingleton()
+      bind(classOf[firebaseDeletionService]).asEagerSingleton()
+
+      // Bind Prod JWT Validator for Prod/Dev Mode
+      bind(classOf[JwtValidator]).to(classOf[JwtValidatorImpl])
+
+      // Optional Jaeger Exporter bind(classOf[JaegerTracingCreator]).asEagerSingleton()
+
     } else {
-      logger.info(s"- - - Binding Services for for Prod/Dev Mode - - -")
-      bind(classOf[JwtValidator])
-        .to(classOf[JwtValidatorImpl]) // Bind Prod JWT Validator for Prod/Dev Mode
+
+      logger.info(s"- - - Binding Services for for Prod Mode - - -")
+
+      bind(classOf[firebaseCreationService]).asEagerSingleton()
+      bind(classOf[firebaseDeletionService]).asEagerSingleton()
+
+      // Bind Prod JWT Validator for Prod/Dev Mode
+      bind(classOf[JwtValidator]).to(classOf[JwtValidatorImpl])
+
+      // Tracing
+      bind(classOf[StackdriverTracingCreator]).asEagerSingleton()
+      bind(classOf[LoggingTracingCreator]).asEagerSingleton()
+
     }
 
   }
 
+}
+
+@Singleton
+class LoggingTracingCreator @Inject() (lifecycle: ApplicationLifecycle) {
+  LoggingTraceExporter.register()
+  lifecycle.addStopHook { () =>
+    Future.successful(LoggingTraceExporter.unregister())
+  }
+}
+
+@Singleton
+class JaegerTracingCreator @Inject() (lifecycle: ApplicationLifecycle) {
+  val jaegerExporterConfiguration: JaegerExporterConfiguration = JaegerExporterConfiguration
+    .builder()
+    .setServiceName("bootstrap-play2")
+    .setThriftEndpoint("http://127.0.0.1:14268/api/traces")
+    .build()
+  JaegerTraceExporter.createAndRegister(jaegerExporterConfiguration)
+
+  lifecycle.addStopHook { () =>
+    Future.successful(JaegerTraceExporter.unregister())
+  }
+}
+
+@Singleton
+class StackdriverTracingCreator @Inject() (lifecycle: ApplicationLifecycle, config: Config) {
+  val serviceAccount: InputStream                                   = getClass.getClassLoader.getResourceAsStream(config.getString("firebase.file"))
+  val credentials: GoogleCredentials                                = GoogleCredentials.fromStream(serviceAccount)
+  val stackDriverTraceExporterConfig: StackdriverTraceConfiguration = StackdriverTraceConfiguration
+    .builder()
+    .setProjectId(config.getString("project.id"))
+    .setCredentials(credentials)
+    .setFixedAttributes(
+      Map(
+        ("/component", AttributeValue.stringAttributeValue("PlayServer"))
+      ).asJava
+    )
+    .build()
+
+  StackdriverTraceExporter.createAndRegister(stackDriverTraceExporterConfig)
+  lifecycle.addStopHook { () =>
+    Future.successful(StackdriverTraceExporter.unregister())
+  }
 }
 
 /** Migrate Flyway on application start */
@@ -72,15 +149,11 @@ class DatabaseProvider @Inject() (config: Config) extends Provider[Database] {
 }
 
 /** Closes DAO. Important on dev restart. */
-class CompaniesDAOCloseHook @Inject() (dao: CompaniesDAO, lifecycle: ApplicationLifecycle) {
+class DAOCloseHook @Inject() (companiesDAO: CompaniesDAO, locationsDAO: LocationsDAO, lifecycle: ApplicationLifecycle) {
   lifecycle.addStopHook { () =>
-    Future.successful(dao.close())
-  }
-}
-
-/** Closes DAO. Important on dev restart. */
-class LocationsDAOCloseHook @Inject() (dao: LocationsDAO, lifecycle: ApplicationLifecycle) {
-  lifecycle.addStopHook { () =>
-    Future.successful(dao.close())
+    Future.successful({
+      companiesDAO.close()
+      locationsDAO.close()
+    })
   }
 }

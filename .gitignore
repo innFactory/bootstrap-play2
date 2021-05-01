@@ -34,7 +34,6 @@ server.pid
 *.eml
 /dist/
 
-
 test.mv.db
 
 #Firebase
@@ -49,10 +48,12 @@ pubSub-dev.json
 .circleci/k8sdeploy.yaml-e
 .metals/*
 
+.bsp/*
+
 #puml
 out/doc
 
 .DS_Store
 
-local-runner/postgis-volume
+.bin/postgis-volume
 .bloop/

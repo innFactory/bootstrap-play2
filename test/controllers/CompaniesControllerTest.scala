@@ -1,26 +1,12 @@
 package controllers
 
 import java.util.UUID
-
-import com.google.inject.Inject
-import com.typesafe.config.Config
 import de.innfactory.bootstrapplay2.models.api._
 import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
 import play.api.libs.json._
-import play.api.mvc.Result
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
-import play.api.libs.json.Reads
-import de.innfactory.bootstrapplay2.common.utils.PagedGen._
-import play.api.test.CSRFTokenHelper._
 import testutils.BaseFakeRequest
 import testutils.BaseFakeRequest._
-
-import scala.concurrent.Future
 
 class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
 
@@ -44,7 +30,7 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
     }
 
     "get me empty" in {
-      BaseFakeRequest(GET, "/v1/companies/me").withHeader(("Authorization", "test7@test7.de")).get checkStatus 404
+      BaseFakeRequest(GET, "/v1/companies/me").withHeader(("Authorization", "test7@test7.de")).get checkStatus 403
     }
 
     "get single" in {
@@ -69,16 +55,18 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
           .withJsonBody(Json.parse(s"""
                                       |{
                                       |"firebaseUser": [
-                                      |"test5@test5.de"
+                                      |"noUser@noUser.de"
                                       | ],
                                       |"settings": {
                                       |"test": "test"
-                                      |}
+                                      |},
+                                      |"booleanAttribute": true,
+                                      |"longAttribute1": 9
                                       |}
                                       |""".stripMargin))
           .getWithBody
           .parseContent[Company]
-      result.firebaseUser.get.contains("test5@test5.de") mustEqual true
+      result.firebaseUser.get.contains("noUser@noUser.de") mustEqual true
     }
 
     "post duplicate" in {
@@ -92,7 +80,9 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
                                     | ],
                                     |"settings": {
                                     |"test": "test"
-                                    |}
+                                    |},
+                                    |"booleanAttribute": true,
+                                    |"longAttribute1": 9
                                     |}
                                     |""".stripMargin))
         .getWithBody checkStatus 400
@@ -106,7 +96,9 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
                                      {
                                       | "id": "231f5e3d-31db-4be5-9db9-92955e03507c",
                                       | "firebaseUser": ["test@test.de"],
-                                      | "settings": {"test2": "test2"}
+                                      | "settings": {"test2": "test2"},
+                                      | "booleanAttribute": false,
+                                      | "longAttribute1": 15
                                       |}
                                       |""".stripMargin))
           .getWithBody
@@ -126,7 +118,7 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
         .get checkStatus 204
       BaseFakeRequest(DELETE, "/v1/companies/b492fa98-ab60-4596-ac3c-256cc4957797")
         .withHeader(("Authorization", "test@test6.de"))
-        .get checkStatus 404
+        .get checkStatus 403
     }
 
   }

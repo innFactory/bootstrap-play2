@@ -11,9 +11,6 @@ import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 import play.api.libs.json.Reads
 
-/**
- * Implementation independent aggregate root.
- */
 case class Location(
   id: Option[Long],
   company: UUID,
@@ -29,10 +26,7 @@ case class Location(
   created: Option[DateTime],
   updated: Option[DateTime],
   distance: Option[Float]
-) extends ApiBaseModel {
-  val writes: Writes[Location] = implicitly
-  override def toJson: JsValue = Json.toJson(this)(writes)
-}
+)
 
 object Location {
   implicit val reads  = Json.reads[Location]

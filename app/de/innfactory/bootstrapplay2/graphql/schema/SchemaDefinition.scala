@@ -24,7 +24,7 @@ object SchemaDefinition {
       Query,
       None,
       description = Some(
-        "Schema for Familotel API "
+        "Schema for Bootstrap API "
       )
     )
 

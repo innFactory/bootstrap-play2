@@ -1,14 +1,14 @@
 package de.innfactory.bootstrapplay2.db
 
 import java.util.UUID
-
 import com.google.inject.ImplementedBy
 import com.vividsolutions.jts.geom.Geometry
 import de.innfactory.common.geo.GeoPointFactory
-import de.innfactory.bootstrapplay2.common.daos.BaseSlickDAO
+import de.innfactory.bootstrapplay2.common.request.{ RequestContext, TraceContext }
 import de.innfactory.bootstrapplay2.common.results.Results.Result
-import de.innfactory.bootstrapplay2.common.results.errors.Errors.{ DatabaseError, NotFound }
+import de.innfactory.bootstrapplay2.common.results.errors.Errors.{ DatabaseResult, NotFound }
 import de.innfactory.play.db.codegen.XPostgresProfile
+
 import javax.inject.{ Inject, Singleton }
 import slick.jdbc.JdbcBackend.Database
 import play.api.libs.json.Json
@@ -19,49 +19,34 @@ import de.innfactory.bootstrapplay2.models.api.Location.patch
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.implicitConversions
 
-/**
- * An implementation dependent DAO.  This could be implemented by Slick, Cassandra, or a REST API.
- */
 @ImplementedBy(classOf[SlickLocationsDAO])
 trait LocationsDAO {
 
-  def lookup(id: Long): Future[Result[LocationObject]]
+  def lookup(id: Long)(implicit tc: TraceContext): Future[Result[LocationObject]]
 
   def lookupByCompany(
     companyId: UUID
-  ): Future[Result[Seq[LocationObject]]]
+  )(implicit tc: TraceContext): Future[Result[Seq[LocationObject]]]
 
   def allFromDistanceByCompany(
     companyId: UUID,
     point: Geometry,
     distance: Long
-  ): Future[Result[Seq[LocationObject]]]
+  )(implicit tc: TraceContext): Future[Result[Seq[LocationObject]]]
 
-  def create(locationObject: LocationObject): Future[Result[LocationObject]]
+  def create(locationObject: LocationObject)(implicit tc: TraceContext): Future[Result[LocationObject]]
 
-  def update(locationObject: LocationObject): Future[Result[LocationObject]]
+  def update(locationObject: LocationObject)(implicit tc: TraceContext): Future[Result[LocationObject]]
 
-  def delete(id: Long): Future[Result[Boolean]]
+  def delete(id: Long)(implicit tc: TraceContext): Future[Result[Boolean]]
 
   def close(): Future[Unit]
 }
 
-/**
- * A locationObject DAO implemented with Slick, leveraging Slick code gen.
- *
- * Note that you must run "flyway/flywayMigrate" before "compile" here.
- *
- * @param db the slick database that this locationObject DAO is using internally, bound through Module.
- * @param ec a CPU bound execution context.  Slick manages blocking JDBC calls with its
- *    own internal thread pool, so Play's default execution context is fine here.
- */
 @Singleton
 class SlickLocationsDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
     extends BaseSlickDAO(db)
     with LocationsDAO {
-
-  // Class Name for identification in Database Errors
-  override val currentClassForDatabaseError = "SlickLocationsDAO"
 
   override val profile = XPostgresProfile
   import profile.api._
@@ -83,22 +68,12 @@ class SlickLocationsDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
         .filter(_._2 <= maxDistance)
     )
 
-  /**
-   * Lookup single object
-   * @param id
-   * @return
-   */
-  def lookup(id: Long): Future[Result[LocationObject]] =
+  def lookup(id: Long)(implicit tc: TraceContext): Future[Result[LocationObject]] =
     lookupGeneric[LocationRow, LocationObject](
       queryById(id).result.headOption
     )
 
-  /**
-   * Lookup single object _internal use only
-   * @param id
-   * @return
-   */
-  def _internal_lookup(id: Long): Future[Option[LocationObject]] =
+  def _internal_lookup(id: Long)(implicit tc: TraceContext): Future[Option[LocationObject]] =
     db.run(queryById(id).result.headOption).map {
       case Some(row) =>
         Some(locationRowToLocation(row))
@@ -106,42 +81,25 @@ class SlickLocationsDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
         None
     }
 
-  /**
-   * Lookup by Company
-   * @param companyId
-   * @return
-   */
   def lookupByCompany(
     companyId: UUID
-  ): Future[Result[Seq[LocationObject]]] =
+  )(implicit tc: TraceContext): Future[Result[Seq[LocationObject]]] =
     lookupSequenceGeneric[LocationRow, LocationObject](
       queryByCompany(companyId).result
     )
 
-  /**
-   * Query All by distance from to index
-   *
-   * @param point
-   * @param distance
-   * @return
-   */
   def allFromDistanceByCompany(
     companyId: UUID,
     point: Geometry,
     distance: Long
-  ): Future[Result[Seq[LocationObject]]] =
+  )(implicit tc: TraceContext): Future[Result[Seq[LocationObject]]] =
     db.run(querySortedWithDistanceFilterMaxDistance(point, distance.toFloat, companyId).result).map { seq =>
       Right(
         seq.map(x => locationRowToLocationWithDistance(x._1, x._2))
       )
     }
 
-  /**
-   * Patch object
-   * @param locationObject
-   * @return
-   */
-  def update(locationObject: LocationObject): Future[Result[LocationObject]] =
+  def update(locationObject: LocationObject)(implicit tc: TraceContext): Future[Result[LocationObject]] =
     updateGeneric[LocationRow, LocationObject](
       queryById(locationObject.id.getOrElse(0)).result.headOption,
       (toPatch: LocationObject) =>
@@ -149,23 +107,13 @@ class SlickLocationsDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
       (old: LocationObject) => patch(locationObject, old)
     )
 
-  /**
-   * Delete Object
-   * @param id
-   * @return
-   */
-  def delete(id: Long): Future[Result[Boolean]] =
+  def delete(id: Long)(implicit tc: TraceContext): Future[Result[Boolean]] =
     deleteGeneric[LocationRow, LocationObject](
       queryById(id).result.headOption,
       queryById(id).delete
     )
 
-  /**
-   * Create new Object
-   * @param locationObject
-   * @return
-   */
-  def create(locationObject: LocationObject): Future[Result[LocationObject]] =
+  def create(locationObject: LocationObject)(implicit tc: TraceContext): Future[Result[LocationObject]] =
     createGeneric[LocationRow, LocationObject](
       locationObject,
       queryById(locationObject.id.getOrElse(0)).result.headOption,
