@@ -32,7 +32,7 @@ object Dependencies {
   val hikariCP        = "com.zaxxer"            % "HikariCP"           % "4.0.3"  exclude("org.slf4j", "slf4j-api")
   val joda            = "joda-time"             % "joda-time"          % "2.10.10"
   val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.19"
-  val cats = "org.typelevel" %% "cats-core" % "2.6.0"
+  val cats = "org.typelevel" %% "cats-core" % "2.6.1"
 
   //Test
   val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.8" % Test
