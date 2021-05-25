@@ -18,4 +18,4 @@ addSbtPlugin("com.iheart" % "sbt-play-swagger" % "0.10.5-PLAY2.8")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-license-report" % "1.2.0")
 
-addSbtPlugin("com.codecommit" % "sbt-github-packages" % "0.5.2")
+addSbtPlugin("com.codecommit" % "sbt-github-packages" % "0.5.3")
