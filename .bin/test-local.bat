@@ -21,7 +21,7 @@ goto:eof
 
 :connection_established
 echo Running tests
-sbt ciTests
+call sbt ciTests
 echo Shutdown docker container
 docker stop bootstrapPlay2PGTest
 docker rm bootstrapPlay2PGTest
