@@ -7,13 +7,13 @@ import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
 
-class TracingCompanyAction @Inject() (
+class TracingUserAction @Inject() (
   val parser: BodyParsers.Default,
-  companyAction: CompanyForUserExtractAction,
+  firebaseUserExtractAction: FirebaseUserExtractAction,
   jwtValidationAction: JwtValidationAction,
   traceAction: TracingAction,
   implicit val environment: Environment
 )(implicit val executionContext: ExecutionContext) {
-  def apply(traceString: String): ActionBuilder[RequestWithCompany, AnyContent] =
-    traceAction(traceString).andThen(jwtValidationAction).andThen(companyAction)
+  def apply(traceString: String): ActionBuilder[RequestWithFirebaseUser, AnyContent] =
+    traceAction(traceString).andThen(jwtValidationAction).andThen(firebaseUserExtractAction)
 }

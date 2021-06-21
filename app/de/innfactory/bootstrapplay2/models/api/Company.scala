@@ -11,7 +11,7 @@ import play.api.libs.json.Reads
 import de.innfactory.bootstrapplay2.common.utils.OptionUtils._
 
 case class Company(
-  id: Option[UUID],
+  id: Option[Long],
   firebaseUser: Option[List[String]],
   settings: Option[JsValue],
   stringAttribute1: Option[String],

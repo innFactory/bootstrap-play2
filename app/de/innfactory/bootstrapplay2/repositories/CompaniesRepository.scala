@@ -8,7 +8,7 @@ import de.innfactory.bootstrapplay2.common.authorization.CompanyAuthorizationMet
 import de.innfactory.bootstrapplay2.common.implicits.EitherTTracingImplicits.{ EnhancedTracingEitherT, TracedT }
 import de.innfactory.bootstrapplay2.common.logging.ImplicitLogContext
 import de.innfactory.bootstrapplay2.common.repositories.{ All, Delete, Lookup, Patch, Post }
-import de.innfactory.bootstrapplay2.common.request.{ RequestContext, RequestContextWithCompany, TraceContext }
+import de.innfactory.bootstrapplay2.common.request.{ RequestContext, RequestContextWithUser }
 import de.innfactory.bootstrapplay2.common.results.Results.{ Result, ResultStatus }
 import de.innfactory.bootstrapplay2.common.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.common.utils.OptionUtils.EnhancedOption
@@ -26,28 +26,27 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 @ImplementedBy(classOf[CompaniesRepositoryImpl])
 trait CompaniesRepository
-    extends Lookup[UUID, RequestContextWithCompany, Company]
+    extends Lookup[Long, RequestContextWithUser, Company]
     with All[RequestContext, Company]
-    with Patch[RequestContextWithCompany, Company]
-    with Post[RequestContext, Company]
-    with Delete[UUID, RequestContextWithCompany, Company] {
+    with Patch[RequestContextWithUser, Company]
+    with Post[RequestContextWithUser, Company]
+    with Delete[Long, RequestContextWithUser, Company] {
   def allGraphQl(filter: Seq[FilterOptions[_root_.dbdata.Tables.Company, _]])(implicit
     rc: RequestContext
   ): Future[Seq[Company]]
-  def streamedAll(implicit tc: TraceContext): Future[DatabasePublisher[Company]]
+  def streamedAll(implicit tc: RequestContext): Future[DatabasePublisher[Company]]
 }
 
 class CompaniesRepositoryImpl @Inject() (
-  companiesDAO: CompaniesDAO,
-  authorizationMethods: CompanyAuthorizationMethods[AnyContent]
+  companiesDAO: CompaniesDAO
 )(implicit ec: ExecutionContext, errorParser: ErrorParserImpl)
     extends CompaniesRepository
     with ImplicitLogContext {
 
-  def lookup(id: UUID)(implicit rc: RequestContextWithCompany): Future[Result[Company]] = {
+  def lookup(id: Long)(implicit rc: RequestContextWithUser): Future[Result[Company]] = {
     val result = for {
       lookupResult <- EitherT(companiesDAO.lookup(id))
-      _            <- EitherT(Future(authorizationMethods.canGet(lookupResult)))
+      _            <- EitherT(Future(CompanyAuthorizationMethods.canGet(lookupResult)))
     } yield lookupResult
     result.value
   }
@@ -59,7 +58,7 @@ class CompaniesRepositoryImpl @Inject() (
     result.value
   }
 
-  def streamedAll(implicit tc: TraceContext): Future[DatabasePublisher[Company]] = {
+  def streamedAll(implicit tc: RequestContext): Future[DatabasePublisher[Company]] = {
     val result = for {
       pub <- Future(companiesDAO.streamedAll)
     } yield pub
@@ -75,31 +74,31 @@ class CompaniesRepositoryImpl @Inject() (
     result.value.completeOrThrow
   }
 
-  def patch(company: Company)(implicit rc: RequestContextWithCompany): Future[Result[Company]] = {
+  def patch(company: Company)(implicit rc: RequestContextWithUser): Future[Result[Company]] = {
     val result = for {
       _             <- TracedT("Patch Company Repository before lookup") // Can be used as extra step
-      oldCompany    <- EitherT(companiesDAO.lookup(company.id.getOrElse(UUID.randomUUID()))).trace("Companies DAO Lookup")
+      oldCompany    <- EitherT(companiesDAO.lookup(company.id.getOrElse(0))).trace("Companies DAO Lookup")
       _             <- TracedT("Patch Company Repository after lookup")
-      _             <- EitherT(Future(authorizationMethods.canUpdate(company))).trace("Authorization Method")
+      _             <- EitherT(Future(CompanyAuthorizationMethods.canUpdate(company))).trace("Authorization Method")
       companyUpdate <- EitherT(companiesDAO.update(company.copy(id = oldCompany.id))).trace("Companies DAO Update")
     } yield companyUpdate
     result.value
   }
-  def post(company: Company)(implicit rc: RequestContext): Future[Result[Company]] = {
+  def post(company: Company)(implicit rc: RequestContextWithUser): Future[Result[Company]] = {
     val result: EitherT[Future, ResultStatus, Company] = for {
       _             <- EitherT({
                          if (company.id.isDefined) companiesDAO.lookup(company.id.get).map(_.toOption.toInverseEither(BadRequest()))
                          else Future(Right(()))
                        })
-      _             <- EitherT(Future(authorizationMethods.canCreate(company)))
+      _             <- EitherT(Future(CompanyAuthorizationMethods.canCreate()))
       createdResult <- EitherT(companiesDAO.create(company))
     } yield createdResult
     result.value
   }
-  def delete(id: UUID)(implicit rc: RequestContextWithCompany): Future[Result[Company]] = {
+  def delete(id: Long)(implicit rc: RequestContextWithUser): Future[Result[Company]] = {
     val result: EitherT[Future, ResultStatus, Company] = for {
       company <- EitherT(companiesDAO.lookup(id))
-      _       <- EitherT(Future(authorizationMethods.canDelete(company)))
+      _       <- EitherT(Future(CompanyAuthorizationMethods.canDelete(company)))
       _       <- EitherT(companiesDAO.delete(id))
     } yield company
     result.value

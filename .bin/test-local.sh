@@ -13,7 +13,14 @@ if [ "$REMOVE" == "" ]; then
 fi
 
 
+
+
 docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=test -e POSTGRES_DB=test -e POSTGRES_USER=test --name bootstrapPlay2PGTest postgis/postgis:12-master
+
+FILE=build.sbt
+if test -f "$FILE"; then
+    cd .bin
+fi
 
 
 
@@ -27,6 +34,7 @@ for i in `seq 1 10`;
             echo Failed waiting for Postgres && exit 1
 )
 
-sbt ciTests
+
+firebase emulators:exec "cd .. && export FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' && sbt ciTests" --only auth --project bootstrap-play2 --import=./firebase-data
 docker stop bootstrapPlay2PGTest
 docker rm bootstrapPlay2PGTest

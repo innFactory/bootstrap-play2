@@ -14,6 +14,7 @@ object Results {
     def message: String
     def additionalInfoToLog: Option[String]
     def additionalInfoErrorCode: Option[String]
+    def statusCode: Int
   }
 
   type Result[T] = Either[ResultStatus, T]
@@ -21,11 +22,8 @@ object Results {
   implicit class RichError(value: ResultStatus)(implicit ec: ExecutionContext) {
     def mapToResult: play.api.mvc.Result =
       value match {
-        case e: DatabaseResult => MvcResults.Status(500)(ErrorResponse.fromMessage(e.message))
-        case e: Forbidden      => MvcResults.Status(403)(ErrorResponse.fromMessage(e.message))
-        case e: BadRequest     => MvcResults.Status(400)(ErrorResponse.fromMessage(e.message))
-        case e: NotFound       => MvcResults.Status(404)(ErrorResponse.fromMessage(e.message))
-        case _                 => MvcResults.Status(400)("")
+        case e: NotLoggingResult => MvcResults.Status(e.statusCode)(ErrorResponse.fromMessage(e.message))
+        case _                   => MvcResults.Status(400)("")
       }
   }
 

@@ -119,7 +119,7 @@ GET                 /v1/companies                                     de.innfact
 #    - in: path
 #      name: company Id
 #      schema:
-#         type: UUID
+#         type: Long
 #      required: true
 #      description: Id of Company
 #  responses:
@@ -134,7 +134,7 @@ GET                 /v1/companies                                     de.innfact
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/companies/:id                                   de.innfactory.bootstrapplay2.controllers.CompaniesController.getSingle(id: String)
+GET                 /v1/companies/:id                                   de.innfactory.bootstrapplay2.controllers.CompaniesController.getSingle(id: Long)
 
 ###
 #  summary: Delete Company
@@ -146,7 +146,7 @@ GET                 /v1/companies/:id                                   de.innfa
 #    - in: path
 #      name: company Id
 #      schema:
-#         type: UUID
+#         type: Long
 #      required: true
 #      description: Id of Company
 #  responses:
@@ -159,7 +159,7 @@ GET                 /v1/companies/:id                                   de.innfa
 #     '403':
 #       description: forbidden
 ###
-DELETE               /v1/companies/:id                                   de.innfactory.bootstrapplay2.controllers.CompaniesController.delete(id: String)
+DELETE               /v1/companies/:id                                   de.innfactory.bootstrapplay2.controllers.CompaniesController.delete(id: Long)
 
 ###
 #  summary: Post Company
@@ -240,7 +240,7 @@ PATCH               /v1/companies                               de.innfactory.bo
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/companies/:id/locations                                  de.innfactory.bootstrapplay2.controllers.LocationsController.getByCompany(id: String)
+GET                 /v1/companies/:id/locations                                  de.innfactory.bootstrapplay2.controllers.LocationsController.getByCompany(id: Long)
 
 ###
 #  summary: Get Single
@@ -387,6 +387,12 @@ PATCH               /v1/locations                               de.innfactory.bo
 
 POST               /graphql                              de.innfactory.bootstrapplay2.graphql.GraphQLController.graphql
 POST               /graphql/schema                              de.innfactory.bootstrapplay2.graphql.GraphQLController.renderSchema
+
+# Users
+GET           /v1/companies/:id/users                       de.innfactory.bootstrapplay2.controllers.UsersController.getUsersForCompany(id: Long)
+POST          /v1/users                                     de.innfactory.bootstrapplay2.controllers.UsersController.createUser
+PATCH         /v1/users                                     de.innfactory.bootstrapplay2.controllers.UsersController.patchUser
+PATCH         /v1/users/reset                               de.innfactory.bootstrapplay2.controllers.UsersController.resetPassword
 
 # Map static resources from the /public folder to the /assets URL path
 ### NoDocs ###

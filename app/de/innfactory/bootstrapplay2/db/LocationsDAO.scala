@@ -1,10 +1,8 @@
 package de.innfactory.bootstrapplay2.db
-
-import java.util.UUID
 import com.google.inject.ImplementedBy
 import com.vividsolutions.jts.geom.Geometry
 import de.innfactory.common.geo.GeoPointFactory
-import de.innfactory.bootstrapplay2.common.request.{ RequestContext, TraceContext }
+import de.innfactory.bootstrapplay2.common.request.RequestContext
 import de.innfactory.bootstrapplay2.common.results.Results.Result
 import de.innfactory.bootstrapplay2.common.results.errors.Errors.{ DatabaseResult, NotFound }
 import de.innfactory.play.db.codegen.XPostgresProfile
@@ -22,23 +20,23 @@ import scala.language.implicitConversions
 @ImplementedBy(classOf[SlickLocationsDAO])
 trait LocationsDAO {
 
-  def lookup(id: Long)(implicit tc: TraceContext): Future[Result[LocationObject]]
+  def lookup(id: Long)(implicit rc: RequestContext): Future[Result[LocationObject]]
 
   def lookupByCompany(
-    companyId: UUID
-  )(implicit tc: TraceContext): Future[Result[Seq[LocationObject]]]
+    companyId: Long
+  )(implicit rc: RequestContext): Future[Result[Seq[LocationObject]]]
 
   def allFromDistanceByCompany(
-    companyId: UUID,
+    companyId: Long,
     point: Geometry,
     distance: Long
-  )(implicit tc: TraceContext): Future[Result[Seq[LocationObject]]]
+  )(implicit rc: RequestContext): Future[Result[Seq[LocationObject]]]
 
-  def create(locationObject: LocationObject)(implicit tc: TraceContext): Future[Result[LocationObject]]
+  def create(locationObject: LocationObject)(implicit rc: RequestContext): Future[Result[LocationObject]]
 
-  def update(locationObject: LocationObject)(implicit tc: TraceContext): Future[Result[LocationObject]]
+  def update(locationObject: LocationObject)(implicit rc: RequestContext): Future[Result[LocationObject]]
 
-  def delete(id: Long)(implicit tc: TraceContext): Future[Result[Boolean]]
+  def delete(id: Long)(implicit rc: RequestContext): Future[Result[Boolean]]
 
   def close(): Future[Unit]
 }
@@ -55,10 +53,10 @@ class SlickLocationsDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
 
   private val queryById = Compiled((id: Rep[Long]) => Location.filter(_.id === id))
 
-  private val queryByCompany = Compiled((id: Rep[UUID]) => Location.filter(_.company === id))
+  private val queryByCompany = Compiled((id: Rep[Long]) => Location.filter(_.company === id))
 
   private val querySortedWithDistanceFilterMaxDistance =
-    Compiled((ref: Rep[Geometry], maxDistance: Rep[Float], companyId: Rep[UUID]) =>
+    Compiled((ref: Rep[Geometry], maxDistance: Rep[Float], companyId: Rep[Long]) =>
       Location
         .filter(_.company === companyId)
         .sortBy(_.position.distanceSphere(ref))
@@ -68,12 +66,12 @@ class SlickLocationsDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
         .filter(_._2 <= maxDistance)
     )
 
-  def lookup(id: Long)(implicit tc: TraceContext): Future[Result[LocationObject]] =
+  def lookup(id: Long)(implicit rc: RequestContext): Future[Result[LocationObject]] =
     lookupGeneric[LocationRow, LocationObject](
       queryById(id).result.headOption
     )
 
-  def _internal_lookup(id: Long)(implicit tc: TraceContext): Future[Option[LocationObject]] =
+  def _internal_lookup(id: Long)(implicit rc: RequestContext): Future[Option[LocationObject]] =
     db.run(queryById(id).result.headOption).map {
       case Some(row) =>
         Some(locationRowToLocation(row))
@@ -82,24 +80,24 @@ class SlickLocationsDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
     }
 
   def lookupByCompany(
-    companyId: UUID
-  )(implicit tc: TraceContext): Future[Result[Seq[LocationObject]]] =
+    companyId: Long
+  )(implicit rc: RequestContext): Future[Result[Seq[LocationObject]]] =
     lookupSequenceGeneric[LocationRow, LocationObject](
       queryByCompany(companyId).result
     )
 
   def allFromDistanceByCompany(
-    companyId: UUID,
+    companyId: Long,
     point: Geometry,
     distance: Long
-  )(implicit tc: TraceContext): Future[Result[Seq[LocationObject]]] =
+  )(implicit rc: RequestContext): Future[Result[Seq[LocationObject]]] =
     db.run(querySortedWithDistanceFilterMaxDistance(point, distance.toFloat, companyId).result).map { seq =>
       Right(
         seq.map(x => locationRowToLocationWithDistance(x._1, x._2))
       )
     }
 
-  def update(locationObject: LocationObject)(implicit tc: TraceContext): Future[Result[LocationObject]] =
+  def update(locationObject: LocationObject)(implicit rc: RequestContext): Future[Result[LocationObject]] =
     updateGeneric[LocationRow, LocationObject](
       queryById(locationObject.id.getOrElse(0)).result.headOption,
       (toPatch: LocationObject) =>
@@ -107,13 +105,13 @@ class SlickLocationsDAO @Inject() (db: Database)(implicit ec: ExecutionContext)
       (old: LocationObject) => patch(locationObject, old)
     )
 
-  def delete(id: Long)(implicit tc: TraceContext): Future[Result[Boolean]] =
+  def delete(id: Long)(implicit rc: RequestContext): Future[Result[Boolean]] =
     deleteGeneric[LocationRow, LocationObject](
       queryById(id).result.headOption,
       queryById(id).delete
     )
 
-  def create(locationObject: LocationObject)(implicit tc: TraceContext): Future[Result[LocationObject]] =
+  def create(locationObject: LocationObject)(implicit rc: RequestContext): Future[Result[LocationObject]] =
     createGeneric[LocationRow, LocationObject](
       locationObject,
       queryById(locationObject.id.getOrElse(0)).result.headOption,

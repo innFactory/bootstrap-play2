@@ -2,7 +2,7 @@ package de.innfactory.bootstrapplay2.db
 
 import java.util.UUID
 import com.google.inject.ImplementedBy
-import de.innfactory.bootstrapplay2.common.request.{ RequestContext, TraceContext }
+import de.innfactory.bootstrapplay2.common.request.RequestContext
 import de.innfactory.bootstrapplay2.db.BaseSlickDAO
 import de.innfactory.bootstrapplay2.common.results.Results.Result
 import de.innfactory.bootstrapplay2.common.results.errors.Errors.{ DatabaseResult, NotFound }
@@ -29,23 +29,23 @@ import scala.language.implicitConversions
 @ImplementedBy(classOf[SlickCompaniesSlickDAO])
 trait CompaniesDAO {
 
-  def lookup(id: UUID)(implicit tc: TraceContext): Future[Result[CompanyObject]]
+  def lookup(id: Long)(implicit rc: RequestContext): Future[Result[CompanyObject]]
 
-  def all(implicit tc: TraceContext): Future[Seq[CompanyObject]]
+  def all(implicit rc: RequestContext): Future[Seq[CompanyObject]]
 
   def allWithFilter(filter: Seq[FilterOptions[Tables.Company, _]])(implicit
-    tc: TraceContext
+    rc: RequestContext
   ): Future[Seq[CompanyObject]]
 
-  def streamedAll(implicit tc: TraceContext): DatabasePublisher[CompanyObject]
+  def streamedAll(implicit rc: RequestContext): DatabasePublisher[CompanyObject]
 
-  def internal_lookupByEmail(email: String)(implicit tc: TraceContext): Future[Option[CompanyObject]]
+  def internal_lookupByEmail(email: String)(implicit rc: RequestContext): Future[Option[CompanyObject]]
 
-  def create(CompanyObject: CompanyObject)(implicit tc: TraceContext): Future[Result[CompanyObject]]
+  def create(CompanyObject: CompanyObject)(implicit rc: RequestContext): Future[Result[CompanyObject]]
 
-  def update(CompanyObject: CompanyObject)(implicit tc: TraceContext): Future[Result[CompanyObject]]
+  def update(CompanyObject: CompanyObject)(implicit rc: RequestContext): Future[Result[CompanyObject]]
 
-  def delete(id: UUID)(implicit tc: TraceContext): Future[Result[Boolean]]
+  def delete(id: Long)(implicit rc: RequestContext): Future[Result[Boolean]]
 
   def close(): Future[Unit]
 }
@@ -61,7 +61,7 @@ class SlickCompaniesSlickDAO @Inject() (db: Database)(implicit ec: ExecutionCont
 
   /* - - - Compiled Queries - - - */
 
-  private val queryById = Compiled((id: Rep[UUID]) => Tables.Company.filter(_.id === id))
+  private val queryById = Compiled((id: Rep[Long]) => Tables.Company.filter(_.id === id))
 
   private val queryByEmail = Compiled((email: Rep[String]) =>
     Tables.Company.filter { cs =>
@@ -70,12 +70,12 @@ class SlickCompaniesSlickDAO @Inject() (db: Database)(implicit ec: ExecutionCont
     }
   )
 
-  def lookup(id: UUID)(implicit tc: TraceContext): Future[Result[CompanyObject]] =
+  def lookup(id: Long)(implicit rc: RequestContext): Future[Result[CompanyObject]] =
     lookupGeneric(
       queryById(id).result.headOption
     )
 
-  def streamedAll(implicit tc: TraceContext): DatabasePublisher[CompanyObject] =
+  def streamedAll(implicit rc: RequestContext): DatabasePublisher[CompanyObject] =
     db.stream(
       Tables.Company.result
         .withStatementParameters(
@@ -86,24 +86,24 @@ class SlickCompaniesSlickDAO @Inject() (db: Database)(implicit ec: ExecutionCont
         .transactionally
     ).mapResult(companyRowToCompanyObject)
 
-  def all(implicit tc: TraceContext): Future[Seq[CompanyObject]] =
+  def all(implicit rc: RequestContext): Future[Seq[CompanyObject]] =
     lookupSequenceGenericRawSequence(
       Tables.Company.result
     )
 
   def allWithFilter(filter: Seq[FilterOptions[Tables.Company, _]])(implicit
-    tc: TraceContext
+    rc: RequestContext
   ): Future[Seq[CompanyObject]] = {
     println(filter)
     lookupSequenceGenericRawSequence(
       queryFromFiltersSeq(filter).result
-    )(c => companyRowToCompanyObject(c.copy()), tc)
+    )(c => companyRowToCompanyObject(c.copy()), rc)
   }
 
   private def queryFromFiltersSeq(filter: Seq[FilterOptions[Tables.Company, _]]) =
     Compiled(Tables.Company.filterOptions(filter))
 
-  def internal_lookupByEmail(email: String)(implicit tc: TraceContext): Future[Option[CompanyObject]] = {
+  def internal_lookupByEmail(email: String)(implicit rc: RequestContext): Future[Option[CompanyObject]] = {
     val f: Future[Option[Tables.CompanyRow]] =
       db.run(queryByEmail(email).result.headOption)
     f.map {
@@ -114,24 +114,23 @@ class SlickCompaniesSlickDAO @Inject() (db: Database)(implicit ec: ExecutionCont
     }
   }
 
-  def update(companyObject: CompanyObject)(implicit tc: TraceContext): Future[Result[CompanyObject]] =
+  def update(companyObject: CompanyObject)(implicit rc: RequestContext): Future[Result[CompanyObject]] =
     updateGeneric(
-      queryById(companyObject.id.getOrElse(UUID.randomUUID())).result.headOption,
-      (toPatch: CompanyObject) =>
-        queryById(companyObject.id.getOrElse(UUID.randomUUID())).update(companyObjectToCompanyRow(toPatch)),
+      queryById(companyObject.id.getOrElse(0)).result.headOption,
+      (toPatch: CompanyObject) => queryById(companyObject.id.getOrElse(0)).update(companyObjectToCompanyRow(toPatch)),
       (old: CompanyObject) => patch(companyObject, old)
     )
 
-  def delete(id: UUID)(implicit tc: TraceContext): Future[Result[Boolean]] =
+  def delete(id: Long)(implicit rc: RequestContext): Future[Result[Boolean]] =
     deleteGeneric(
       queryById(id).result.headOption,
       queryById(id).delete
     )
 
-  def create(companyObject: CompanyObject)(implicit tc: TraceContext): Future[Result[CompanyObject]] =
+  def create(companyObject: CompanyObject)(implicit rc: RequestContext): Future[Result[CompanyObject]] =
     createGeneric(
       companyObject,
-      queryById(companyObject.id.getOrElse(UUID.randomUUID())).result.headOption,
+      queryById(companyObject.id.getOrElse(0)).result.headOption,
       (entityToSave: Tables.CompanyRow) => (Tables.Company returning Tables.Company) += entityToSave
     )
 
@@ -139,7 +138,7 @@ class SlickCompaniesSlickDAO @Inject() (db: Database)(implicit ec: ExecutionCont
 
   implicit private def companyObjectToCompanyRow(companyObject: CompanyObject): Tables.CompanyRow =
     Tables.CompanyRow(
-      id = companyObject.id.getOrElse(UUID.randomUUID()),
+      id = companyObject.id.getOrElse(0),
       firebaseUser = companyObject.firebaseUser.getOrElse(List.empty[String]),
       settings = companyObject.settings.getOrElse(Json.parse("{}")),
       stringAttribute1 = companyObject.stringAttribute1,

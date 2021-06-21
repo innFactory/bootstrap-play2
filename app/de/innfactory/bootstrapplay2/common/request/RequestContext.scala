@@ -1,45 +1,42 @@
 package de.innfactory.bootstrapplay2.common.request
 
-import de.innfactory.bootstrapplay2.actions.RequestWithCompany
+import de.innfactory.bootstrapplay2.actions.RequestWithFirebaseUser
 import de.innfactory.bootstrapplay2.common.request.logger.TraceLogger
-import de.innfactory.bootstrapplay2.models.api.Company
+import de.innfactory.bootstrapplay2.services.firebase.models.FirebaseUser
 import de.innfactory.play.tracing.TraceRequest
 import io.opencensus.trace.Span
 import play.api.mvc.{ AnyContent, Request }
 
-class TraceContext(traceSpan: Span) {
-  def span: Span = traceSpan
+abstract class BaseRequestContext {
+
+  def request: Request[AnyContent]
+
+  def span: Span
 
   private val traceLogger = new TraceLogger(span)
 
   final def log: TraceLogger = traceLogger
-}
-
-trait BaseRequestContext {
-
-  def request: Request[AnyContent]
 
 }
 
-trait RequestContextCompany[COMPANY] {
-  def company: COMPANY
+trait RequestContextUser[USER] {
+  def user: USER
 }
 
-class RequestContext(rcSpan: Span, rcRequest: Request[AnyContent])
-    extends TraceContext(rcSpan)
-    with BaseRequestContext {
+class RequestContext(rcSpan: Span, rcRequest: Request[AnyContent]) extends BaseRequestContext {
   override def request: Request[AnyContent] = rcRequest
+  override def span: Span                   = rcSpan
 }
 
-case class RequestContextWithCompany(
+case class RequestContextWithUser(
   override val span: Span,
   override val request: Request[AnyContent],
-  company: Company
+  user: FirebaseUser
 ) extends RequestContext(span, request)
-    with RequestContextCompany[Company]
+    with RequestContextUser[FirebaseUser] {}
 
-object RequestContextWithCompany {
-  implicit def toRequestContext(requestContextWithUser: RequestContextWithCompany): RequestContext =
+object RequestContextWithUser {
+  implicit def toRequestContext(requestContextWithUser: RequestContextWithUser): RequestContext =
     new RequestContext(requestContextWithUser.span, requestContextWithUser.request)
 }
 
@@ -48,7 +45,9 @@ object ReqConverterHelper {
   def requestContext[R[A] <: TraceRequest[AnyContent]](implicit req: R[_]): RequestContext =
     new RequestContext(req.traceSpan, req.request)
 
-  def requestContextWithCompany[R[A] <: RequestWithCompany[AnyContent]](implicit req: R[_]): RequestContextWithCompany =
-    RequestContextWithCompany(req.traceSpan, req.request, req.company)
+  def requestContextWithUser[R[A] <: RequestWithFirebaseUser[AnyContent]](implicit
+    req: R[_]
+  ): RequestContextWithUser =
+    RequestContextWithUser(req.traceSpan, req.request, req.firebaseUser)
 
 }

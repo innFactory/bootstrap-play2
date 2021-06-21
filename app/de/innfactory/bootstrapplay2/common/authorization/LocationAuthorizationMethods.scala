@@ -1,56 +1,22 @@
 package de.innfactory.bootstrapplay2.common.authorization
 
-import java.util.UUID
-import com.google.inject.Inject
-import de.innfactory.bootstrapplay2.common.request.RequestContextWithCompany
+import de.innfactory.bootstrapplay2.common.request.RequestContextWithUser
 import de.innfactory.bootstrapplay2.common.results.Results.Result
 import de.innfactory.bootstrapplay2.common.results.errors.Errors.Forbidden
-import de.innfactory.bootstrapplay2.models.api.{ Company, Location }
-import play.api.mvc.{ BodyParsers, Request }
-import play.api.Configuration
-import de.innfactory.bootstrapplay2.common.utils.{
-  CompanyAndLocation,
-  CompanyId,
-  CompanyIdAndOldCompanyId,
-  CompanyIdEqualsId,
-  CompanyIdsAreEqual,
-  IsCompanyOfLocation
-}
+import de.innfactory.bootstrapplay2.models.api.Location
 import de.innfactory.implicits.BooleanImplicits.EnhancedBoolean
+import de.innfactory.bootstrapplay2.services.firebase.utils.Utils._
 
-import scala.concurrent.{ ExecutionContext, Future }
+object LocationAuthorizationMethods {
+  def accessGet(location: Location)(implicit rc: RequestContextWithUser): Result[Boolean] =
+    rc.user.isCompanyAdmin(location.company).toResult(Forbidden())
 
-/**
- * *
- * Auth Methods for Locations endpoint
- */
-class LocationAuthorizationMethods[A] @Inject() (
-  val parser: BodyParsers.Default
-)(implicit
-  val executionContext: ExecutionContext,
-  configuration: Configuration,
-  firebaseEmailExtractor: FirebaseEmailExtractor[Request[Any]]
-) {
+  def accessGetAllByCompany(companyId: Long)(implicit rc: RequestContextWithUser): Result[Boolean] =
+    rc.user.isCompanyAdmin(companyId).toResult(Forbidden())
 
-  def accessGet(location: Location)(implicit rc: RequestContextWithCompany): Result[Boolean] =
-    CompanyAndLocation(rc.company, location) match {
-      case IsCompanyOfLocation() => Right(true)
-      case _                     => Left(Forbidden())
-    }
+  def update(ownerId: Long, oldOwnerId: Long)(implicit rc: RequestContextWithUser): Result[Boolean] =
+    (rc.user.isCompanyAdmin(ownerId) && ownerId == oldOwnerId).toResult(Forbidden())
 
-  def accessGetAllByCompany(id: UUID)(implicit rc: RequestContextWithCompany): Result[Boolean] =
-    CompanyId(rc.company, id) match {
-      case CompanyIdEqualsId() => Right(true)
-      case _                   => Left(Forbidden())
-    }
-
-  def update(ownerId: UUID, oldOwnerId: UUID)(implicit rc: RequestContextWithCompany): Result[Boolean] =
-    CompanyIdAndOldCompanyId(rc.company, ownerId, oldOwnerId) match {
-      case CompanyIdsAreEqual() => Right(true)
-      case _                    => Left(Forbidden())
-    }
-
-  def createDelete(locationOwnerId: UUID)(implicit rc: RequestContextWithCompany): Result[Boolean] =
-    rc.company.id.get.equals(locationOwnerId).toResult(Forbidden())
-
+  def createDelete(locationOwnerId: Long)(implicit rc: RequestContextWithUser): Result[Boolean] =
+    rc.user.isCompanyAdmin(locationOwnerId).toResult(Forbidden())
 }

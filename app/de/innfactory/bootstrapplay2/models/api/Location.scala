@@ -13,7 +13,7 @@ import play.api.libs.json.Reads
 
 case class Location(
   id: Option[Long],
-  company: UUID,
+  company: Long,
   name: Option[String],
   settings: Option[JsValue],
   lat: Option[Double],
