@@ -14,7 +14,7 @@ class RequestExecutor
     GraphQLExecutionContext(
       request = request,
       ec = ec,
-      companiesRepository = services.companiesRepository,
-      locationsRepository = services.locationsRepository
+      companiesService = services.companiesService,
+      locationsService = services.locationsService
     )
 }

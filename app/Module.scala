@@ -8,10 +8,8 @@ import play.api.{ Configuration, Environment, Logger, Mode }
 import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
 import de.innfactory.auth.firebase.FirebaseBase
-import de.innfactory.auth.firebase.validator.{ JWTValidatorMock, JwtValidator, JwtValidatorImpl }
-import de.innfactory.bootstrapplay2.db.{ CompaniesDAO, LocationsDAO }
+import de.innfactory.auth.firebase.validator.{ JwtValidator, JwtValidatorImpl }
 import de.innfactory.play.flyway.FlywayMigrator
-import io.opencensus.exporter.trace.jaeger.{ JaegerExporterConfiguration, JaegerTraceExporter }
 import io.opencensus.exporter.trace.logging.LoggingTraceExporter
 import io.opencensus.exporter.trace.stackdriver.{ StackdriverTraceConfiguration, StackdriverTraceExporter }
 import io.opencensus.trace.AttributeValue
@@ -35,7 +33,6 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 
     bind(classOf[Database]).toProvider(classOf[DatabaseProvider])
     bind(classOf[FlywayMigratorImpl]).asEagerSingleton()
-    bind(classOf[DAOCloseHook]).asEagerSingleton()
 
     logger.info(s"- - - Binding Firebase - - -")
 
@@ -50,15 +47,11 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
       logger.info(s"- - - Binding Services for for Test Mode - - -")
     } else if (environment.mode == Mode.Dev) {
       logger.info(s"- - - Binding Services for for Dev Mode - - -")
-      // Optional Jaeger Exporter bind(classOf[JaegerTracingCreator]).asEagerSingleton()
     } else {
-
       logger.info(s"- - - Binding Services for for Prod Mode - - -")
-
       // Tracing
       bind(classOf[StackdriverTracingCreator]).asEagerSingleton()
       bind(classOf[LoggingTracingCreator]).asEagerSingleton()
-
     }
 
   }
@@ -70,20 +63,6 @@ class LoggingTracingCreator @Inject() (lifecycle: ApplicationLifecycle) {
   LoggingTraceExporter.register()
   lifecycle.addStopHook { () =>
     Future.successful(LoggingTraceExporter.unregister())
-  }
-}
-
-@Singleton
-class JaegerTracingCreator @Inject() (lifecycle: ApplicationLifecycle) {
-  val jaegerExporterConfiguration: JaegerExporterConfiguration = JaegerExporterConfiguration
-    .builder()
-    .setServiceName("bootstrap-play2")
-    .setThriftEndpoint("http://127.0.0.1:14268/api/traces")
-    .build()
-  JaegerTraceExporter.createAndRegister(jaegerExporterConfiguration)
-
-  lifecycle.addStopHook { () =>
-    Future.successful(JaegerTraceExporter.unregister())
   }
 }
 
@@ -129,14 +108,4 @@ class firebaseDeletionService @Inject() (lifecycle: ApplicationLifecycle) {
 @Singleton
 class DatabaseProvider @Inject() (config: Config) extends Provider[Database] {
   lazy val get = Database.forConfig("bootstrap-play2.database", config)
-}
-
-/** Closes DAO. Important on dev restart. */
-class DAOCloseHook @Inject() (companiesDAO: CompaniesDAO, locationsDAO: LocationsDAO, lifecycle: ApplicationLifecycle) {
-  lifecycle.addStopHook { () =>
-    Future.successful({
-      companiesDAO.close()
-      locationsDAO.close()
-    })
-  }
 }

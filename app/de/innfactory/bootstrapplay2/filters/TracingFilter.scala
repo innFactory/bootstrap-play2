@@ -2,8 +2,8 @@ package de.innfactory.bootstrapplay2.filters
 
 import akka.stream.Materializer
 import com.typesafe.config.Config
-import de.innfactory.bootstrapplay2.common.tracing.Common.GoogleAttributes._
-import de.innfactory.bootstrapplay2.common.tracing.Common.{
+import de.innfactory.bootstrapplay2.commons.tracing.Common.GoogleAttributes._
+import de.innfactory.bootstrapplay2.commons.tracing.Common.{
   XTRACINGID,
   X_INTERNAL_SPANID,
   X_INTERNAL_TRACEID,

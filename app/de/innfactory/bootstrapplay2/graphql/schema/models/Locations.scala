@@ -1,7 +1,7 @@
 package de.innfactory.bootstrapplay2.graphql.schema.models
 
 import de.innfactory.bootstrapplay2.graphql.GraphQLExecutionContext
-import de.innfactory.bootstrapplay2.models.api.Location
+import de.innfactory.bootstrapplay2.locations.domain.models.Location
 import sangria.macros.derive.{ deriveObjectType, ReplaceField }
 import sangria.schema.{ BigDecimalType, Field, ObjectType, OptionType, StringType }
 import de.innfactory.grapqhl.sangria.implicits.JsonScalarType._
@@ -16,19 +16,6 @@ object Locations {
     ReplaceField(
       fieldName = "company",
       field = Field(name = "company", fieldType = StringType, resolve = c => c.value.company.toString)
-    ),
-    ReplaceField(
-      fieldName = "distance",
-      field = Field(
-        name = "distance",
-        fieldType = OptionType(BigDecimalType),
-        resolve = c => {
-          c.value.distance match {
-            case Some(v) => Some(BigDecimal.decimal(v))
-            case None    => None
-          }
-        }
-      )
     )
   )
 }

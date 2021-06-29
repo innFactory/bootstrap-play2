@@ -1,7 +1,8 @@
 package controllers
 
-import java.util.UUID
+import de.innfactory.bootstrapplay2.locations.domain.models.Location
 
+import java.util.UUID
 import de.innfactory.bootstrapplay2.models.api._
 import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
 import play.api.libs.json._

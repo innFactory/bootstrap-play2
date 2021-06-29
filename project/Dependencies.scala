@@ -33,6 +33,10 @@ object Dependencies {
   val joda            = "joda-time"             % "joda-time"          % "2.10.10"
   val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.19"
   val cats = "org.typelevel" %% "cats-core" % "2.5.0"
+  val henkanConvert =   "com.kailuowang" %% "henkan-convert" % "0.6.5"
+  val henkanOptional =   "com.kailuowang" %% "henkan-optional" % "0.6.5"
+  val chimney = "io.scalaland" %% "chimney" % "0.6.1"
+
 
   //Test
   val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.8" % Test
@@ -56,6 +60,9 @@ object Dependencies {
   lazy val list = Seq(
     scalaUtil,
     sl4j,
+    chimney,
+    henkanConvert,
+    henkanOptional,
     sharedDeps,
     logback,
     logbackCore,
