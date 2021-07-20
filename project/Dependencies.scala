@@ -20,9 +20,9 @@ object Dependencies {
   val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "1.3.2"
 
   //Prod
-  val slickPg         = "com.github.tminglei"  %% "slick-pg"           % "0.19.6"
-  val slickPgPlayJson = "com.github.tminglei"  %% "slick-pg_play-json" % "0.19.6"
-  val slickPgJts      = "com.github.tminglei"  %% "slick-pg_jts"       % "0.19.6"
+  val slickPg         = "com.github.tminglei"  %% "slick-pg"           % "0.19.7"
+  val slickPgPlayJson = "com.github.tminglei"  %% "slick-pg_play-json" % "0.19.7"
+  val slickPgJts      = "com.github.tminglei"  %% "slick-pg_jts"       % "0.19.7"
   val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper"  % "2.4.2"
   val playJson        = "com.typesafe.play"    %% "play-json"          % "2.9.2"
   val playJsonJoda    = "com.typesafe.play"    %% "play-json-joda"     % "2.9.2"
