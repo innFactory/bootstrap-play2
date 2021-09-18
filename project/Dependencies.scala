@@ -3,8 +3,8 @@ import sbt._
 
 object Dependencies {
 
-  val scalaVersion = "2.13.3"
-  val akkaVersion  = "2.6.16"
+  val scalaVersion = "2.13.6"
+  val akkaVersion  = "2.6.15"
 
   val akkaTyped    = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
   val akkaHttp     = "com.typesafe.akka" %% "akka-http" % "10.2.6"
@@ -49,9 +49,9 @@ object Dependencies {
   val opencensusAkkaHttp  = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
   val sl4j        = "org.slf4j"        % "slf4j-api"                        % "1.7.32" intransitive
-  val sharedDeps  = "com.google.cloud" % "google-cloud-shared-dependencies" % "2.0.1"
-  val logback     = "ch.qos.logback"   % "logback-classic"                  % "1.2.5"
-  val logbackCore = "ch.qos.logback"   % "logback-core"                     % "1.2.5"
+  val sharedDeps  = "com.google.cloud" % "google-cloud-shared-dependencies" % "2.2.1"
+  val logback     = "ch.qos.logback"   % "logback-classic"                  % "1.2.6"
+  val logbackCore = "ch.qos.logback"   % "logback-core"                     % "1.2.6"
 
   lazy val list = Seq(
     scalaUtil,
