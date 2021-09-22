@@ -42,8 +42,8 @@ object ReqConverterHelper {
   def requestContext(implicit req: TraceRequest[_]): RequestContext =
     new RequestContext(req.traceSpan, req.request.headers.toMap)
 
-  def requestContextWithUser(implicit
-    req: RequestWithUser[_]
+  def requestContextWithUser[Q](implicit
+    req: RequestWithUser[Q]
   ): RequestContextWithUser =
     RequestContextWithUser(req.traceSpan, req.request.headers.toMap, req.user)
 

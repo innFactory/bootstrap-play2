@@ -26,14 +26,14 @@ class LocationController @Inject() (tracingUserAction: TracingUserAction, locati
     val result = for {
       getAll <- locationService.getAllByCompany(LocationCompanyId(companyId))(requestContextWithUser)
     } yield getAll.map(LocationResponse.fromLocation)
-    result.value.completeResult()
+    result.completeResult()
   }
 
   def getAllCompaniesAsSource: Action[AnyContent] = tracingUserAction().async { implicit request =>
     val result: EitherT[Future, Results.ResultStatus, Source[LocationResponse, NotUsed]] = for {
       getAll <- locationService.getAllAsStream()(requestContextWithUser)
     } yield getAll.map(LocationResponse.fromLocation)
-    result.value.completeSourceChunked()
+    result.completeSourceChunked()
   }
 
   def getById(id: Long): Action[AnyContent] = tracingUserAction().async { implicit request =>
@@ -41,7 +41,7 @@ class LocationController @Inject() (tracingUserAction: TracingUserAction, locati
     val result    = for {
       company <- locationService.getById(companyId)(requestContextWithUser)
     } yield LocationResponse.fromLocation(company)
-    result.value.completeResult()
+    result.completeResult()
   }
 
   def create(): Action[LocationRequest] = tracingUserAction().async(validateJson[LocationRequest]) { implicit request =>
@@ -49,7 +49,7 @@ class LocationController @Inject() (tracingUserAction: TracingUserAction, locati
     val result         = for {
       company <- locationService.createLocation(companyRequest.toLocation())(requestContextWithUser)
     } yield LocationResponse.fromLocation(company)
-    result.value.completeResult()
+    result.completeResult()
   }
 
   def update(): Action[LocationRequest] = tracingUserAction().async(validateJson[LocationRequest]) { implicit request =>
@@ -57,7 +57,7 @@ class LocationController @Inject() (tracingUserAction: TracingUserAction, locati
     val result         = for {
       company <- locationService.updateLocation(companyRequest.toLocation())(requestContextWithUser)
     } yield LocationResponse.fromLocation(company)
-    result.value.completeResult()
+    result.completeResult()
   }
 
   def delete(id: Long): Action[AnyContent] = tracingUserAction().async { implicit request =>
@@ -65,7 +65,7 @@ class LocationController @Inject() (tracingUserAction: TracingUserAction, locati
     val result    = for {
       deleteResult <- locationService.deleteLocation(companyId)(requestContextWithUser)
     } yield deleteResult
-    result.value.completeResultWithoutBody()
+    result.completeResultWithoutBody()
   }
 
 }

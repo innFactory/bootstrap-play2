@@ -1,20 +1,27 @@
 package de.innfactory.bootstrapplay2.commons.application.actions
 
+import de.innfactory.bootstrapplay2.commons.application.actions.models.RequestWithTrace
+import de.innfactory.bootstrapplay2.commons.logging.LogContext
 import de.innfactory.bootstrapplay2.commons.tracing.Common._
-import de.innfactory.play.tracing.{ RequestWithTrace, TraceRequest }
-import io.opencensus.scala.Tracing.{ startSpan, startSpanWithRemoteParent, traceWithParent }
+import de.innfactory.play.tracing.TraceRequest
+import io.opencensus.scala.Tracing.{startSpan, startSpanWithRemoteParent, traceWithParent}
 import io.opencensus.trace._
 import play.api.Environment
 import play.api.mvc._
 
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 class TracingAction @Inject() (
   val parser: BodyParsers.Default,
   implicit val environment: Environment
 )(implicit val executionContext: ExecutionContext) {
-  def apply(traceString: String): TraceActionBuilder = new TraceActionBuilder(traceString, parser)
+  // def apply(traceString: String): TraceActionBuilder = new TraceActionBuilder(traceString, parser)
+  def apply()(implicit logContext: LogContext): ActionBuilder[RequestWithTrace, AnyContent] = {
+    val owningMethodName = Thread.currentThread.getStackTrace()(2).getMethodName
+    val builder =  new TraceActionBuilder(owningMethodName, parser)
+    builder
+  }
 }
 
 private[actions] class TraceActionBuilder(spanString: String, val parser: BodyParsers.Default)(implicit

@@ -1,71 +1,81 @@
 package de.innfactory.bootstrapplay2.companies.application
 
 import akka.NotUsed
+import akka.stream.Materializer
 import akka.stream.scaladsl.Source
 import cats.data.EitherT
 import de.innfactory.bootstrapplay2.application.controller.BaseController
-import de.innfactory.bootstrapplay2.commons.ReqConverterHelper.requestContextWithUser
+import de.innfactory.bootstrapplay2.commons.ReqConverterHelper.{requestContext, requestContextWithUser}
 import de.innfactory.bootstrapplay2.commons.logging.ImplicitLogContext
-import de.innfactory.bootstrapplay2.commons.application.actions.TracingUserAction
-import de.innfactory.bootstrapplay2.commons.results.Results
+import de.innfactory.bootstrapplay2.commons.application.actions.{TracingAction, TracingUserAction}
+import de.innfactory.bootstrapplay2.commons.application.actions.models.{RequestWithTrace, RequestWithUser}
+import de.innfactory.bootstrapplay2.commons.results.Results.ResultStatus
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyService
-import play.api.mvc.{ Action, AnyContent, ControllerComponents }
-import de.innfactory.bootstrapplay2.companies.application.models.{ CompanyRequest, CompanyResponse }
-import de.innfactory.bootstrapplay2.companies.domain.models.{ Company, CompanyId }
-
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import de.innfactory.bootstrapplay2.companies.application.models.{CompanyRequest, CompanyResponse}
+import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.ExecutionContext
+import scala.language.implicitConversions
 
-class CompanyController @Inject() (tracingUserAction: TracingUserAction, companyService: CompanyService)(implicit
+class CompanyController @Inject() (tracingUserAction: TracingUserAction, companyService: CompanyService, tracingAction: TracingAction)(implicit
   ec: ExecutionContext,
-  cc: ControllerComponents
+  cc: ControllerComponents,
+  mat: Materializer
 ) extends BaseController
     with ImplicitLogContext {
 
-  def getAll: Action[AnyContent] = tracingUserAction().async { implicit request =>
-    val result: EitherT[Future, Results.ResultStatus, Seq[CompanyResponse]] = for {
-      getAll <- companyService.getAll()(requestContextWithUser)
-    } yield getAll.map(CompanyResponse.fromCompany)
-    result.value.completeResult()
-  }
+  implicit private def companyRequestToCompany(companyRequest: CompanyRequest): Company = companyRequest.toCompany()
 
-  def getAllCompaniesAsSource: Action[AnyContent] = tracingUserAction().async { implicit request =>
-    val result: EitherT[Future, Results.ResultStatus, Source[CompanyResponse, NotUsed]] = for {
-      getAll <- companyService.getAllCompaniesAsStream()(requestContextWithUser)
-    } yield getAll.map(CompanyResponse.fromCompany)
-    result.value.completeSourceChunked()
-  }
+  implicit private val outMapperSeq: OutMapper[Seq[Company], Seq[CompanyResponse]] =
+    OutMapper[Seq[Company], Seq[CompanyResponse]](companies => companies.map(CompanyResponse.fromCompany))
 
-  def getById(id: Long): Action[AnyContent] = tracingUserAction().async { implicit request =>
-    val companyId = CompanyId(id)
-    val result    = for {
-      company <- companyService.getById(companyId)(requestContextWithUser)
-    } yield CompanyResponse.fromCompany(company)
-    result.value.completeResult()
-  }
+  implicit private val outMapper: OutMapper[Company, CompanyResponse] =
+    OutMapper[Company, CompanyResponse](CompanyResponse.fromCompany)
 
-  def create(): Action[CompanyRequest] = tracingUserAction().async(validateJson[CompanyRequest]) { implicit request =>
-    val companyRequest = request.request.body
-    val result         = for {
-      company <- companyService.createCompany(companyRequest.toCompany())(requestContextWithUser(request))
-    } yield CompanyResponse.fromCompany(company)
-    result.value.completeResult()
-  }
+  implicit private val outMapperSource: OutMapper[Source[Company, NotUsed], Source[CompanyResponse, NotUsed]] =
+    OutMapper[Source[Company, NotUsed], Source[CompanyResponse, NotUsed]](v => v.map(CompanyResponse.fromCompany))
 
-  def update(): Action[CompanyRequest] = tracingUserAction().async(validateJson[CompanyRequest]) { implicit request =>
-    val companyRequest = request.request.body
-    val result         = for {
-      company <- companyService.updateCompany(companyRequest.toCompany())(requestContextWithUser(request))
-    } yield CompanyResponse.fromCompany(company)
-    result.value.completeResult()
-  }
+  def getById(id: Long): Action[AnyContent] =
+    Endpoint.in[RequestWithUser](tracingUserAction())
+      .logic((_, rc) => companyService.getById(CompanyId(id))(requestContextWithUser(rc)))
+      .mapOutTo[CompanyResponse]
+      .result(r => r.completeResult())
 
-  def delete(id: Long): Action[AnyContent] = tracingUserAction().async { implicit request =>
-    val companyId = CompanyId(id)
-    val result    = for {
-      deleteResult <- companyService.deleteCompany(companyId)(requestContextWithUser)
-    } yield deleteResult
-    result.value.completeResultWithoutBody()
-  }
+  def getAll: Action[AnyContent] =
+    Endpoint.in[RequestWithUser](tracingUserAction())
+      .logic((_, rc) => companyService.getAll()(requestContextWithUser(rc)))
+      .mapOutTo[Seq[CompanyResponse]]
+      .result(_.completeResult())
+
+  def getAllPublic(filter: Option[String]): Action[AnyContent] =
+    Endpoint.in[RequestWithTrace](tracingAction())
+      .logic((_, rc) => EitherT.right[ResultStatus](companyService.getAllForGraphQL(filter)(requestContext(rc))))
+      .mapOutTo[Seq[CompanyResponse]]
+      .result(_.completeResult())
+
+  def delete(id: Long): Action[AnyContent] =
+    Endpoint.in[RequestWithUser](tracingUserAction())
+      .logic((_, r) => companyService.deleteCompany(CompanyId(id))(requestContextWithUser(r)))
+      .result(_.completeResultWithoutBody(statusCode = 204))
+
+  private def UpdateCreateEndpoint(): Endpoint[CompanyRequest, CompanyResponse, RequestWithUser, Company, Company] =
+    Endpoint.in[CompanyRequest, RequestWithUser, Company](tracingUserAction())
+      .logic((companyRequest, rc) => companyService.createCompany(companyRequest)(requestContextWithUser(rc)))
+      .mapOutTo[CompanyResponse]
+
+  def update: Action[CompanyRequest] =
+    UpdateCreateEndpoint()
+      .result(_.completeResultWithoutBody(statusCode = 204))
+
+  def create: Action[CompanyRequest] =
+    UpdateCreateEndpoint()
+      .result(_.completeResultWithoutBody(statusCode = 204))
+
+  def getAllCompaniesAsSource: Action[AnyContent] =
+    Endpoint.in[RequestWithUser](tracingUserAction())
+      .logic[Source[Company, NotUsed]]((_, r) => companyService.getAllCompaniesAsStream()(requestContextWithUser(r)))
+      .mapOutTo[Source[CompanyResponse, NotUsed]]
+      .result(_.completeSourceChunked())
 
 }
