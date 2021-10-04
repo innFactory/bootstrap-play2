@@ -22,7 +22,7 @@ case class CompanyResponse(
 )
 
 object CompanyResponse {
-  implicit val writes = Json.writes[CompanyResponse]
+  implicit val format = Json.format[CompanyResponse]
 
   def fromCompany(company: Company): CompanyResponse =
     company

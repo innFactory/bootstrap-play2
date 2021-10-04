@@ -7,19 +7,15 @@ import cats.syntax._
 import dbdata.Tables
 import de.innfactory.bootstrapplay2.commons.logging.ImplicitLogContext
 import de.innfactory.bootstrapplay2.commons.implicits.FutureTracingImplicits.EnhancedFuture
-import de.innfactory.bootstrapplay2.commons.results.Results.{ Result, ResultStatus }
+import de.innfactory.bootstrapplay2.commons.results.Results.Result
 import de.innfactory.bootstrapplay2.commons.results.errors.Errors.{ BadRequest, DatabaseResult, NotFound }
 import de.innfactory.bootstrapplay2.commons.implicits.OptionUtils._
 import de.innfactory.bootstrapplay2.commons.TraceContext
 import de.innfactory.bootstrapplay2.commons.implicits.EitherImplicits.EitherFuture
 import de.innfactory.bootstrapplay2.commons.implicits.EitherTTracingImplicits.EnhancedTracingEitherT
+import de.innfactory.play.controller.ResultStatus
 import slick.dbio.{ DBIOAction, Effect, NoStream }
 import slick.jdbc.JdbcBackend.Database
-import slick.jdbc.{ ResultSetConcurrency, ResultSetType }
-import slick.jdbc.JdbcActionComponent
-import slick.sql.FixedSqlStreamingAction
-import slick.jdbc.{ ResultSetConcurrency, ResultSetType }
-import slick.lifted.{ AbstractTable, TableQuery }
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.implicitConversions

@@ -1,5 +1,6 @@
 package de.innfactory.bootstrapplay2.commons.results
 
+import de.innfactory.play.controller.ErrorResponse
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.{ AnyContent, Request }
 

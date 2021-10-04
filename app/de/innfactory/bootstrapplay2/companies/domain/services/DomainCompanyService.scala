@@ -4,7 +4,7 @@ import akka.NotUsed
 import akka.stream.scaladsl.Source
 import cats.data.EitherT
 import de.innfactory.bootstrapplay2.commons.{ RequestContext, RequestContextWithUser }
-import de.innfactory.bootstrapplay2.commons.results.Results.ResultStatus
+import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.{ CompanyRepository, CompanyService }
 import de.innfactory.bootstrapplay2.companies.domain.models.{ Company, CompanyId }
 

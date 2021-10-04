@@ -2,7 +2,7 @@ package de.innfactory.bootstrapplay2.commons.implicits
 
 import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
-import de.innfactory.bootstrapplay2.commons.results.Results.ResultStatus
+import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.commons.TraceContext
 import io.opencensus.scala.Tracing.traceWithParent
 import io.opencensus.trace.Span

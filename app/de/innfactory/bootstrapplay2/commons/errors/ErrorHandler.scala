@@ -1,6 +1,7 @@
 package de.innfactory.bootstrapplay2.commons.errors
 
-import de.innfactory.bootstrapplay2.commons.results.{ ErrorResponse, ErrorResponseWithAdditionalBody }
+import de.innfactory.bootstrapplay2.commons.results.ErrorResponseWithAdditionalBody
+import de.innfactory.play.controller.ErrorResponse
 import play.api.http.HttpErrorHandler
 import play.api.mvc._
 import play.api.mvc.Results._

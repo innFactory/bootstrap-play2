@@ -7,7 +7,7 @@ import dbdata.Tables
 import de.innfactory.bootstrapplay2.commons.filteroptions.FilterOptionUtils
 import de.innfactory.bootstrapplay2.commons.{ RequestContext, TraceContext }
 import de.innfactory.bootstrapplay2.commons.results.Results
-import de.innfactory.bootstrapplay2.commons.results.Results.ResultStatus
+import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickDAO
 import de.innfactory.bootstrapplay2.commons.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyRepository
@@ -33,7 +33,7 @@ private[companies] class SlickCompanyRepository @Inject() (db: Database)(implici
   private def queryFromFiltersSeq(filter: Seq[FilterOptions[Tables.Company, _]]) =
     Compiled(Tables.Company.filterOptions(filter))
 
-  override def getAll()(implicit rc: TraceContext): EitherT[Future, Results.ResultStatus, Seq[Company]] =
+  override def getAll()(implicit rc: TraceContext): EitherT[Future, ResultStatus, Seq[Company]] =
     EitherT(lookupSequenceGeneric(Tables.Company.result))
 
   def getAllForGraphQL(filterOptions: Option[String])(implicit rc: RequestContext): Future[Seq[Company]] = {
@@ -60,7 +60,7 @@ private[companies] class SlickCompanyRepository @Inject() (db: Database)(implici
 
   override def getById(companyId: CompanyId)(implicit
     rc: TraceContext
-  ): EitherT[Future, Results.ResultStatus, Company] =
+  ): EitherT[Future, ResultStatus, Company] =
     EitherT(lookupGeneric(queryById(companyId).result.headOption))
 
   override def createCompany(company: Company)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Company] =
@@ -77,7 +77,7 @@ private[companies] class SlickCompanyRepository @Inject() (db: Database)(implici
       updated <- EitherT(
                    updateGeneric(
                      queryById(company.id.get).result.headOption,
-                     (c: Company) => Tables.Company.update(companyToCompanyRow(c)),
+                     (c: Company) => Tables.Company insertOrUpdate companyToCompanyRow(c),
                      oldCompany => patch(company, oldCompany)
                    )
                  )

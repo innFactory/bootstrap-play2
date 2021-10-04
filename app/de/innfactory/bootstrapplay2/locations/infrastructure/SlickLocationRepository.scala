@@ -12,6 +12,7 @@ import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationReposito
 import de.innfactory.bootstrapplay2.locations.domain.models.{ Location, LocationCompanyId, LocationId }
 import de.innfactory.bootstrapplay2.locations.domain.models.Location.patch
 import de.innfactory.bootstrapplay2.locations.infrastructure.mapper.LocationMapper._
+import de.innfactory.play.controller.ResultStatus
 import slick.jdbc.JdbcBackend.Database
 import slick.lifted.{ Compiled, Rep }
 import de.innfactory.play.db.codegen.XPostgresProfile.api._
@@ -31,7 +32,7 @@ private[locations] class SlickLocationRepository @Inject() (db: Database, lifecy
 
   def getAllLocationsByCompany(
     companyId: LocationCompanyId
-  )(implicit rc: TraceContext): EitherT[Future, Results.ResultStatus, Seq[Location]] =
+  )(implicit rc: TraceContext): EitherT[Future, ResultStatus, Seq[Location]] =
     EitherT(
       lookupSequenceGeneric(
         queryByCompanyId(companyId).result
@@ -53,10 +54,10 @@ private[locations] class SlickLocationRepository @Inject() (db: Database, lifecy
     Source.fromPublisher(publisher)
   }
 
-  def getById(locationId: LocationId)(implicit rc: TraceContext): EitherT[Future, Results.ResultStatus, Location] =
+  def getById(locationId: LocationId)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location] =
     EitherT(lookupGeneric(queryById(locationId).result.headOption))
 
-  def createLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, Results.ResultStatus, Location] =
+  def createLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location] =
     EitherT(
       createGeneric(
         location,
@@ -64,13 +65,13 @@ private[locations] class SlickLocationRepository @Inject() (db: Database, lifecy
       )
     )
 
-  def updateLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, Results.ResultStatus, Location] =
+  def updateLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location] =
     for {
       _       <- EitherT(Future(Validated.cond(location.id.isDefined, (), BadRequest("")).toEither))
       updated <- EitherT(
                    updateGeneric(
                      queryById(location.id.get).result.headOption,
-                     (l: Location) => Tables.Location.update(locationToLocationRow(l)),
+                     (l: Location) => Tables.Location insertOrUpdate locationToLocationRow(l),
                      old => patch(location, old)
                    )
                  )
@@ -78,7 +79,7 @@ private[locations] class SlickLocationRepository @Inject() (db: Database, lifecy
 
   def deleteLocation(
     locationId: LocationId
-  )(implicit rc: TraceContext): EitherT[Future, Results.ResultStatus, Boolean] =
+  )(implicit rc: TraceContext): EitherT[Future, ResultStatus, Boolean] =
     EitherT(
       deleteGeneric(
         queryById(locationId).result.headOption,

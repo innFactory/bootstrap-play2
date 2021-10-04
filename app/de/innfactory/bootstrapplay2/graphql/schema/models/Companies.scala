@@ -6,7 +6,7 @@ import de.innfactory.bootstrapplay2.commons.implicits.RequestToRequestContextImp
 import de.innfactory.bootstrapplay2.companies.domain.models.Company
 import de.innfactory.bootstrapplay2.graphql.GraphQLExecutionContext
 import sangria.macros.derive.{ deriveObjectType, AddFields, ReplaceField }
-import sangria.schema.{ Field, ListType, LongType, ObjectType, StringType }
+import sangria.schema.{ Field, IntType, ListType, LongType, ObjectType, OptionType, StringType }
 import de.innfactory.grapqhl.sangria.implicits.JsonScalarType._
 import de.innfactory.grapqhl.sangria.implicits.JodaScalarType._
 
@@ -14,7 +14,7 @@ object Companies {
   val CompanyType: ObjectType[GraphQLExecutionContext, Company] = deriveObjectType(
     ReplaceField(
       fieldName = "id",
-      field = Field(name = "id", fieldType = StringType, resolve = c => c.value.id.get.toString)
+      field = Field(name = "id", fieldType = OptionType(LongType), resolve = c => c.value.id.map(_.value))
     ),
     AddFields(
       Field(

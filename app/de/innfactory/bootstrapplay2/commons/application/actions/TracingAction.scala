@@ -4,13 +4,13 @@ import de.innfactory.bootstrapplay2.commons.application.actions.models.RequestWi
 import de.innfactory.bootstrapplay2.commons.logging.LogContext
 import de.innfactory.bootstrapplay2.commons.tracing.Common._
 import de.innfactory.play.tracing.TraceRequest
-import io.opencensus.scala.Tracing.{startSpan, startSpanWithRemoteParent, traceWithParent}
+import io.opencensus.scala.Tracing.{ startSpan, startSpanWithRemoteParent, traceWithParent }
 import io.opencensus.trace._
 import play.api.Environment
 import play.api.mvc._
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 class TracingAction @Inject() (
   val parser: BodyParsers.Default,
@@ -19,7 +19,7 @@ class TracingAction @Inject() (
   // def apply(traceString: String): TraceActionBuilder = new TraceActionBuilder(traceString, parser)
   def apply()(implicit logContext: LogContext): ActionBuilder[RequestWithTrace, AnyContent] = {
     val owningMethodName = Thread.currentThread.getStackTrace()(2).getMethodName
-    val builder =  new TraceActionBuilder(owningMethodName, parser)
+    val builder          = new TraceActionBuilder(owningMethodName, parser)
     builder
   }
 }

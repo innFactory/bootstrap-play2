@@ -11,7 +11,7 @@ import io.scalaland.chimney.dsl._
 import io.scalaland.chimney._
 
 case class LocationRequest(
-  id: Long,
+  id: Option[Long],
   company: Long,
   name: Option[String],
   settings: Option[JsValue],
@@ -23,7 +23,7 @@ case class LocationRequest(
 ) {
   def toLocation(): Location = this
     .into[Location]
-    .withFieldComputed(_.id, l => Some(LocationId(l.id)))
+    .withFieldComputed(_.id, l => l.id.map(LocationId))
     .withFieldComputed(_.company, l => LocationCompanyId(l.company))
     .withFieldComputed(_.created, _ => None)
     .withFieldComputed(_.updated, _ => None)

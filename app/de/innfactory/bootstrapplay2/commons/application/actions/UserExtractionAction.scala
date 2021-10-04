@@ -3,12 +3,13 @@ package de.innfactory.bootstrapplay2.commons.application.actions
 import cats.data.{ EitherT, Validated }
 import cats.implicits.{ catsSyntaxEitherId, _ }
 import com.google.inject.Inject
-import de.innfactory.bootstrapplay2.commons.results.{ ErrorResponse, Results }
+import de.innfactory.bootstrapplay2.commons.results.Results
 import de.innfactory.bootstrapplay2.commons.application.actions.models.RequestWithUser
 import de.innfactory.bootstrapplay2.commons.application.actions.utils.UserUtils
 import de.innfactory.bootstrapplay2.commons.jwt.JWTToken
 import de.innfactory.bootstrapplay2.users.domain.interfaces.UserService
 import de.innfactory.bootstrapplay2.users.domain.models.{ User, UserId }
+import de.innfactory.play.controller.ErrorResponse
 import de.innfactory.play.tracing.{ RequestWithTrace, UserExtractionActionBase }
 import play.api.Environment
 import play.api.mvc.Results.{ FailedDependency, NotFound, Unauthorized }

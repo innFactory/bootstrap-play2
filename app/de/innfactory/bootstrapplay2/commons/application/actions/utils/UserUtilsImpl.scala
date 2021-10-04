@@ -4,6 +4,7 @@ import cats.implicits.catsSyntaxEitherId
 import de.innfactory.bootstrapplay2.commons.jwt.JWTToken
 import de.innfactory.bootstrapplay2.commons.results.Results.Result
 import de.innfactory.bootstrapplay2.commons.results.errors.Errors.Forbidden
+import de.innfactory.play.controller.ResultStatus
 import play.libs.Json
 
 import java.util.Base64
@@ -16,10 +17,10 @@ class UserUtilsImpl @Inject() (implicit ec: ExecutionContext) extends UserUtils 
       val tokenContent = authorizationHeader.get.content.split('.')(1)
       val decoded      = new String(Base64.getDecoder.decode(tokenContent))
       val userId       = Json.parse(decoded).get("user_id").asText()
-      Future(Right(userId))
+      Future(userId.asRight[ResultStatus])
     } catch {
       case _: Exception => Future(Forbidden("").asLeft[String])
     }
   def validateJwtToken(authorizationHeader: Option[JWTToken]): Future[Result[Unit]] =
-    Future(Right(()))
+    Future(().asRight[ResultStatus])
 }

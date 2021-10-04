@@ -5,7 +5,7 @@ import akka.stream.scaladsl.Source
 import cats.data.EitherT
 import com.google.inject.ImplementedBy
 import de.innfactory.bootstrapplay2.commons.RequestContextWithUser
-import de.innfactory.bootstrapplay2.commons.results.Results.ResultStatus
+import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.locations.domain.models.{ Location, LocationCompanyId, LocationId }
 import de.innfactory.bootstrapplay2.locations.domain.services.DomainLocationService
 

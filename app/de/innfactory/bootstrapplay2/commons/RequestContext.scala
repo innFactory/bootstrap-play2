@@ -6,6 +6,8 @@ import de.innfactory.bootstrapplay2.users.domain.models.User
 import de.innfactory.play.tracing.TraceRequest
 import io.opencensus.trace.Span
 
+import scala.util.Try
+
 abstract class TraceContext {
 
   def span: Span
@@ -39,12 +41,16 @@ object RequestContextWithUser {
 
 object ReqConverterHelper {
 
-  def requestContext(implicit req: TraceRequest[_]): RequestContext =
-    new RequestContext(req.traceSpan, req.request.headers.toMap)
+  def requestContext(implicit req: TraceRequest[_]): RequestContext = {
+    val headers = Try(req.request.headers.toMap).toOption.getOrElse(Map.empty)
+    new RequestContext(req.traceSpan, headers)
+  }
 
   def requestContextWithUser[Q](implicit
     req: RequestWithUser[Q]
-  ): RequestContextWithUser =
-    RequestContextWithUser(req.traceSpan, req.request.headers.toMap, req.user)
+  ): RequestContextWithUser = {
+    val headers = Try(req.request.headers.toMap).toOption.getOrElse(Map.empty)
+    RequestContextWithUser(req.traceSpan, headers, req.user)
+  }
 
 }

@@ -1,6 +1,7 @@
 package de.innfactory.bootstrapplay2.commons.implicits
 
-import de.innfactory.bootstrapplay2.commons.results.Results.{ Result, ResultStatus }
+import de.innfactory.bootstrapplay2.commons.results.Results.Result
+import de.innfactory.play.controller.ResultStatus
 
 object OptionUtils {
   implicit class EnhancedOption[T](value: Option[T]) {

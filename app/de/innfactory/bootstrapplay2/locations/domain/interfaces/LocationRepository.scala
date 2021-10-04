@@ -6,7 +6,7 @@ import cats.data.EitherT
 import com.google.inject.ImplementedBy
 import de.innfactory.bootstrapplay2.commons.TraceContext
 import de.innfactory.bootstrapplay2.commons.results.Results
-import de.innfactory.bootstrapplay2.commons.results.Results.ResultStatus
+import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.locations.domain.models.{ Location, LocationCompanyId, LocationId }
 import de.innfactory.bootstrapplay2.locations.infrastructure.SlickLocationRepository
 
@@ -23,7 +23,7 @@ private[locations] trait LocationRepository {
 
   def getById(locationId: LocationId)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location]
 
-  def createLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, Results.ResultStatus, Location]
+  def createLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location]
 
   def updateLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location]
 
