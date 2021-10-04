@@ -17,7 +17,7 @@ object Dependencies {
 
   // innFactory Utils
 
-  val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "1.3.2"
+  val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "1.4.4"
 
   //Prod
   val slickPg         = "com.github.tminglei"  %% "slick-pg"           % "0.19.7"
@@ -33,6 +33,9 @@ object Dependencies {
   val joda            = "joda-time"             % "joda-time"          % "2.10.12"
   val postgresql      = "org.postgresql"        % "postgresql"         % "42.2.24"
   val cats = "org.typelevel" %% "cats-core" % "2.6.1"
+  val henkanConvert =   "com.kailuowang" %% "henkan-convert" % "0.6.5"
+  val henkanOptional =   "com.kailuowang" %% "henkan-optional" % "0.6.5"
+  val chimney = "io.scalaland" %% "chimney" % "0.6.1"
 
   //Test
   val playAhcWS     = "com.typesafe.play"      %% "play-ahc-ws"        % "2.8.8" % Test
@@ -56,6 +59,9 @@ object Dependencies {
   lazy val list = Seq(
     scalaUtil,
     sl4j,
+    chimney,
+    henkanConvert,
+    henkanOptional,
     sharedDeps,
     logback,
     logbackCore,

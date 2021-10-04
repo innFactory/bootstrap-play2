@@ -7,7 +7,7 @@ object MutationDefinition {
 
   val Mutations: ObjectType[GraphQLExecutionContext, Unit] = ObjectType(
     name = "mutation",
-    description = "Familotel API Mutations",
+    description = "Bootstrap API Mutations",
     fields = fields(
     )
   )
