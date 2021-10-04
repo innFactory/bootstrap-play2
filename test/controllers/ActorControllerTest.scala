@@ -2,12 +2,11 @@ package controllers
 
 import java.util.UUID
 
-import de.innfactory.bootstrapplay2.models.api._
 import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
 import play.api.libs.json._
 import play.api.test.Helpers._
 import testutils.BaseFakeRequest
-import testutils.BaseFakeRequest._
+import testutils.FakeRequestUtils._
 
 class ActorControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
 
@@ -15,34 +14,17 @@ class ActorControllerTest extends PlaySpec with BaseOneAppPerSuite with TestAppl
   /** ACTORSCONTROLLER */
   /** —————————————————————— */
   "Actor" must {
-    "query not hello" in {
-      val result = BaseFakeRequest(GET, "/v1/public/helloworld/test")
-        .withHeader(("Authorization", "test@test.de"))
-        .get
-
+    "query hello" in {
+      val result  = Get("/v1/public/helloworld/test", "AuthHeader")
       val content = contentAsString(result)
       val parsed  = content
-
       parsed mustBe "the query was not 'hello'"
-
     }
 
     "throughput" in {
       for (_ <- 0 to 10)
-        BaseFakeRequest(GET, "/v1/public/helloworld/test")
-          .withHeader(("Authorization", "test@test.de"))
-          .get
-    }
+        Get("/v1/public/helloworld/test", "test@test.de")
 
-    "query hello " in {
-      val result = BaseFakeRequest(GET, "/v1/public/helloworld/hello")
-        .withHeader(("Authorization", "test@test.de"))
-        .get
-
-      val content = contentAsString(result)
-      val parsed  = content
-
-      parsed mustBe "hello you"
     }
 
   }
