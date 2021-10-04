@@ -45,7 +45,7 @@ jobs:
         FIREBASE_JSON: ${{ secrets.FIREBASE_JSON_PRODUCTION }}
     - name: Run tests
       run: |
-        sbt ciTests
+        firebase emulators:exec "cd .. && export FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' && sbt ciTests" --only auth --project bootstrap-play2 --import=./firebase-data
         bash <(curl -s https://codecov.io/bash)
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
