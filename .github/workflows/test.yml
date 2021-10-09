@@ -37,6 +37,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11.0.9
+    - name: Set up Firebase
+      run: npm install -g firebase-tools
     - name: Set up Environment
       shell: bash
       run: |
@@ -45,8 +47,8 @@ jobs:
         FIREBASE_JSON: ${{ secrets.FIREBASE_JSON_PRODUCTION }}
     - name: Run tests
       run: |
-        sbt ciTests
-        bash <(curl -s https://codecov.io/bash)
+        cd .bin
+        firebase emulators:exec "cd .. && export FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' && sbt ciTests" --only auth --project bootstrap-play2 --import=./firebase-data
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.PUBLIC_GITHUB_TOKEN }}

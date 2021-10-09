@@ -1,8 +1,8 @@
 package de.innfactory.bootstrapplay2.graphql
 
-import de.innfactory.bootstrapplay2.common.results.Results
-import de.innfactory.bootstrapplay2.common.results.Results.ResultStatus
-import de.innfactory.bootstrapplay2.common.results.errors.Errors.{ BadRequest, Forbidden }
+import de.innfactory.bootstrapplay2.commons.results.Results
+import de.innfactory.play.controller.ResultStatus
+import de.innfactory.bootstrapplay2.commons.results.errors.Errors.{ BadRequest, Forbidden }
 import de.innfactory.grapqhl.play.result.implicits.GraphQlResult.{ BadRequestError, ForbiddenError }
 import de.innfactory.grapqhl.play.result.implicits.{ ErrorParser, GraphQlException }
 

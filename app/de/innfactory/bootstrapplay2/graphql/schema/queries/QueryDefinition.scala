@@ -7,7 +7,7 @@ import sangria.schema.{ fields, ObjectType }
 object QueryDefinition {
   val Query: ObjectType[GraphQLExecutionContext, Unit] = ObjectType(
     name = "Query",
-    description = "Familotel API Queries",
+    description = "Bootstrap API Queries",
     fields = fields[GraphQLExecutionContext, Unit](
       allCompanies
     )

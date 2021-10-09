@@ -1,6 +1,6 @@
 package testutils.grapqhl
 
-import de.innfactory.bootstrapplay2.models.api.Company
+import de.innfactory.bootstrapplay2.companies.application.models.CompanyResponse
 import play.api.libs.json.{ JsObject, Json }
 
 object CompanyRequests {
@@ -8,10 +8,10 @@ object CompanyRequests {
   object CompanyRequest {
     private val body = Json.parse("""{"operationName":"Companies"}""")
 
-    implicit val writesData                 = Json.reads[Data]
-    implicit val writesCompanyRequestResult = Json.reads[CompanyRequestResult]
+    implicit val writesData                 = Json.format[Data]
+    implicit val writesCompanyRequestResult = Json.format[CompanyRequestResult]
 
-    case class Data(allCompanies: List[Company])
+    case class Data(allCompanies: List[CompanyResponse])
 
     case class CompanyRequestResult(data: Data)
 
@@ -22,7 +22,6 @@ object CompanyRequests {
           s"""query Companies {
              |  allCompanies$addition {
              |    id
-             |    firebaseUser
              |    settings
              |    stringAttribute1
              |    stringAttribute2

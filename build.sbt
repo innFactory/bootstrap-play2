@@ -87,7 +87,7 @@ def flywaySettings =
 def generateTablesTask(conf: DbConf) =
   Def.task {
     val dir          = sourceManaged.value
-    val outputDir    = (dir / "slick/main").getPath
+    val outputDir    = (dir / "main").getPath
     val fname        = outputDir + generatedFilePath
     val generator    = "db.codegen.CustomizedCodeGenerator"
     val url          = conf.url
