@@ -37,7 +37,7 @@ server.pid
 test.mv.db
 
 #Firebase
-firebase.json
+conf/firebase.json
 
 influx2.properties
 

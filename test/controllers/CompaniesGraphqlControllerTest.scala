@@ -1,6 +1,5 @@
 package controllers
 
-import de.innfactory.bootstrapplay2.models.api._
 import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
 import play.api.libs.json._
 import play.api.test.Helpers._
@@ -44,7 +43,7 @@ class CompaniesGraphqlControllerTest extends PlaySpec with BaseOneAppPerSuite wi
       val content = contentAsJson(fake)
       status(fake) mustBe 200
       val parsed  = content.as[CompanyRequests.CompanyRequest.CompanyRequestResult]
-      parsed.data.allCompanies.length mustBe 1
+      parsed.data.allCompanies.length mustBe 2
 
     }
 

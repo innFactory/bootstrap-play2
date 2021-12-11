@@ -9,7 +9,7 @@ class CodeGenConfig() extends Config[XPostgresProfile] {
 object CustomizedCodeGenerator
     extends CustomizedCodeGeneratorBase(
       CustomizedCodeGeneratorConfig(
-        folder = "/target/scala-2.13/src_managed/slick/main"
+        folder = "/target/scala-2.13/src_managed/main"
       ),
       new CodeGenConfig()
     ) {
@@ -17,5 +17,5 @@ object CustomizedCodeGenerator
   // Update here if new Tables are added
   // Each Database Table, which should be included in CodeGen
   // has to be added here in UPPER-CASE
-  override def included: Seq[String] = Seq("company", "location").map(_.toUpperCase)
+  override def included: Seq[String] = Seq("company", "location", "user_password_reset_tokens").map(_.toUpperCase)
 }
