@@ -42,19 +42,19 @@ object Dependencies {
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   // Dependent on the trace exporters you want to use add one or more of the following
-  val opencensusStackdriver = "io.opencensus" % "opencensus-exporter-trace-stackdriver" % "0.28.3"
-  val opencensusLoggging = "io.opencensus" % "opencensus-exporter-trace-logging" % "0.28.3"
-  val opencensusJaeger = "io.opencensus" % "opencensus-exporter-trace-jaeger" % "0.28.3"
+  val opencensusStackdriver = "io.opencensus" % "opencensus-exporter-trace-stackdriver" % "0.29.0"
+  val opencensusLoggging = "io.opencensus" % "opencensus-exporter-trace-logging" % "0.29.0"
+  val opencensusJaeger = "io.opencensus" % "opencensus-exporter-trace-jaeger" % "0.29.0"
 
-  val opencensusStatsStackdriver = "io.opencensus" % "opencensus-exporter-stats-stackdriver" % "0.28.3"
+  val opencensusStatsStackdriver = "io.opencensus" % "opencensus-exporter-stats-stackdriver" % "0.29.0"
 
   // If you want to use opencensus-scala inside an Akka HTTP project
   val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
   val sl4j = "org.slf4j" % "slf4j-api" % "1.7.32" intransitive
   val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "2.5.1"
-  val logback = "ch.qos.logback" % "logback-classic" % "1.2.8"
-  val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.8"
+  val logback = "ch.qos.logback" % "logback-classic" % "1.2.7"
+  val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.7"
 
   lazy val list = Seq(
     scalaUtil,
