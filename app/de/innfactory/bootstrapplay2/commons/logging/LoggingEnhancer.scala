@@ -1,7 +1,7 @@
 package de.innfactory.bootstrapplay2.commons.logging
 
 import io.opencensus.trace.Span
-import org.slf4j.{ Marker, MarkerFactory }
+import org.slf4j.{Marker, MarkerFactory}
 import play.api.Logger
 
 object LoggingEnhancer {

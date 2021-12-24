@@ -10,17 +10,17 @@ import io.scalaland.chimney.dsl._
 import io.scalaland.chimney._
 
 case class LocationResponse(
-  id: Long,
-  company: Long,
-  name: Option[String],
-  settings: Option[JsValue],
-  addressLine1: Option[String],
-  addressLine2: Option[String],
-  zip: Option[String],
-  city: Option[String],
-  country: Option[String],
-  created: DateTime,
-  updated: DateTime
+    id: Long,
+    company: Long,
+    name: Option[String],
+    settings: Option[JsValue],
+    addressLine1: Option[String],
+    addressLine2: Option[String],
+    zip: Option[String],
+    city: Option[String],
+    country: Option[String],
+    created: DateTime,
+    updated: DateTime
 )
 
 object LocationResponse {

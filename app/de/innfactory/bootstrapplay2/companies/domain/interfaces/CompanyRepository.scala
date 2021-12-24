@@ -4,9 +4,9 @@ import akka.NotUsed
 import akka.stream.scaladsl.Source
 import cats.data.EitherT
 import com.google.inject.ImplementedBy
-import de.innfactory.bootstrapplay2.commons.{ RequestContext, TraceContext }
+import de.innfactory.bootstrapplay2.commons.{RequestContext, TraceContext}
 import de.innfactory.play.controller.ResultStatus
-import de.innfactory.bootstrapplay2.companies.domain.models.{ Company, CompanyId }
+import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import de.innfactory.bootstrapplay2.companies.infrastructure.SlickCompanyRepository
 
 import scala.concurrent.Future

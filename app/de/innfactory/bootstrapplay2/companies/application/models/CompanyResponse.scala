@@ -1,6 +1,6 @@
 package de.innfactory.bootstrapplay2.companies.application.models
 
-import de.innfactory.bootstrapplay2.companies.domain.models.{ Company, CompanyId }
+import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import org.joda.time.DateTime
 import play.api.libs.json.JsValue
 import play.api.libs.json.Json
@@ -11,14 +11,14 @@ import io.scalaland.chimney.dsl._
 import io.scalaland.chimney._
 
 case class CompanyResponse(
-  id: Long,
-  settings: Option[JsValue],
-  stringAttribute1: Option[String],
-  stringAttribute2: Option[String],
-  longAttribute1: Option[Long],
-  booleanAttribute: Option[Boolean],
-  created: DateTime,
-  updated: DateTime
+    id: Long,
+    settings: Option[JsValue],
+    stringAttribute1: Option[String],
+    stringAttribute2: Option[String],
+    longAttribute1: Option[Long],
+    booleanAttribute: Option[Boolean],
+    created: DateTime,
+    updated: DateTime
 )
 
 object CompanyResponse {

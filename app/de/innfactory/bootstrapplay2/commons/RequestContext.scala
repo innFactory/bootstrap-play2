@@ -24,13 +24,13 @@ trait RequestContextUser[USER] {
 
 class RequestContext(rcSpan: Span, rcHeaders: Map[String, Seq[String]]) extends TraceContext {
   def headers: Map[String, Seq[String]] = rcHeaders
-  override def span: Span               = rcSpan
+  override def span: Span = rcSpan
 }
 
 case class RequestContextWithUser(
-  override val span: Span,
-  override val headers: Map[String, Seq[String]],
-  user: User
+    override val span: Span,
+    override val headers: Map[String, Seq[String]],
+    user: User
 ) extends RequestContext(span, headers)
     with RequestContextUser[User] {}
 
@@ -47,7 +47,7 @@ object ReqConverterHelper {
   }
 
   def requestContextWithUser[Q](implicit
-    req: RequestWithUser[Q]
+      req: RequestWithUser[Q]
   ): RequestContextWithUser = {
     val headers = Try(req.request.headers.toMap).toOption.getOrElse(Map.empty)
     RequestContextWithUser(req.traceSpan, headers, req.user)

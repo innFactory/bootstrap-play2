@@ -1,18 +1,15 @@
 package de.innfactory.bootstrapplay2.actorsystem.application
-import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{
-  ResponseQueryHelloWorld,
-  ResponseQueryHelloWorldError
-}
+import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{ResponseQueryHelloWorld, ResponseQueryHelloWorldError}
 import de.innfactory.bootstrapplay2.actorsystem.infrastructure.HelloWorldService
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class ActorHelloWorldController @Inject() (
-  cc: ControllerComponents,
-  helloWorldService: HelloWorldService
+    cc: ControllerComponents,
+    helloWorldService: HelloWorldService
 )(implicit ec: ExecutionContext)
     extends AbstractController(cc) {
 

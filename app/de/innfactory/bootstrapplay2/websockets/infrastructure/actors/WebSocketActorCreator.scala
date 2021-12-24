@@ -1,6 +1,6 @@
 package de.innfactory.bootstrapplay2.websockets.infrastructure.actors
 
-import akka.actor.{ ActorRef, Props }
+import akka.actor.{ActorRef, Props}
 import de.innfactory.bootstrapplay2.websockets.domain.interfaces.WebSocketRepository
 
 class WebSocketActorCreator extends WebSocketRepository {

@@ -1,12 +1,12 @@
 package controllers
 
-import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
+import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
 import play.api.libs.json._
 import play.api.test.Helpers._
 import testutils.BaseFakeRequest
 import testutils.BaseFakeRequest._
 import testutils.grapqhl.CompanyRequests
-import testutils.grapqhl.FakeGraphQLRequest.{ getFake, routeResult }
+import testutils.grapqhl.FakeGraphQLRequest.{getFake, routeResult}
 
 import java.util.UUID
 
@@ -18,7 +18,7 @@ class CompaniesGraphqlControllerTest extends PlaySpec with BaseOneAppPerSuite wi
   "CompaniesController" must {
 
     "getAll" in {
-      val fake    =
+      val fake =
         routeResult(
           getFake(
             CompanyRequests.CompanyRequest
@@ -27,13 +27,13 @@ class CompaniesGraphqlControllerTest extends PlaySpec with BaseOneAppPerSuite wi
         )
       val content = contentAsJson(fake)
       status(fake) mustBe 200
-      val parsed  = content.as[CompanyRequests.CompanyRequest.CompanyRequestResult]
+      val parsed = content.as[CompanyRequests.CompanyRequest.CompanyRequestResult]
       parsed.data.allCompanies.length mustBe 2
 
     }
 
     "getAll with boolean Filter" in {
-      val fake    =
+      val fake =
         routeResult(
           getFake(
             CompanyRequests.CompanyRequest
@@ -42,7 +42,7 @@ class CompaniesGraphqlControllerTest extends PlaySpec with BaseOneAppPerSuite wi
         )
       val content = contentAsJson(fake)
       status(fake) mustBe 200
-      val parsed  = content.as[CompanyRequests.CompanyRequest.CompanyRequestResult]
+      val parsed = content.as[CompanyRequests.CompanyRequest.CompanyRequestResult]
       parsed.data.allCompanies.length mustBe 2
 
     }

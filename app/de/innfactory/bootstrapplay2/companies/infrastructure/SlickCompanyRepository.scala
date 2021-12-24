@@ -2,27 +2,27 @@ package de.innfactory.bootstrapplay2.companies.infrastructure
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source
-import cats.data.{ EitherT, Validated }
+import cats.data.{EitherT, Validated}
 import dbdata.Tables
 import de.innfactory.bootstrapplay2.commons.filteroptions.FilterOptionUtils
-import de.innfactory.bootstrapplay2.commons.{ RequestContext, TraceContext }
+import de.innfactory.bootstrapplay2.commons.{RequestContext, TraceContext}
 import de.innfactory.bootstrapplay2.commons.results.Results
 import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickDAO
 import de.innfactory.bootstrapplay2.commons.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyRepository
-import de.innfactory.bootstrapplay2.companies.domain.models.{ Company, CompanyId }
+import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import de.innfactory.bootstrapplay2.companies.domain.models.Company.patch
 import de.innfactory.bootstrapplay2.companies.infrastructure.mapper.CompanyMapper._
 import de.innfactory.play.db.codegen.XPostgresProfile.api._
 import de.innfactory.play.slick.enhanced.utils.filteroptions.FilterOptions
 import slick.jdbc.JdbcBackend.Database
-import slick.jdbc.{ ResultSetConcurrency, ResultSetType }
+import slick.jdbc.{ResultSetConcurrency, ResultSetType}
 import de.innfactory.play.slick.enhanced.utils.filteroptions.FilterOptions
 import de.innfactory.play.slick.enhanced.query.EnhancedQuery._
 
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 private[companies] class SlickCompanyRepository @Inject() (db: Database)(implicit ec: ExecutionContext)
     extends BaseSlickDAO(db)
@@ -59,7 +59,7 @@ private[companies] class SlickCompanyRepository @Inject() (db: Database)(implici
   }
 
   override def getById(companyId: CompanyId)(implicit
-    rc: TraceContext
+      rc: TraceContext
   ): EitherT[Future, ResultStatus, Company] =
     EitherT(lookupGeneric(queryById(companyId).result.headOption))
 
@@ -73,14 +73,14 @@ private[companies] class SlickCompanyRepository @Inject() (db: Database)(implici
 
   def updateCompany(company: Company)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Company] =
     for {
-      _       <- EitherT(Future(Validated.cond(company.id.isDefined, (), BadRequest("")).toEither))
+      _ <- EitherT(Future(Validated.cond(company.id.isDefined, (), BadRequest("")).toEither))
       updated <- EitherT(
-                   updateGeneric(
-                     queryById(company.id.get).result.headOption,
-                     (c: Company) => Tables.Company insertOrUpdate companyToCompanyRow(c),
-                     oldCompany => patch(company, oldCompany)
-                   )
-                 )
+        updateGeneric(
+          queryById(company.id.get).result.headOption,
+          (c: Company) => Tables.Company insertOrUpdate companyToCompanyRow(c),
+          oldCompany => patch(company, oldCompany)
+        )
+      )
     } yield updated
 
   def deleteCompany(id: CompanyId)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Boolean] =

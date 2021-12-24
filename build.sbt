@@ -11,15 +11,17 @@ resolvers += Resolver.githubPackages("innFactory")
 val token = sys.env.getOrElse("GITHUB_TOKEN", "")
 
 val githubSettings = Seq(
-   githubOwner := "innFactory",
-    githubRepository := "bootstrap-play2",
+  githubOwner := "innFactory",
+  githubRepository := "bootstrap-play2",
   credentials :=
-    Seq(Credentials(
-      "GitHub Package Registry",
-      "maven.pkg.github.com",
-      "innFactory",
-      token
-    ))
+    Seq(
+      Credentials(
+        "GitHub Package Registry",
+        "maven.pkg.github.com",
+        "innFactory",
+        token
+      )
+    )
 )
 
 val latest = sys.env.get("BRANCH") match {
@@ -38,14 +40,14 @@ val dockerRegistry = sys.env.get("DOCKER_REGISTRY") match {
 }
 
 val generatedFilePath: String = "/dbdata/Tables.scala"
-val flywayDbName: String      = "bootstrap-play2"
-val dbConf                    = settingKey[DbConf]("Typesafe config file with slick settings")
-val generateTables            = taskKey[Seq[File]]("Generate slick code")
+val flywayDbName: String = "bootstrap-play2"
+val dbConf = settingKey[DbConf]("Typesafe config file with slick settings")
+val generateTables = taskKey[Seq[File]]("Generate slick code")
 
 // Testing
 
 coverageExcludedPackages += "<empty>;Reverse.*;router.*;.*AuthService.*;models\\\\.data\\\\..*;dbdata.Tables*;de.innfactory.bootstrapplay2.common.jwt.*;de.innfactory.bootstrapplay2.common.errorHandling.*;de.innfactory.bootstrapplay2.common.jwt.JwtFilter;db.codegen.*;de.innfactory.bootstrapplay2.common.pubSub.*;publicmetrics.influx.*"
-Test / fork  := true
+Test / fork := true
 
 // Commands
 
@@ -58,9 +60,9 @@ lazy val slickGen = taskKey[Seq[File]]("slickGen")
 /* Create db config for flyway */
 def createDbConf(dbConfFile: File): DbConf = {
   val configFactory = ConfigFactory.parseFile(dbConfFile)
-  val configPath    = s"$flywayDbName"
-  val config        = configFactory.getConfig(configPath).resolve
-  val url           = s"${config.getString("database.urlPrefix")}${config
+  val configPath = s"$flywayDbName"
+  val config = configFactory.getConfig(configPath).resolve
+  val url = s"${config.getString("database.urlPrefix")}${config
     .getString("database.host")}:${config.getString("database.port")}/${config.getString("database.db")}"
   DbConf(
     config.getString("profile"),
@@ -86,19 +88,19 @@ def flywaySettings =
 
 def generateTablesTask(conf: DbConf) =
   Def.task {
-    val dir          = sourceManaged.value
-    val outputDir    = (dir / "main").getPath
-    val fname        = outputDir + generatedFilePath
-    val generator    = "db.codegen.CustomizedCodeGenerator"
-    val url          = conf.url
+    val dir = sourceManaged.value
+    val outputDir = (dir / "main").getPath
+    val fname = outputDir + generatedFilePath
+    val generator = "db.codegen.CustomizedCodeGenerator"
+    val url = conf.url
     val slickProfile = conf.profile.dropRight(1)
-    val jdbcDriver   = conf.driver
-    val pkg          = "db.Tables"
-    val cp           = (Compile / dependencyClasspath).value
-    val username     = conf.user
-    val password     = conf.password
-    val s            = streams.value
-    val r            = (Compile / runner).value
+    val jdbcDriver = conf.driver
+    val pkg = "db.Tables"
+    val cp = (Compile / dependencyClasspath).value
+    val username = conf.user
+    val password = conf.password
+    val s = streams.value
+    val r = (Compile / runner).value
     r.run(
       generator,
       cp.files,
@@ -123,7 +125,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(ehcache),
     dependencyOverrides += Dependencies.sl4j, // Override to avoid problems with HikariCP 4.x
     swaggerDomainNameSpaces := Seq(
-      "models",
+      "models"
     ), // New Models have to be added here to be referencable in routes
     swaggerPrettyJson := true,
     swaggerV3 := true,
@@ -166,6 +168,6 @@ ThisBuild / scalafmtOnCompile := true // all projects
 
 /* Change compiling */
 Compile / sourceGenerators += Def.taskDyn(generateTablesTask((Global / dbConf).value)).taskValue
-Compile /compile  := {
+Compile / compile := {
   (Compile / compile).value
 }

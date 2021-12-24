@@ -2,30 +2,30 @@ package de.innfactory.bootstrapplay2.commons.jwt
 
 import java.text.ParseException
 import com.nimbusds.jose.jwk.source.JWKSource
-import com.nimbusds.jose.proc.{ JWSVerificationKeySelector, SecurityContext }
+import com.nimbusds.jose.proc.{JWSVerificationKeySelector, SecurityContext}
 import com.nimbusds.jwt.JWTClaimsSet
-import com.nimbusds.jwt.proc.{ BadJWTException, DefaultJWTClaimsVerifier, DefaultJWTProcessor }
+import com.nimbusds.jwt.proc.{BadJWTException, DefaultJWTClaimsVerifier, DefaultJWTProcessor}
 import de.innfactory.bootstrapplay2.commons.jwt.algorithm.JWTAlgorithm
 import de.innfactory.bootstrapplay2.commons.jwt.algorithm.JWTAlgorithm.RS256
 
 object ConfigurableJWTValidator {
   def apply(
-    keySource: JWKSource[SecurityContext],
-    algorithm: JWTAlgorithm = RS256,
-    maybeCtx: Option[SecurityContext] = None,
-    additionalValidations: List[(JWTClaimsSet, SecurityContext) => Option[BadJWTException]] = List.empty
+      keySource: JWKSource[SecurityContext],
+      algorithm: JWTAlgorithm = RS256,
+      maybeCtx: Option[SecurityContext] = None,
+      additionalValidations: List[(JWTClaimsSet, SecurityContext) => Option[BadJWTException]] = List.empty
   ): ConfigurableJWTValidator = new ConfigurableJWTValidator(keySource, algorithm, maybeCtx, additionalValidations)
 }
 
 final class ConfigurableJWTValidator(
-  keySource: JWKSource[SecurityContext],
-  algorithm: JWTAlgorithm = RS256,
-  maybeCtx: Option[SecurityContext] = None,
-  additionalValidations: List[(JWTClaimsSet, SecurityContext) => Option[BadJWTException]] = List.empty
+    keySource: JWKSource[SecurityContext],
+    algorithm: JWTAlgorithm = RS256,
+    maybeCtx: Option[SecurityContext] = None,
+    additionalValidations: List[(JWTClaimsSet, SecurityContext) => Option[BadJWTException]] = List.empty
 ) extends JWTValidator {
 
   private val jwtProcessor = new DefaultJWTProcessor[SecurityContext]
-  private val keySelector  = new JWSVerificationKeySelector[SecurityContext](algorithm.nimbusRepresentation, keySource)
+  private val keySelector = new JWSVerificationKeySelector[SecurityContext](algorithm.nimbusRepresentation, keySource)
   jwtProcessor.setJWSKeySelector(keySelector)
 
   jwtProcessor.setJWTClaimsSetVerifier(new DefaultJWTClaimsVerifier[SecurityContext] {

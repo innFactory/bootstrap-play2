@@ -9,7 +9,7 @@ object JWT {
       authHeader match {
         case token: String if token.startsWith("Bearer") =>
           JwtToken(token.splitAt(7)._2)
-        case token                                       => JwtToken(token)
+        case token => JwtToken(token)
       }
   }
 

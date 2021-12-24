@@ -8,8 +8,8 @@ sealed trait JWTAlgorithm {
   def nimbusRepresentation: JWSAlgorithm
 }
 
-sealed trait JwtAsymmetricAlgorithm extends JWTAlgorithm           {}
-sealed trait JwtRSAAlgorithm        extends JwtAsymmetricAlgorithm {}
+sealed trait JwtAsymmetricAlgorithm extends JWTAlgorithm {}
+sealed trait JwtRSAAlgorithm extends JwtAsymmetricAlgorithm {}
 
 object JWTAlgorithm {
 

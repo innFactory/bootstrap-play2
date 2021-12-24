@@ -20,8 +20,7 @@ class AccessLoggingFilter @Inject() (config: Config, implicit val mat: Materiali
     config.getIntList("logging.access.statusList ")
 
   /**
-   * Logs requests if result header status is inclueded
-   * in logging.access.statusList as defined in application.conf
+   * Logs requests if result header status is inclueded in logging.access.statusList as defined in application.conf
    * @param next
    * @param request
    * @return

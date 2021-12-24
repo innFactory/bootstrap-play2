@@ -1,14 +1,14 @@
 package testutils.grapqhl
 
 import de.innfactory.bootstrapplay2.companies.application.models.CompanyResponse
-import play.api.libs.json.{ JsObject, Json }
+import play.api.libs.json.{JsObject, Json}
 
 object CompanyRequests {
 
   object CompanyRequest {
     private val body = Json.parse("""{"operationName":"Companies"}""")
 
-    implicit val writesData                 = Json.format[Data]
+    implicit val writesData = Json.format[Data]
     implicit val writesCompanyRequestResult = Json.format[CompanyRequestResult]
 
     case class Data(allCompanies: List[CompanyResponse])

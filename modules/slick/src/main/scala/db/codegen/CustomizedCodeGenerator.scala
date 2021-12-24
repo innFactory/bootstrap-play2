@@ -1,6 +1,6 @@
 package db.codegen
 import de.innfactory.play.db.codegen.XPostgresProfile
-import de.innfactory.play.db.codegen.{ Config, CustomizedCodeGeneratorBase, CustomizedCodeGeneratorConfig }
+import de.innfactory.play.db.codegen.{Config, CustomizedCodeGeneratorBase, CustomizedCodeGeneratorConfig}
 
 class CodeGenConfig() extends Config[XPostgresProfile] {
   override lazy val slickProfile: XPostgresProfile = XPostgresProfile

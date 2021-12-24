@@ -1,7 +1,7 @@
 package de.innfactory.bootstrapplay2.websockets.application
 
 import akka.Done
-import akka.actor.{ ActorRef, ActorSystem }
+import akka.actor.{ActorRef, ActorSystem}
 import akka.stream.Materializer
 import de.innfactory.bootstrapplay2.websockets.domain.interfaces.WebSocketService
 import play.api.libs.json.JsValue
@@ -11,14 +11,14 @@ import akka.stream.scaladsl.Source
 import de.innfactory.bootstrapplay2.websockets.infrastructure.actors.ScheduledActor
 import play.api.http.ContentTypes
 import play.api.libs.EventSource
-import javax.inject.{ Inject, Singleton }
-import play.api.mvc.{ WebSocket, _ }
+import javax.inject.{Inject, Singleton}
+import play.api.mvc.{WebSocket, _}
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class WebsocketController @Inject() (
-  cc: ControllerComponents,
-  webSocketService: WebSocketService
+    cc: ControllerComponents,
+    webSocketService: WebSocketService
 )(implicit ec: ExecutionContext, val system: ActorSystem, mat: Materializer)
     extends AbstractController(cc) {
 

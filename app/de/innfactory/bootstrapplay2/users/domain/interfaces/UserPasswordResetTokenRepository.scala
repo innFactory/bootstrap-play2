@@ -3,7 +3,7 @@ package de.innfactory.bootstrapplay2.users.domain.interfaces
 import com.google.inject.ImplementedBy
 import de.innfactory.bootstrapplay2.commons.TraceContext
 import de.innfactory.bootstrapplay2.commons.results.Results.Result
-import de.innfactory.bootstrapplay2.users.domain.models.{ UserId, UserPasswordResetToken }
+import de.innfactory.bootstrapplay2.users.domain.models.{UserId, UserPasswordResetToken}
 import de.innfactory.bootstrapplay2.users.infrastructure.SlickUserResetTokenRepository
 
 import scala.concurrent.Future

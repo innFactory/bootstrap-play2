@@ -7,8 +7,8 @@ import org.flywaydb.core.Flyway
 import org.flywaydb.core.internal.jdbc.DriverDataSource
 import org.scalatestplus.play.FakeApplicationFactory
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.inject.{ Binding, Module }
-import play.api.{ Application, Configuration, Environment, Logger }
+import play.api.inject.{Binding, Module}
+import play.api.{Application, Configuration, Environment, Logger}
 import de.innfactory.play.flyway.test.TestFlywayMigrator
 
 /**

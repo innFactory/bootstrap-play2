@@ -1,6 +1,6 @@
 package de.innfactory.bootstrapplay2.graphql.schema.models
 
-import sangria.schema.{ Argument, OptionInputType, StringType }
+import sangria.schema.{Argument, OptionInputType, StringType}
 
 object Arguments {
   val FilterArg: Argument[Option[String]] =

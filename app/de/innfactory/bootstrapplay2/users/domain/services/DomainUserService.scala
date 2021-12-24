@@ -5,33 +5,33 @@ import akka.stream.scaladsl.Source
 import cats.data.EitherT
 import de.innfactory.bootstrapplay2.commons.logging.ImplicitLogContext
 import de.innfactory.bootstrapplay2.commons.results.Results.Result
-import de.innfactory.bootstrapplay2.commons.{ RequestContextWithUser, TraceContext }
+import de.innfactory.bootstrapplay2.commons.{RequestContextWithUser, TraceContext}
 import de.innfactory.bootstrapplay2.users.domain.interfaces.{
   UserPasswordResetTokenRepository,
   UserRepository,
   UserService
 }
-import de.innfactory.bootstrapplay2.users.domain.models.{ Claims, User, UserId, UserPasswordResetToken }
+import de.innfactory.bootstrapplay2.users.domain.models.{Claims, User, UserId, UserPasswordResetToken}
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 class DomainUserService @Inject() (
-  userRepository: UserRepository,
-  userPasswordResetTokenRepository: UserPasswordResetTokenRepository
+    userRepository: UserRepository,
+    userPasswordResetTokenRepository: UserPasswordResetTokenRepository
 )(implicit ec: ExecutionContext)
     extends UserService
     with ImplicitLogContext {
 
   def sendPasswordResetToken()(implicit rc: RequestContextWithUser): Future[Result[Unit]] = {
-    val uiURI  = "localhost"
+    val uiURI = "localhost"
     val result = for {
-      token    <- EitherT(
-                    userPasswordResetTokenRepository.create(
-                      UserPasswordResetToken(rc.user.userId)
-                    )
-                  )
+      token <- EitherT(
+        userPasswordResetTokenRepository.create(
+          UserPasswordResetToken(rc.user.userId)
+        )
+      )
       resetLink = s"$uiURI/reset?token=" + token.token + "&uid=" + rc.user.userId.value
-      _         = rc.log.info(resetLink)
+      _ = rc.log.info(resetLink)
       // Optionally could Send Email _ <- EitherT(emailSendService.sendWelcomeEmail(createdUser.email, resetLink))
     } yield ()
     result.value

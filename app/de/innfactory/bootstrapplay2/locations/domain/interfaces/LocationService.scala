@@ -6,7 +6,7 @@ import cats.data.EitherT
 import com.google.inject.ImplementedBy
 import de.innfactory.bootstrapplay2.commons.RequestContextWithUser
 import de.innfactory.play.controller.ResultStatus
-import de.innfactory.bootstrapplay2.locations.domain.models.{ Location, LocationCompanyId, LocationId }
+import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
 import de.innfactory.bootstrapplay2.locations.domain.services.DomainLocationService
 
 import scala.concurrent.Future
@@ -15,7 +15,7 @@ import scala.concurrent.Future
 trait LocationService {
 
   def getAllByCompany(locationCompanyId: LocationCompanyId)(implicit
-    rc: RequestContextWithUser
+      rc: RequestContextWithUser
   ): EitherT[Future, ResultStatus, Seq[Location]]
 
   def getAllAsStream()(implicit rc: RequestContextWithUser): EitherT[Future, ResultStatus, Source[Location, NotUsed]]

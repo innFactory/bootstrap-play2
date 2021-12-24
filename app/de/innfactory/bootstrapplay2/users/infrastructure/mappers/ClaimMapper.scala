@@ -1,9 +1,9 @@
 package de.innfactory.bootstrapplay2.users.infrastructure.mappers
 
 import com.google.firebase.auth.UserRecord
-import de.innfactory.bootstrapplay2.users.domain.models.{ Claims, User, UserId }
+import de.innfactory.bootstrapplay2.users.domain.models.{Claims, User, UserId}
 import play.api.Logger
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.JavaConverters._
 

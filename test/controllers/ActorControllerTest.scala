@@ -2,7 +2,7 @@ package controllers
 
 import java.util.UUID
 
-import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
+import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
 import play.api.libs.json._
 import play.api.test.Helpers._
 import testutils.BaseFakeRequest
@@ -15,9 +15,9 @@ class ActorControllerTest extends PlaySpec with BaseOneAppPerSuite with TestAppl
   /** —————————————————————— */
   "Actor" must {
     "query hello" in {
-      val result  = Get("/v1/public/helloworld/test", "AuthHeader")
+      val result = Get("/v1/public/helloworld/test", "AuthHeader")
       val content = contentAsString(result)
-      val parsed  = content
+      val parsed = content
       parsed mustBe "the query was not 'hello'"
     }
 

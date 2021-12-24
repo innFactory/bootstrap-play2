@@ -5,17 +5,17 @@ import org.joda.time.DateTime
 import play.api.libs.json._
 
 case class Location(
-  id: Option[LocationId],
-  company: LocationCompanyId,
-  name: Option[String],
-  settings: Option[JsValue],
-  addressLine1: Option[String],
-  addressLine2: Option[String],
-  zip: Option[String],
-  city: Option[String],
-  country: Option[String],
-  created: Option[DateTime],
-  updated: Option[DateTime]
+    id: Option[LocationId],
+    company: LocationCompanyId,
+    name: Option[String],
+    settings: Option[JsValue],
+    addressLine1: Option[String],
+    addressLine2: Option[String],
+    zip: Option[String],
+    city: Option[String],
+    country: Option[String],
+    created: Option[DateTime],
+    updated: Option[DateTime]
 )
 
 object Location {

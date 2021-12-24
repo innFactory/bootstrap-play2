@@ -2,9 +2,9 @@ package testutils.grapqhl
 
 import play.api.Application
 import play.api.libs.json.JsObject
-import play.api.mvc.{ Headers, Result }
+import play.api.mvc.{Headers, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{ route, POST }
+import play.api.test.Helpers.{route, POST}
 
 import scala.concurrent.Future
 

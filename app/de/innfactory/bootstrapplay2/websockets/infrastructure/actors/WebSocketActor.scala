@@ -15,13 +15,13 @@ object Test {
 }
 
 class WebSocketActor(out: ActorRef) extends Actor {
-  var counter                             = 1
+  var counter = 1
   def receive: PartialFunction[Any, Unit] = {
-    case jsValue: JsValue if (jsValue.validate[Test].asOpt.isDefined) =>
+    case jsValue: JsValue if jsValue.validate[Test].asOpt.isDefined =>
       out ! Json.toJson(
         Test(this.self.path.toString, "I received your message: " + jsValue + " | This is message: " + counter)
       )
       counter += 1
-    case _                                                            => println("Receive unknown")
+    case _ => println("Receive unknown")
   }
 }
