@@ -2,7 +2,7 @@ package testutils
 
 import org.scalatestplus.play.PlaySpec
 import play.api.Application
-import play.api.libs.json.{ Json, Writes }
+import play.api.libs.json.{Json, Writes}
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -16,8 +16,8 @@ object FakeRequestUtils extends PlaySpec {
   }
 
   def Post[T](url: String, body: T, authHeader: String)(implicit
-    app: Application,
-    writes: Writes[T]
+      app: Application,
+      writes: Writes[T]
   ): Future[Result] = {
     val future: Future[Result] =
       route(
@@ -32,7 +32,7 @@ object FakeRequestUtils extends PlaySpec {
   }
 
   def PostNoBody(url: String, authHeader: String)(implicit
-    app: Application
+      app: Application
   ): Future[Result] = {
     val future: Future[Result] =
       route(
@@ -46,8 +46,8 @@ object FakeRequestUtils extends PlaySpec {
   }
 
   def Patch[T](url: String, body: T, authHeader: String)(implicit
-    app: Application,
-    writes: Writes[T]
+      app: Application,
+      writes: Writes[T]
   ): Future[Result] = {
     val future: Future[Result] =
       route(
@@ -62,7 +62,7 @@ object FakeRequestUtils extends PlaySpec {
   }
 
   def PatchNoBody[T](url: String, authHeader: String)(implicit
-    app: Application
+      app: Application
   ): Future[Result] = {
     val future: Future[Result] =
       route(
@@ -100,8 +100,8 @@ object FakeRequestUtils extends PlaySpec {
   }
 
   def DeleteWithBody[T](url: String, body: T, authHeader: String)(implicit
-    app: Application,
-    writes: Writes[T]
+      app: Application,
+      writes: Writes[T]
   ): Future[Result] = {
     val future: Future[Result] =
       route(

@@ -10,10 +10,10 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext
 
 class TracingUserAction @Inject() (
-  val parser: BodyParsers.Default,
-  userExtractionAction: UserExtractionAction,
-  traceAction: TracingAction,
-  implicit val environment: Environment
+    val parser: BodyParsers.Default,
+    userExtractionAction: UserExtractionAction,
+    traceAction: TracingAction,
+    implicit val environment: Environment
 )(implicit val executionContext: ExecutionContext) {
   def apply()(implicit logContext: LogContext): ActionBuilder[RequestWithUser, AnyContent] = {
     val owningMethodName = Thread.currentThread.getStackTrace()(2).getMethodName

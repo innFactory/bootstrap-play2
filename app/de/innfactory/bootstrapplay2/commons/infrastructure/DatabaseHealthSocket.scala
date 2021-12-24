@@ -4,7 +4,7 @@ import play.api.inject.ApplicationLifecycle
 import slick.jdbc.JdbcBackend.Database
 
 import java.sql.Connection
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton

@@ -3,8 +3,8 @@ package testutils
 import akka.util.Timeout
 import org.scalatest
 import play.api.Application
-import play.api.libs.json.{ JsValue, Reads }
-import play.api.mvc.{ AnyContentAsJson, Result }
+import play.api.libs.json.{JsValue, Reads}
+import play.api.mvc.{AnyContentAsJson, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import org.scalatest.MustMatchers._

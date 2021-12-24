@@ -3,16 +3,16 @@ package de.innfactory.bootstrapplay2.companies.domain.services
 import akka.NotUsed
 import akka.stream.scaladsl.Source
 import cats.data.EitherT
-import de.innfactory.bootstrapplay2.commons.{ RequestContext, RequestContextWithUser }
+import de.innfactory.bootstrapplay2.commons.{RequestContext, RequestContextWithUser}
 import de.innfactory.play.controller.ResultStatus
-import de.innfactory.bootstrapplay2.companies.domain.interfaces.{ CompanyRepository, CompanyService }
-import de.innfactory.bootstrapplay2.companies.domain.models.{ Company, CompanyId }
+import de.innfactory.bootstrapplay2.companies.domain.interfaces.{CompanyRepository, CompanyService}
+import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 private[companies] class DomainCompanyService @Inject() (companyRepository: CompanyRepository)(implicit
-  ec: ExecutionContext
+    ec: ExecutionContext
 ) extends CompanyService {
 
   def getAll()(implicit rc: RequestContextWithUser): EitherT[Future, ResultStatus, Seq[Company]] =
@@ -22,7 +22,7 @@ private[companies] class DomainCompanyService @Inject() (companyRepository: Comp
     companyRepository.getAllForGraphQL(filterOptions)
 
   def getAllCompaniesAsStream()(implicit
-    rc: RequestContextWithUser
+      rc: RequestContextWithUser
   ): EitherT[Future, ResultStatus, Source[Company, NotUsed]] =
     for {
       result <- EitherT.right[ResultStatus](Future(companyRepository.getAllCompaniesAsSource))

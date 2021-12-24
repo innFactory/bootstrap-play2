@@ -1,6 +1,6 @@
 package controllers
 
-import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
+import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

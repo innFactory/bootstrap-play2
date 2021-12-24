@@ -24,8 +24,7 @@ class RouteBlacklistFilter @Inject() (config: Config, implicit val mat: Material
   )
 
   /**
-   * Check if route is contained in blacklistedRoutes
-   * and block request if true
+   * Check if route is contained in blacklistedRoutes and block request if true
    * @param nextFilter
    * @param request
    * @return

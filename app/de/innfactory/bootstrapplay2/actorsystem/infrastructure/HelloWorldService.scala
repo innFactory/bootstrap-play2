@@ -1,7 +1,7 @@
 package de.innfactory.bootstrapplay2.actorsystem.infrastructure
 
 import de.innfactory.bootstrapplay2.actorsystem.domain.HelloWorldActor
-import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{ Command, QueryHelloWorld, Response }
+import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{Command, QueryHelloWorld, Response}
 import akka.actor._
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.util.Timeout
@@ -10,7 +10,7 @@ import javax.inject._
 import akka.actor.typed.scaladsl.adapter._
 
 import scala.concurrent.duration._
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[HelloWorldServiceImpl])
 trait HelloWorldService {
@@ -26,7 +26,7 @@ class HelloWorldServiceImpl @Inject() (
   private implicit val timeout: Timeout = 10.seconds
 
   // Convert classic actor system of play to typed
-  private val actorSystem: akka.actor.typed.ActorSystem[_]   = system.toTyped
+  private val actorSystem: akka.actor.typed.ActorSystem[_] = system.toTyped
   // define implicit scheduler
   private implicit val scheduler: akka.actor.typed.Scheduler =
     actorSystem.scheduler

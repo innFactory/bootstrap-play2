@@ -1,6 +1,6 @@
 package de.innfactory.bootstrapplay2.commons.implicits
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 object EitherImplicits {
 

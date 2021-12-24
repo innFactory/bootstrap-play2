@@ -4,29 +4,29 @@ import akka.NotUsed
 import akka.stream.Materializer
 import akka.stream.scaladsl.Source
 import cats.data.EitherT
-import de.innfactory.bootstrapplay2.commons.ReqConverterHelper.{ requestContext, requestContextWithUser }
+import de.innfactory.bootstrapplay2.commons.ReqConverterHelper.{requestContext, requestContextWithUser}
 import de.innfactory.bootstrapplay2.commons.RequestContextWithUser
 import de.innfactory.bootstrapplay2.commons.logging.ImplicitLogContext
-import de.innfactory.bootstrapplay2.commons.application.actions.{ TracingAction, TracingUserAction }
-import de.innfactory.bootstrapplay2.commons.application.actions.models.{ RequestWithTrace, RequestWithUser }
+import de.innfactory.bootstrapplay2.commons.application.actions.{TracingAction, TracingUserAction}
+import de.innfactory.bootstrapplay2.commons.application.actions.models.{RequestWithTrace, RequestWithUser}
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyService
-import play.api.mvc.{ Action, AnyContent, ControllerComponents }
-import de.innfactory.bootstrapplay2.companies.application.models.{ CompanyRequest, CompanyResponse }
-import de.innfactory.bootstrapplay2.companies.domain.models.{ Company, CompanyId }
-import de.innfactory.play.controller.{ BaseController, ResultStatus }
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import de.innfactory.bootstrapplay2.companies.application.models.{CompanyRequest, CompanyResponse}
+import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
+import de.innfactory.play.controller.{BaseController, ResultStatus}
 
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
 class CompanyController @Inject() (
-  tracingUserAction: TracingUserAction,
-  companyService: CompanyService,
-  tracingAction: TracingAction
+    tracingUserAction: TracingUserAction,
+    companyService: CompanyService,
+    tracingAction: TracingAction
 )(implicit
-  ec: ExecutionContext,
-  cc: ControllerComponents,
-  mat: Materializer
+    ec: ExecutionContext,
+    cc: ControllerComponents,
+    mat: Materializer
 ) extends BaseController
     with ImplicitLogContext {
 
@@ -71,7 +71,7 @@ class CompanyController @Inject() (
       .result(_.completeResultWithoutBody(statusCode = 204))
 
   private def UpdateCreateEndpoint(
-    logic: (Company, RequestContextWithUser) => EitherT[Future, ResultStatus, Company]
+      logic: (Company, RequestContextWithUser) => EitherT[Future, ResultStatus, Company]
   ): Endpoint[CompanyRequest, CompanyResponse, RequestWithUser, Company, Company] =
     Endpoint
       .in[CompanyRequest, RequestWithUser, Company](tracingUserAction())

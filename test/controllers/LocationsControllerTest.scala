@@ -2,7 +2,7 @@ package controllers
 
 import de.innfactory.bootstrapplay2.locations.application.models.LocationResponse
 import de.innfactory.bootstrapplay2.locations.domain.models.Location
-import org.scalatestplus.play.{ BaseOneAppPerSuite, PlaySpec }
+import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
 import play.api.libs.json._
 import play.api.test.Helpers._
 import testutils.AuthUtils
@@ -18,14 +18,14 @@ class LocationsControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
   "LocationsController" must {
     "get by id" in {
       val result = Get("/v1/locations/1", authUtils.CompanyAdminEmailToken)
-      val body   = contentAsJson(result).as[LocationResponse]
+      val body = contentAsJson(result).as[LocationResponse]
       body.id mustBe 1
     }
 
     "get by company" in {
       val result =
         Get("/v1/companies/1/locations", authUtils.CompanyAdminEmailToken)
-      val body   = contentAsJson(result).as[Seq[LocationResponse]]
+      val body = contentAsJson(result).as[Seq[LocationResponse]]
     }
 
     "post" in {
@@ -41,7 +41,7 @@ class LocationsControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
           authUtils.CompanyAdminEmailToken
         )
       println(contentAsJson(result))
-      val body   = contentAsJson(result).as[LocationResponse]
+      val body = contentAsJson(result).as[LocationResponse]
     }
 
     "patch" in {
@@ -57,7 +57,7 @@ class LocationsControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
                         |""".stripMargin),
           authUtils.CompanyAdminEmailToken
         )
-      val body   = contentAsJson(result).as[LocationResponse]
+      val body = contentAsJson(result).as[LocationResponse]
     }
 
     "delete" in {

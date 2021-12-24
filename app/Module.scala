@@ -1,17 +1,17 @@
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.auth.internal.Utils.isEmulatorMode
 
-import javax.inject.{ Inject, Provider, Singleton }
+import javax.inject.{Inject, Provider, Singleton}
 import com.typesafe.config.Config
 import play.api.inject.ApplicationLifecycle
-import play.api.{ Configuration, Environment, Logger, Mode }
+import play.api.{Configuration, Environment, Logger, Mode}
 import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
 import de.innfactory.auth.firebase.FirebaseBase
-import de.innfactory.auth.firebase.validator.{ JwtValidator, JwtValidatorImpl }
+import de.innfactory.auth.firebase.validator.{JwtValidator, JwtValidatorImpl}
 import de.innfactory.play.flyway.FlywayMigrator
 import io.opencensus.exporter.trace.logging.LoggingTraceExporter
-import io.opencensus.exporter.trace.stackdriver.{ StackdriverTraceConfiguration, StackdriverTraceExporter }
+import io.opencensus.exporter.trace.stackdriver.{StackdriverTraceConfiguration, StackdriverTraceExporter}
 import io.opencensus.trace.AttributeValue
 import play.api.libs.concurrent.AkkaGuiceSupport
 
@@ -68,8 +68,8 @@ class LoggingTracingCreator @Inject() (lifecycle: ApplicationLifecycle) {
 
 @Singleton
 class StackdriverTracingCreator @Inject() (lifecycle: ApplicationLifecycle, config: Config) {
-  val serviceAccount: InputStream                                   = getClass.getClassLoader.getResourceAsStream(config.getString("firebase.file"))
-  val credentials: GoogleCredentials                                = GoogleCredentials.fromStream(serviceAccount)
+  val serviceAccount: InputStream = getClass.getClassLoader.getResourceAsStream(config.getString("firebase.file"))
+  val credentials: GoogleCredentials = GoogleCredentials.fromStream(serviceAccount)
   val stackDriverTraceExporterConfig: StackdriverTraceConfiguration = StackdriverTraceConfiguration
     .builder()
     .setProjectId(config.getString("project.id"))

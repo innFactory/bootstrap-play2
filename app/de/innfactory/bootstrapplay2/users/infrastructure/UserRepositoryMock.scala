@@ -3,10 +3,10 @@ package de.innfactory.bootstrapplay2.users.infrastructure
 import akka.NotUsed
 import akka.stream.scaladsl.Source
 import de.innfactory.bootstrapplay2.commons.results.Results.Result
-import de.innfactory.bootstrapplay2.users.domain.interfaces.{ UserRepository, UserService }
-import de.innfactory.bootstrapplay2.users.domain.models.{ Claims, User, UserId }
+import de.innfactory.bootstrapplay2.users.domain.interfaces.{UserRepository, UserService}
+import de.innfactory.bootstrapplay2.users.domain.models.{Claims, User, UserId}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 class UserRepositoryMock extends UserRepository {
 

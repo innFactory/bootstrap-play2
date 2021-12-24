@@ -1,7 +1,7 @@
 package de.innfactory.bootstrapplay2.companies.infrastructure.mapper
 
 import dbdata.Tables
-import de.innfactory.bootstrapplay2.companies.domain.models.{ Company, CompanyId }
+import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import io.scalaland.chimney.dsl.TransformerOps
 import org.joda.time.DateTime
 

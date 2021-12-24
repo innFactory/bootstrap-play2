@@ -15,7 +15,7 @@ import io.opencensus.scala.Tracing._
 import io.opencensus.stats.Measure.MeasureDouble
 import io.opencensus.stats.Stats
 import io.opencensus.trace.samplers.Samplers
-import io.opencensus.trace.{ AttributeValue, Sampler, SpanBuilder, Tracing }
+import io.opencensus.trace.{AttributeValue, Sampler, SpanBuilder, Tracing}
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -24,7 +24,7 @@ import scala.concurrent.Future
 class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) extends Filter {
 
   private val statsRecorder = Stats.getStatsRecorder
-  private val LATENCY_MS    = MeasureDouble.create("task_latency", "The task latency in milliseconds", "ms")
+  private val LATENCY_MS = MeasureDouble.create("task_latency", "The task latency in milliseconds", "ms")
 
   def apply(next: RequestHeader => Future[Result])(request: RequestHeader): Future[Result] = {
     // Start Trace Span Root

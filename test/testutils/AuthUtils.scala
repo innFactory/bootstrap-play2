@@ -11,7 +11,7 @@ import scala.concurrent.duration.DurationInt
 class AuthUtils @Inject() (wsClient: WSClient, config: Config) {
   import AuthUtils._
 
-  def NotVerifiedEmailToken: String  = getTokenForEmail(NotVerifiedEmail)
+  def NotVerifiedEmailToken: String = getTokenForEmail(NotVerifiedEmail)
   def CompanyAdminEmailToken: String = getTokenForEmail(CompanyAdminEmail)
 
   def getTokenFor(email: String) = getTokenForEmail(email)
@@ -30,16 +30,16 @@ class AuthUtils @Inject() (wsClient: WSClient, config: Config) {
              |""".stripMargin
         )
       )
-    val res    = Await.result(result, 5.seconds)
-    val token  = res.json.\("idToken").as[String]
+    val res = Await.result(result, 5.seconds)
+    val token = res.json.\("idToken").as[String]
     token
   }
 
 }
 
 object AuthUtils {
-  val NotVerifiedEmail    = "notverified@innfactory.de"
-  val NotVerifiedEmailId  = "WasFqkZRc9TktJmu2DoDSFienga2"
-  val CompanyAdminEmail   = "test@test.de"
+  val NotVerifiedEmail = "notverified@innfactory.de"
+  val NotVerifiedEmailId = "WasFqkZRc9TktJmu2DoDSFienga2"
+  val CompanyAdminEmail = "test@test.de"
   val CompanyAdminEmailId = "W88FqkZRc9TktJmu2Dow4xUkT0UU"
 }

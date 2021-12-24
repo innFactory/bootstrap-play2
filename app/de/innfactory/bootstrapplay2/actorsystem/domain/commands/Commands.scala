@@ -13,7 +13,7 @@ final case class QueryError(query: String, replyTo: ActorRef[Response]) extends 
 
 final case class QueryHelloWorld(query: String, replyTo: ActorRef[Response]) extends Command
 
-case class ResponseQueryHelloWorld(query: String, answer: String)     extends Response
+case class ResponseQueryHelloWorld(query: String, answer: String) extends Response
 case class ResponseQueryHelloWorldError(query: String, error: String) extends Response
 
 case class QueryHelloWorldResult(response: Response, replyTo: ActorRef[Response]) extends Command

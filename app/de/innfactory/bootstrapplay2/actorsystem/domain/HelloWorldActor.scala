@@ -1,6 +1,6 @@
 package de.innfactory.bootstrapplay2.actorsystem.domain
 
-import akka.actor.typed.scaladsl.{ ActorContext, Behaviors, StashBuffer }
+import akka.actor.typed.scaladsl.{ActorContext, Behaviors, StashBuffer}
 import akka.actor.typed.Behavior
 import play.api.Logger
 import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{
@@ -12,8 +12,8 @@ import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{
   ResponseQueryHelloWorldError
 }
 
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success }
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 object HelloWorldActor {
 
@@ -29,23 +29,22 @@ object HelloWorldActor {
 }
 
 class HelloWorldActor(
-  actorLogger: org.slf4j.Logger,
-  context: ActorContext[Command],
-  buffer: StashBuffer[Command]
+    actorLogger: org.slf4j.Logger,
+    context: ActorContext[Command],
+    buffer: StashBuffer[Command]
 ) {
 
   implicit val ec: ExecutionContext = context.executionContext
 
   /**
-   * Ready to receive requests
-   * Will process QueryHelloWorld
+   * Ready to receive requests Will process QueryHelloWorld
    * @return
    */
   def ready(): Behavior[Command] =
     Behaviors.receiveMessage {
       case message: QueryHelloWorld =>
         processQueryHelloWorldToBehavior(message)
-      case _                        => Behaviors.same
+      case _ => Behaviors.same
     }
 
   private def processQueryHelloWorldToBehavior(message: QueryHelloWorld): Behavior[Command] = {
@@ -70,9 +69,10 @@ class HelloWorldActor(
   }
 
   /**
-   * When in Query Behavior only process QueryResult and QueryError
-   * All other messages will get stashed for later processing after query state is over
-   * @return Behavior[Command]
+   * When in Query Behavior only process QueryResult and QueryError All other messages will get stashed for later
+   * processing after query state is over
+   * @return
+   *   Behavior[Command]
    */
   def query(): Behavior[Command] =
     Behaviors.receiveMessage {
@@ -85,8 +85,8 @@ class HelloWorldActor(
     result.response match {
       case responseQueryHelloWorld: ResponseQueryHelloWorld =>
         result.replyTo ! responseQueryHelloWorld // Complete request with replyTo
-        buffer.unstashAll(ready())               // Unstash all messages to process and set behavior to "ready" with prevData
-      case err: ResponseQueryHelloWorldError                =>
+        buffer.unstashAll(ready()) // Unstash all messages to process and set behavior to "ready" with prevData
+      case err: ResponseQueryHelloWorldError =>
         result.replyTo ! err // Complete request with replyTo
         buffer.unstashAll(ready()) // Unstash all messages to process and set behavior to "ready" without prevData
     }

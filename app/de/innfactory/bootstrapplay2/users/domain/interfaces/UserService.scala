@@ -3,9 +3,9 @@ package de.innfactory.bootstrapplay2.users.domain.interfaces
 import akka.NotUsed
 import akka.stream.scaladsl.Source
 import com.google.inject.ImplementedBy
-import de.innfactory.bootstrapplay2.commons.{ RequestContextWithUser, TraceContext }
+import de.innfactory.bootstrapplay2.commons.{RequestContextWithUser, TraceContext}
 import de.innfactory.bootstrapplay2.commons.results.Results.Result
-import de.innfactory.bootstrapplay2.users.domain.models.{ Claims, User, UserId }
+import de.innfactory.bootstrapplay2.users.domain.models.{Claims, User, UserId}
 import de.innfactory.bootstrapplay2.users.domain.services.DomainUserService
 import scala.concurrent.Future
 

@@ -8,18 +8,18 @@ import de.innfactory.bootstrapplay2.commons.application.actions.TracingUserActio
 import de.innfactory.bootstrapplay2.commons.application.actions.models.RequestWithUser
 import de.innfactory.bootstrapplay2.commons.logging.ImplicitLogContext
 import de.innfactory.bootstrapplay2.commons.results.Results
-import de.innfactory.bootstrapplay2.locations.application.models.{ LocationRequest, LocationResponse }
+import de.innfactory.bootstrapplay2.locations.application.models.{LocationRequest, LocationResponse}
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationService
-import de.innfactory.bootstrapplay2.locations.domain.models.{ Location, LocationCompanyId, LocationId }
+import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
 import de.innfactory.play.controller.BaseController
-import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 class LocationController @Inject() (tracingUserAction: TracingUserAction, locationService: LocationService)(implicit
-  ec: ExecutionContext,
-  cc: ControllerComponents
+    ec: ExecutionContext,
+    cc: ControllerComponents
 ) extends BaseController
     with ImplicitLogContext {
 

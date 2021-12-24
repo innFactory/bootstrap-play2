@@ -1,7 +1,7 @@
 package de.innfactory.bootstrapplay2.graphql.schema.mutations
 
 import de.innfactory.bootstrapplay2.graphql.GraphQLExecutionContext
-import sangria.schema.{ fields, ObjectType }
+import sangria.schema.{fields, ObjectType}
 
 object MutationDefinition {
 

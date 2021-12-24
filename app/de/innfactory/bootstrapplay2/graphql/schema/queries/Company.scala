@@ -5,7 +5,7 @@ import de.innfactory.bootstrapplay2.commons.implicits.RequestToRequestContextImp
 import de.innfactory.bootstrapplay2.graphql.GraphQLExecutionContext
 import de.innfactory.bootstrapplay2.graphql.schema.models.Companies.CompanyType
 import de.innfactory.bootstrapplay2.graphql.schema.models.Arguments.FilterArg
-import sangria.schema.{ Field, ListType }
+import sangria.schema.{Field, ListType}
 
 object Company {
   val allCompanies: Field[GraphQLExecutionContext, Unit] = Field(

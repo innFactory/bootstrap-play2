@@ -4,8 +4,8 @@ import akka.NotUsed
 import akka.stream.scaladsl.Source
 import cats.data.EitherT
 import com.google.inject.ImplementedBy
-import de.innfactory.bootstrapplay2.commons.{ RequestContext, RequestContextWithUser, TraceContext }
-import de.innfactory.bootstrapplay2.companies.domain.models.{ Company, CompanyId }
+import de.innfactory.bootstrapplay2.commons.{RequestContext, RequestContextWithUser, TraceContext}
+import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import de.innfactory.bootstrapplay2.companies.domain.services.DomainCompanyService
 import de.innfactory.play.controller.ResultStatus
 
@@ -19,7 +19,7 @@ trait CompanyService {
   def getAllForGraphQL(filterOptions: Option[String])(implicit rc: RequestContext): Future[Seq[Company]]
 
   def getAllCompaniesAsStream()(implicit
-    rc: RequestContextWithUser
+      rc: RequestContextWithUser
   ): EitherT[Future, ResultStatus, Source[Company, NotUsed]]
 
   def getById(id: CompanyId)(implicit rc: RequestContextWithUser): EitherT[Future, ResultStatus, Company]

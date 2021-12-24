@@ -7,7 +7,7 @@ import com.google.inject.ImplementedBy
 import de.innfactory.bootstrapplay2.commons.TraceContext
 import de.innfactory.bootstrapplay2.commons.results.Results
 import de.innfactory.play.controller.ResultStatus
-import de.innfactory.bootstrapplay2.locations.domain.models.{ Location, LocationCompanyId, LocationId }
+import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
 import de.innfactory.bootstrapplay2.locations.infrastructure.SlickLocationRepository
 
 import scala.concurrent.Future
@@ -16,7 +16,7 @@ import scala.concurrent.Future
 private[locations] trait LocationRepository {
 
   def getAllLocationsByCompany(companyId: LocationCompanyId)(implicit
-    rc: TraceContext
+      rc: TraceContext
   ): EitherT[Future, ResultStatus, Seq[Location]]
 
   def getAllLocationsAsSource(implicit rc: TraceContext): Source[Location, NotUsed]

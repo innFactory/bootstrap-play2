@@ -6,7 +6,7 @@ import de.innfactory.play.slick.enhanced.utils.filteroptions.FilterOptions
 object FilterOptionUtils {
 
   private def queryStringToOptionsSequence(implicit
-    queryString: Map[String, Seq[String]]
+      queryString: Map[String, Seq[String]]
   ): Seq[FilterOptions[Tables.Company, _]] = {
     val filterOptionsConfig = new FilterOptionsConfig
     filterOptionsConfig.companiesFilterOptions
@@ -21,11 +21,11 @@ object FilterOptionUtils {
    * @param queryString
    */
   def queryStringToFilterOptions(implicit
-    queryString: Map[String, Seq[String]]
+      queryString: Map[String, Seq[String]]
   ): Seq[FilterOptions[Tables.Company, _]] = queryStringToOptionsSequence(queryString)
 
   def optionStringToFilterOptions(implicit
-    optionString: Option[String]
+      optionString: Option[String]
   ): Seq[FilterOptions[Tables.Company, _]] =
     optionString match {
       case Some(value) if !value.isBlank =>
@@ -40,7 +40,7 @@ object FilterOptionUtils {
               .toSeq
           )
         queryStringToFilterOptions(query)
-      case _                             => Seq.empty
+      case _ => Seq.empty
     }
 
 }

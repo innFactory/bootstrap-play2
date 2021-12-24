@@ -33,7 +33,7 @@ class ErrorHandler extends HttpErrorHandler {
   }
 
   /**
-   *  Custom error handler for custom server error handling
+   * Custom error handler for custom server error handling
    * @param request
    * @param exception
    * @return
@@ -55,10 +55,10 @@ class ErrorHandler extends HttpErrorHandler {
             )
           ).toJson
         )
-      case pg: org.postgresql.util.PSQLException   =>
+      case pg: org.postgresql.util.PSQLException =>
         log.error(request.toString(), exception)
         BadRequest(ErrorResponse("PSQL Exception, maybe duplicate key or foreign key constraint").toJson)
-      case _                                       =>
+      case _ =>
         println(exception)
         println(request)
         log.error(request.toString(), exception)

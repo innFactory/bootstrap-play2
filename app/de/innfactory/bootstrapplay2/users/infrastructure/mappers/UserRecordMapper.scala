@@ -1,9 +1,9 @@
 package de.innfactory.bootstrapplay2.users.infrastructure.mappers
 
 import com.google.firebase.auth.UserRecord
-import de.innfactory.bootstrapplay2.users.domain.models.{ Claims, User, UserId }
+import de.innfactory.bootstrapplay2.users.domain.models.{Claims, User, UserId}
 import play.api.Logger
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.JavaConverters._
 
@@ -35,7 +35,7 @@ object UserRecordMapper {
       case s: java.lang.String     => Json.toJson(s)
       case l: java.math.BigDecimal => Json.toJson(l.longValue)
       case b: java.lang.Boolean    => Json.toJson(b.booleanValue())
-      case value                   =>
+      case value =>
         Logger("play").logger.warn("Parsing unknown userClaims: " + value.getClass)
         Json.toJson("unknown")
     }
