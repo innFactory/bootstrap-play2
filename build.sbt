@@ -63,7 +63,7 @@ def createDbConf(dbConfFile: File): DbConf = {
   val configPath = s"$flywayDbName"
   val config = configFactory.getConfig(configPath).resolve
   val url = s"${config.getString("database.urlPrefix")}${config
-    .getString("database.host")}:${config.getString("database.port")}/${config.getString("database.db")}"
+      .getString("database.host")}:${config.getString("database.port")}/${config.getString("database.db")}"
   DbConf(
     config.getString("profile"),
     config.getString("database.driver"),
