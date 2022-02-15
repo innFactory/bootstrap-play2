@@ -7,7 +7,7 @@ object Dependencies {
   val akkaVersion = "2.6.18"
 
   val akkaTyped = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
-  val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.2.7"
+  val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.2.8"
   val akka = "com.typesafe.akka" %% "akka-actor" % akkaVersion
 
   // https://github.com/akka/akka/issues/29351
