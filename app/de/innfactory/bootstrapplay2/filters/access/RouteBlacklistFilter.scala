@@ -12,7 +12,7 @@ import play.api.Mode.Prod
 import play.api.mvc._
 import play.api._
 
-class RouteBlacklistFilter @Inject() (config: Config, implicit val mat: Materializer, environment: Environment)
+class RouteBlacklistFilter @Inject(config: Config, implicit val mat: Materializer, environment: Environment)
     extends Filter {
 
   case class BlackListEntry(route: String, environment: Mode, method: String)

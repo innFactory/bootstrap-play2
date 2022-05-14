@@ -59,7 +59,7 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 }
 
 @Singleton
-class LoggingTracingCreator @Inject() (lifecycle: ApplicationLifecycle) {
+class LoggingTracingCreator @Inject(lifecycle: ApplicationLifecycle) {
   LoggingTraceExporter.register()
   lifecycle.addStopHook { () =>
     Future.successful(LoggingTraceExporter.unregister())
@@ -67,7 +67,7 @@ class LoggingTracingCreator @Inject() (lifecycle: ApplicationLifecycle) {
 }
 
 @Singleton
-class StackdriverTracingCreator @Inject() (lifecycle: ApplicationLifecycle, config: Config) {
+class StackdriverTracingCreator @Inject(lifecycle: ApplicationLifecycle, config: Config) {
   val serviceAccount: InputStream = getClass.getClassLoader.getResourceAsStream(config.getString("firebase.file"))
   val credentials: GoogleCredentials = GoogleCredentials.fromStream(serviceAccount)
   val stackDriverTraceExporterConfig: StackdriverTraceConfiguration = StackdriverTraceConfiguration
@@ -88,24 +88,24 @@ class StackdriverTracingCreator @Inject() (lifecycle: ApplicationLifecycle, conf
 }
 
 /** Migrate Flyway on application start */
-class FlywayMigratorImpl @Inject() (env: Environment, configuration: Configuration)
+class FlywayMigratorImpl @Inject(env: Environment, configuration: Configuration)
     extends FlywayMigrator(configuration, env, configIdentifier = "bootstrap-play2")
 
 /** Creates FirebaseApp on Application creation */
-class firebaseCreationService @Inject() (config: Config, env: Environment) {
+class firebaseCreationService @Inject(config: Config, env: Environment) {
   println(System.getenv("FIREBASE_AUTH_EMULATOR_HOST"))
   println(isEmulatorMode)
   FirebaseBase.instantiateFirebase(config.getString("firebase.file"), config.getString("project.id"))
 }
 
 /** Deletes FirebaseApp safely. Important on dev restart. */
-class firebaseDeletionService @Inject() (lifecycle: ApplicationLifecycle) {
+class firebaseDeletionService @Inject(lifecycle: ApplicationLifecycle) {
   lifecycle.addStopHook { () =>
     Future.successful(FirebaseBase.deleteFirebase())
   }
 }
 
 @Singleton
-class DatabaseProvider @Inject() (config: Config) extends Provider[Database] {
+class DatabaseProvider @Inject(config: Config) extends Provider[Database] {
   lazy val get = Database.forConfig("bootstrap-play2.database", config)
 }

@@ -9,7 +9,7 @@ import play.libs.Json
 import java.util.Base64
 import scala.concurrent.ExecutionContext
 
-class FirebaseEmailExtractor[A] @Inject() (val parser: BodyParsers.Default, environment: Environment)(implicit
+class FirebaseEmailExtractor[A] @Inject(val parser: BodyParsers.Default, environment: Environment)(implicit
     val executionContext: ExecutionContext,
     configuration: Configuration
 ) {

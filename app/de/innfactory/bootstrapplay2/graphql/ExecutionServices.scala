@@ -5,7 +5,7 @@ import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationService
 
 import javax.inject.Inject
 
-case class ExecutionServices @Inject() (
+case class ExecutionServices @Inject(
     companiesService: CompanyService,
     locationsService: LocationService
 )

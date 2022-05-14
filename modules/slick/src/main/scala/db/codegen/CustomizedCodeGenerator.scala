@@ -11,7 +11,7 @@ object CustomizedCodeGenerator
       CustomizedCodeGeneratorConfig(
         folder = "/target/scala-2.13/src_managed/main"
       ),
-      new CodeGenConfig()
+      new CodeGenConfig
     ) {
 
   // Update here if new Tables are added

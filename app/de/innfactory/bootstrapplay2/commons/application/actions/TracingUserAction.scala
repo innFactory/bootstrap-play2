@@ -9,7 +9,7 @@ import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
 
-class TracingUserAction @Inject() (
+class TracingUserAction @Inject(
     val parser: BodyParsers.Default,
     userExtractionAction: UserExtractionAction,
     traceAction: TracingAction,

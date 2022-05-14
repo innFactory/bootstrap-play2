@@ -17,7 +17,7 @@ import play.api.mvc.{BodyParsers, Request, Result}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-private[actions] class UserExtractionAction @Inject() (
+private[actions] class UserExtractionAction @Inject(
     userService: UserService,
     userUtils: UserUtils
 )(implicit executionContext: ExecutionContext, parser: BodyParsers.Default, environment: Environment)

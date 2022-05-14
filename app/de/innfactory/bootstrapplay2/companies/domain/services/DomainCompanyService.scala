@@ -11,7 +11,7 @@ import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-private[companies] class DomainCompanyService @Inject() (companyRepository: CompanyRepository)(implicit
+private[companies] class DomainCompanyService @Inject(companyRepository: CompanyRepository)(implicit
     ec: ExecutionContext
 ) extends CompanyService {
 

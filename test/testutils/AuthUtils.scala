@@ -8,7 +8,7 @@ import javax.inject.Inject
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
-class AuthUtils @Inject() (wsClient: WSClient, config: Config) {
+class AuthUtils @Inject(wsClient: WSClient, config: Config) {
   import AuthUtils._
 
   def NotVerifiedEmailToken: String = getTokenForEmail(NotVerifiedEmail)

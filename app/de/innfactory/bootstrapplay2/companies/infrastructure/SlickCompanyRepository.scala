@@ -24,7 +24,7 @@ import de.innfactory.play.slick.enhanced.query.EnhancedQuery._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-private[companies] class SlickCompanyRepository @Inject() (db: Database)(implicit ec: ExecutionContext)
+private[companies] class SlickCompanyRepository @Inject(db: Database)(implicit ec: ExecutionContext)
     extends BaseSlickDAO(db)
     with CompanyRepository {
 
@@ -67,7 +67,7 @@ private[companies] class SlickCompanyRepository @Inject() (db: Database)(implici
     EitherT(
       createGeneric(
         company,
-        row => (Tables.Company returning Tables.Company) += row
+        row => Tables.Company returning Tables.Company += row
       )
     )
 

@@ -29,7 +29,7 @@ object UserPasswordResetToken {
   }
 
   private def createResetTokenString(userId: UserId) = {
-    val random = new SecureRandom()
+    val random = new SecureRandom
     val randomBytes = random.generateSeed(10)
     val digest = MessageDigest.getInstance("SHA-256")
     val hash = digest.digest(userId.value.getBytes(StandardCharsets.UTF_8) ++ randomBytes)

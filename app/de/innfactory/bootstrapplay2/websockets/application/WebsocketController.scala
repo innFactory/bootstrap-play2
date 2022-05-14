@@ -16,7 +16,7 @@ import play.api.mvc.{WebSocket, _}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class WebsocketController @Inject() (
+class WebsocketController @Inject(
     cc: ControllerComponents,
     webSocketService: WebSocketService
 )(implicit ec: ExecutionContext, val system: ActorSystem, mat: Materializer)

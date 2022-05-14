@@ -22,7 +22,7 @@ import slick.jdbc.{ResultSetConcurrency, ResultSetType}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-private[locations] class SlickLocationRepository @Inject() (db: Database, lifecycle: ApplicationLifecycle)(implicit
+private[locations] class SlickLocationRepository @Inject(db: Database, lifecycle: ApplicationLifecycle)(implicit
     ec: ExecutionContext
 ) extends BaseSlickDAO(db)
     with LocationRepository {
@@ -61,7 +61,7 @@ private[locations] class SlickLocationRepository @Inject() (db: Database, lifecy
     EitherT(
       createGeneric(
         location,
-        l => (Tables.Location returning Tables.Location) += l
+        l => Tables.Location returning Tables.Location += l
       )
     )
 

@@ -11,7 +11,7 @@ import java.util.Base64
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class UserUtilsImpl @Inject() (implicit ec: ExecutionContext) extends UserUtils {
+class UserUtilsImpl @Inject(implicit ec: ExecutionContext) extends UserUtils {
   def extractUserId(authorizationHeader: Option[JWTToken]): Future[Result[String]] =
     try {
       val tokenContent = authorizationHeader.get.content.split('.')(1)

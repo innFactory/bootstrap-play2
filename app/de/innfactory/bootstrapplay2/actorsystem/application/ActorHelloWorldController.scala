@@ -7,7 +7,7 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ActorHelloWorldController @Inject() (
+class ActorHelloWorldController @Inject(
     cc: ControllerComponents,
     helloWorldService: HelloWorldService
 )(implicit ec: ExecutionContext)

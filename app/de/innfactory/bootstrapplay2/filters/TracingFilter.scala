@@ -21,7 +21,7 @@ import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) extends Filter {
+class TracingFilter @Inject(config: Config, implicit val mat: Materializer) extends Filter {
 
   private val statsRecorder = Stats.getStatsRecorder
   private val LATENCY_MS = MeasureDouble.create("task_latency", "The task latency in milliseconds", "ms")

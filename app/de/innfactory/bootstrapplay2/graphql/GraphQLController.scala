@@ -8,7 +8,7 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class GraphQLController @Inject() (
+class GraphQLController @Inject(
     cc: ControllerComponents,
     executionServices: ExecutionServices,
     requestExecutor: RequestExecutor

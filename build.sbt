@@ -83,7 +83,7 @@ def flywaySettings =
     flywayUrl := (Global / dbConf).value.url,
     flywayUser := (Global / dbConf).value.user,
     flywayPassword := (Global / dbConf).value.password,
-    flywaySchemas := (Seq("postgis"))
+    flywaySchemas := Seq("postgis")
   )
 
 def generateTablesTask(conf: DbConf) =

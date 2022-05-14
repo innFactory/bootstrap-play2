@@ -17,7 +17,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class LocationController @Inject() (tracingUserAction: TracingUserAction, locationService: LocationService)(implicit
+class LocationController @Inject(tracingUserAction: TracingUserAction, locationService: LocationService)(implicit
     ec: ExecutionContext,
     cc: ControllerComponents
 ) extends BaseController

@@ -18,9 +18,7 @@ trait HelloWorldService {
 }
 
 @Singleton
-class HelloWorldServiceImpl @Inject() (
-)(implicit ec: ExecutionContext, system: ActorSystem)
-    extends HelloWorldService {
+class HelloWorldServiceImpl @Inject(implicit ec: ExecutionContext, system: ActorSystem) extends HelloWorldService {
   //  // asking someone requires a timeout if the timeout hits without response
   // the ask is failed with a TimeoutException
   private implicit val timeout: Timeout = 10.seconds

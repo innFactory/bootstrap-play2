@@ -18,7 +18,7 @@ import slick.jdbc.JdbcBackend.Database
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
-class SlickUserResetTokenRepository @Inject() (db: Database, lifecycle: ApplicationLifecycle)(implicit
+class SlickUserResetTokenRepository @Inject(db: Database, lifecycle: ApplicationLifecycle)(implicit
     ec: ExecutionContext
 ) extends BaseSlickDAO(db)
     with UserPasswordResetTokenRepository {

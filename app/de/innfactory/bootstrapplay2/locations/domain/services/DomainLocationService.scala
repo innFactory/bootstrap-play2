@@ -11,7 +11,7 @@ import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationC
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-private[locations] class DomainLocationService @Inject() (locationRepository: LocationRepository)(implicit
+private[locations] class DomainLocationService @Inject(locationRepository: LocationRepository)(implicit
     ec: ExecutionContext
 ) extends LocationService {
 

@@ -10,7 +10,7 @@ import play.api.Logger
 import play.api.mvc._
 import play.api._
 
-class AccessLoggingFilter @Inject() (config: Config, implicit val mat: Materializer) extends Filter {
+class AccessLoggingFilter @Inject(config: Config, implicit val mat: Materializer) extends Filter {
   val accessLogger = Logger("AccessFilterLog")
 
   /**

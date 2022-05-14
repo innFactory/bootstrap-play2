@@ -15,7 +15,7 @@ import de.innfactory.bootstrapplay2.users.domain.models.{Claims, User, UserId, U
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DomainUserService @Inject() (
+class DomainUserService @Inject(
     userRepository: UserRepository,
     userPasswordResetTokenRepository: UserPasswordResetTokenRepository
 )(implicit ec: ExecutionContext)

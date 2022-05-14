@@ -7,7 +7,7 @@ import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponent
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class HealthController @Inject() (
+class HealthController @Inject(
     databaseHealthSocket: DatabaseHealthSocket
 )(implicit ec: ExecutionContext, cc: ControllerComponents)
     extends BaseController {

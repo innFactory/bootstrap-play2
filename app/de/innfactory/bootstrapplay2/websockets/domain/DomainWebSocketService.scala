@@ -10,7 +10,7 @@ import play.api.mvc.WebSocket
 
 import javax.inject.Inject
 
-class DomainWebSocketService @Inject() (webSocketRepository: WebSocketRepository)(implicit
+class DomainWebSocketService @Inject(webSocketRepository: WebSocketRepository)(implicit
     val system: ActorSystem,
     mat: Materializer
 ) extends WebSocketService {

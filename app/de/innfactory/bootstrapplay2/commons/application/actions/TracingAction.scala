@@ -12,7 +12,7 @@ import play.api.mvc._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TracingAction @Inject() (
+class TracingAction @Inject(
     val parser: BodyParsers.Default,
     implicit val environment: Environment
 )(implicit val executionContext: ExecutionContext) {

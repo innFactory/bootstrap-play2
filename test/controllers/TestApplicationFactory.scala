@@ -16,7 +16,7 @@ import de.innfactory.play.flyway.test.TestFlywayMigrator
  */
 trait TestApplicationFactory extends FakeApplicationFactory {
   def fakeApplication(): Application =
-    new GuiceApplicationBuilder()
+    new GuiceApplicationBuilder
       .bindings(new FlywayModule)
       .build()
 }
@@ -26,5 +26,5 @@ class FlywayModule extends Module {
     Seq(bind[FlywayMigrator].toSelf.eagerly())
 }
 
-class FlywayMigrator @Inject() (env: Environment, configuration: Configuration)
+class FlywayMigrator @Inject(env: Environment, configuration: Configuration)
     extends TestFlywayMigrator(configuration, env)

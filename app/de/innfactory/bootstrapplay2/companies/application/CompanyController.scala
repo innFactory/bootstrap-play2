@@ -19,7 +19,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
-class CompanyController @Inject() (
+class CompanyController @Inject(
     tracingUserAction: TracingUserAction,
     companyService: CompanyService,
     tracingAction: TracingAction

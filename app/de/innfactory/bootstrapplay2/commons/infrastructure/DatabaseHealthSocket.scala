@@ -8,7 +8,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
-class DatabaseHealthSocket @Inject() (db: Database, lifecycle: ApplicationLifecycle) {
+class DatabaseHealthSocket @Inject(db: Database, lifecycle: ApplicationLifecycle) {
   private val connection: Connection = db.source.createConnection()
 
   def isConnectionOpen: Boolean = connection.getSchema.nonEmpty

@@ -21,7 +21,7 @@ import scala.concurrent.ExecutionContext
 import scala.util.Try
 import scala.util.control.NonFatal
 
-class FirebaseUserRepository @Inject() (implicit ec: ExecutionContext, system: ActorSystem) {
+class FirebaseUserRepository @Inject(implicit ec: ExecutionContext, system: ActorSystem) {
 
   private val firebaseInstance = FirebaseAuth.getInstance()
 
@@ -43,8 +43,8 @@ class FirebaseUserRepository @Inject() (implicit ec: ExecutionContext, system: A
     } yield userRecordToUser(record)
 
   def createUser(email: String): Result[User] = {
-    val createRequest = new UserRecord.CreateRequest()
-    val secureRandom = new SecureRandom()
+    val createRequest = new UserRecord.CreateRequest
+    val secureRandom = new SecureRandom
     val random = secureRandom.nextInt(10000000) * DateTime.now.getMillis // Generate Random Number
     val password = BaseEncoding.base64().encode(random.toString.getBytes(Charsets.UTF_8)) // Generate Random Password
     createRequest.setPassword(password) // set password
@@ -79,7 +79,7 @@ class FirebaseUserRepository @Inject() (implicit ec: ExecutionContext, system: A
           case JsObject(_)     => None
         }
       )
-    }.filter(_._2.isDefined).map(e => (e._1 -> e._2.get))
+    }.filter(_._2.isDefined).map(e => e._1 -> e._2.get)
     firebaseInstance.setCustomUserClaims(userRecord.getUid, parsedClaims.asJava) // set User Claims to firebase
     Right(true)
   }
