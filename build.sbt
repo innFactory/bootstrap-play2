@@ -80,9 +80,9 @@ def dbConfSettings =
 
 def flywaySettings =
   Seq(
-    flywayUrl := (Global / dbConf).value.url,
-    flywayUser := (Global / dbConf).value.user,
-    flywayPassword := (Global / dbConf).value.password,
+    flywayUrl := Global / dbConf.value.url,
+    flywayUser := Global / dbConf.value.user,
+    flywayPassword := Global / dbConf.value.password,
     flywaySchemas := (Seq("postgis"))
   )
 
