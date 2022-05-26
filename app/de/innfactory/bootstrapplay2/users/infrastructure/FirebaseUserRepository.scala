@@ -79,7 +79,7 @@ class FirebaseUserRepository @Inject() (implicit ec: ExecutionContext, system: A
           case JsObject(_)     => None
         }
       )
-    }.filter(_._2.isDefined).map(e => (e._1 -> e._2.get))
+    }.filter(_._2.isDefined).map(e => e._1 -> e._2.get)
     firebaseInstance.setCustomUserClaims(userRecord.getUid, parsedClaims.asJava) // set User Claims to firebase
     Right(true)
   }
