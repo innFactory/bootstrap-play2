@@ -10,7 +10,7 @@ import scala.collection.JavaConverters._
 object UserRecordMapper {
 
   def userRecordToUser(userRecord: UserRecord): User = {
-    val claimsMap = userRecord.getCustomClaims.asScala.toMap.map(k => (k._1 -> getValueFromAnyRef(k._2)))
+    val claimsMap = userRecord.getCustomClaims.asScala.toMap.map(k => k._1 -> getValueFromAnyRef(k._2))
     User(
       userId = UserId(userRecord.getUid),
       email = userRecord.getEmail,
