@@ -1,8 +1,8 @@
 package de.innfactory.bootstrapplay2.commons.application.actions
 
 import com.google.inject.Inject
-import de.innfactory.bootstrapplay2.commons.logging.LogContext
 import de.innfactory.bootstrapplay2.commons.application.actions.models.RequestWithUser
+import de.innfactory.play.smithy4play.LogContext
 import de.innfactory.play.tracing.TracingAction
 import play.api.Environment
 import play.api.mvc._

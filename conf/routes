@@ -2,6 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+->        /        de.innfactory.smithy4play.AutoRouter
+
 # - - - - - - - - HELLO WORLD ACTOR QUERY - - - - - - - -
 
 ###
@@ -23,7 +25,7 @@
 #     '500':
 #       description: InternalServerError
 ###
-GET                 /v1/public/helloworld/:query                       de.innfactory.bootstrapplay2.actorsystem.application.ActorHelloWorldController.helloWorldActor(query: String)
+#GET                 /v1/public/helloworld/:query                       de.innfactory.bootstrapplay2.actorsystem.application.ActorHelloWorldController.helloWorldActor(query: String)
 
 # - - - - - - - - WEBSOCKET - - - - - - - -
 
@@ -35,7 +37,7 @@ GET                 /v1/public/helloworld/:query                       de.innfac
 #     '200':
 #       description: Response
 ###
-GET                 /v1/websocket                                   de.innfactory.bootstrapplay2.websockets.application.WebsocketController.socket
+#GET                 /v1/websocket                                   de.innfactory.bootstrapplay2.websockets.application.WebsocketController.socket
 
 # - - - - - - - - SERVER SENT EVENTS - - - - - - - -
 
@@ -47,7 +49,7 @@ GET                 /v1/websocket                                   de.innfactor
 #     '200':
 #       description: Response
 ###
-GET                 /v1/serversentevent                             de.innfactory.bootstrapplay2.websockets.application.WebsocketController.serverSentEvents()
+#GET                 /v1/serversentevent                             de.innfactory.bootstrapplay2.websockets.application.WebsocketController.serverSentEvents()
 
 # - - - - - - - - PROBES - - - - - - - -
 
@@ -59,7 +61,7 @@ GET                 /v1/serversentevent                             de.innfactor
 #     '200':
 #       description: OK
 ###
-GET                /                                                de.innfactory.bootstrapplay2.application.controller.HealthController.ping
+#GET                /                                                de.innfactory.bootstrapplay2.application.controller.HealthController.ping
 
 ###
 #  summary: Liveness check
@@ -69,7 +71,7 @@ GET                /                                                de.innfactor
 #     '200':
 #       description: OK
 ###
-GET                /liveness                                        de.innfactory.bootstrapplay2.application.controller.HealthController.ping
+#GET                /liveness                                        de.innfactory.bootstrapplay2.application.controller.HealthController.ping
 
 ###
 #  summary: Readiness check
@@ -79,7 +81,7 @@ GET                /liveness                                        de.innfactor
 #     '200':
 #       description: OK
 ###
-GET                /readiness                                      de.innfactory.bootstrapplay2.application.controller.HealthController.ping
+#GET                /readiness                                      de.innfactory.bootstrapplay2.application.controller.HealthController.ping
 
 # - - - - - - - - COMPANIES - - - - - - - -
 
@@ -99,7 +101,7 @@ GET                /readiness                                      de.innfactory
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/companies                                     de.innfactory.bootstrapplay2.companies.application.CompanyController.getAllCompaniesAsSource
+#GET                 /v1/companies                                     de.innfactory.bootstrapplay2.companies.application.CompanyController.getAllCompaniesAsSource
 
 ###
 #  summary: Get Single
@@ -126,7 +128,7 @@ GET                 /v1/companies                                     de.innfact
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/companies/:id                                    de.innfactory.bootstrapplay2.companies.application.CompanyController.getById(id: Long)
+#GET                 /v1/companies/:id                                    de.innfactory.bootstrapplay2.companies.application.CompanyController.getById(id: Long)
 
 ###
 #  summary: Delete Company
@@ -151,7 +153,7 @@ GET                 /v1/companies/:id                                    de.innf
 #     '403':
 #       description: forbidden
 ###
-DELETE               /v1/companies/:id                                   de.innfactory.bootstrapplay2.companies.application.CompanyController.delete(id: Long)
+#DELETE               /v1/companies/:id                                   de.innfactory.bootstrapplay2.companies.application.CompanyController.delete(id: Long)
 
 ###
 #  summary: Post Company
@@ -177,7 +179,7 @@ DELETE               /v1/companies/:id                                   de.innf
 #     '400':
 #       description: bad request
 ###
-POST               /v1/companies                                   de.innfactory.bootstrapplay2.companies.application.CompanyController.create()
+#POST               /v1/companies                                   de.innfactory.bootstrapplay2.companies.application.CompanyController.create()
 
 ###
 #  summary: Patch Company
@@ -203,7 +205,7 @@ POST               /v1/companies                                   de.innfactory
 #     '400':
 #       description: bad request
 ###
-PATCH               /v1/companies                                de.innfactory.bootstrapplay2.companies.application.CompanyController.update()
+#PATCH               /v1/companies                                de.innfactory.bootstrapplay2.companies.application.CompanyController.update()
 
 # - - - - - - - - LOCATIONS - - - - - - - -
 
@@ -232,7 +234,7 @@ PATCH               /v1/companies                                de.innfactory.b
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/companies/:id/locations                                   de.innfactory.bootstrapplay2.locations.application.LocationController.getAllByCompany(id: Long)
+#GET                 /v1/companies/:id/locations                                   de.innfactory.bootstrapplay2.locations.application.LocationController.getAllByCompany(id: Long)
 
 ###
 #  summary: Get Single
@@ -259,7 +261,7 @@ GET                 /v1/companies/:id/locations                                 
 #     '403':
 #       description: forbidden
 ###
-GET                 /v1/locations/:id                                  de.innfactory.bootstrapplay2.locations.application.LocationController.getById(id: Long)
+#GET                 /v1/locations/:id                                  de.innfactory.bootstrapplay2.locations.application.LocationController.getById(id: Long)
 
 ###
 #  summary: Delete Location
@@ -284,7 +286,7 @@ GET                 /v1/locations/:id                                  de.innfac
 #     '403':
 #       description: forbidden
 ###
-DELETE               /v1/locations/:id                                   de.innfactory.bootstrapplay2.locations.application.LocationController.delete(id: Long)
+#DELETE               /v1/locations/:id                                   de.innfactory.bootstrapplay2.locations.application.LocationController.delete(id: Long)
 
 ###
 #  summary: Post Location
@@ -310,7 +312,7 @@ DELETE               /v1/locations/:id                                   de.innf
 #     '400':
 #       description: bad request
 ###
-POST               /v1/locations                                 de.innfactory.bootstrapplay2.locations.application.LocationController.create()
+#POST               /v1/locations                                 de.innfactory.bootstrapplay2.locations.application.LocationController.create()
 
 ###
 #  summary: Patch Location
@@ -336,13 +338,13 @@ POST               /v1/locations                                 de.innfactory.b
 #     '400':
 #       description: bad request
 ###
-PATCH               /v1/locations                              de.innfactory.bootstrapplay2.locations.application.LocationController.update()
+#PATCH               /v1/locations                              de.innfactory.bootstrapplay2.locations.application.LocationController.update()
 
-POST               /graphql                              de.innfactory.bootstrapplay2.graphql.GraphQLController.graphql
-POST               /graphql/schema                              de.innfactory.bootstrapplay2.graphql.GraphQLController.renderSchema
+#POST               /graphql                              de.innfactory.bootstrapplay2.graphql.GraphQLController.graphql
+#POST               /graphql/schema                              de.innfactory.bootstrapplay2.graphql.GraphQLController.renderSchema
 
 # Map static resources from the /public folder to the /assets URL path
 ### NoDocs ###
-GET                 /assets/*file                                   controllers.Assets.versioned(path="/public", file: Asset)
+#GET                 /assets/*file                                   controllers.Assets.versioned(path="/public", file: Asset)
 ### NoDocs ###
-GET                 /v1/assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
+#GET                 /v1/assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)

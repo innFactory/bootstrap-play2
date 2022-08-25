@@ -4,7 +4,7 @@ import akka.NotUsed
 import akka.stream.scaladsl.Source
 import cats.data.EitherT
 import com.google.inject.ImplementedBy
-import de.innfactory.bootstrapplay2.commons.TraceContext
+import de.innfactory.play.smithy4play.TraceContext
 import de.innfactory.bootstrapplay2.commons.results.Results
 import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}

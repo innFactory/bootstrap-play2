@@ -115,7 +115,7 @@ slickGen := Def.taskDyn(generateTablesTask((Global / dbConf).value)).value
 /*project definitions*/
 
 lazy val root = (project in file("."))
-  .enablePlugins(PlayScala, DockerPlugin, SwaggerPlugin)
+  .enablePlugins(PlayScala, DockerPlugin, SwaggerPlugin, Smithy4sCodegenPlugin)
   .dependsOn(slick)
   .settings(
     scalaVersion := Dependencies.scalaVersion,
@@ -129,7 +129,9 @@ lazy val root = (project in file("."))
     ), // New Models have to be added here to be referencable in routes
     swaggerPrettyJson := true,
     swaggerV3 := true,
-    githubSettings
+    githubSettings,
+    Compile / smithy4sInputDir := (ThisBuild / baseDirectory).value / "smithy-definition",
+    Compile / smithy4sOutputDir := (ThisBuild / baseDirectory).value / "app"
   )
   .settings(
     Seq(
@@ -165,6 +167,13 @@ lazy val globalResources = file("conf")
 
 /* Scala format */
 ThisBuild / scalafmtOnCompile := true // all projects
+
+/*
+ * smithy4sOutputDir is added automatically to sbt clean
+ * -> prevent source code deletion during sbt clean
+ */
+cleanKeepFiles += (ThisBuild / baseDirectory).value / "app"
+cleanFiles += (ThisBuild / baseDirectory).value / "app" / "de" / "innfactory" / "bootstrapplay2"
 
 /* Change compiling */
 Compile / sourceGenerators += Def.taskDyn(generateTablesTask((Global / dbConf).value)).taskValue

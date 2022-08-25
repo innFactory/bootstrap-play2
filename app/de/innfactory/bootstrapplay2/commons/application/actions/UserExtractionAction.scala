@@ -6,10 +6,11 @@ import com.google.inject.Inject
 import de.innfactory.bootstrapplay2.commons.results.Results
 import de.innfactory.bootstrapplay2.commons.application.actions.models.RequestWithUser
 import de.innfactory.bootstrapplay2.commons.application.actions.utils.UserUtils
-import de.innfactory.bootstrapplay2.commons.jwt.JWTToken
+import de.innfactory.bootstrapplay2.commons.implicits.EitherTF
 import de.innfactory.bootstrapplay2.users.domain.interfaces.UserService
 import de.innfactory.bootstrapplay2.users.domain.models.{User, UserId}
 import de.innfactory.play.controller.ErrorResponse
+import de.innfactory.play.smithy4play.JWTToken
 import de.innfactory.play.tracing.{RequestWithTrace, UserExtractionActionBase}
 import play.api.Environment
 import play.api.mvc.Results.{FailedDependency, NotFound, Unauthorized}
@@ -43,29 +44,34 @@ private[actions] class UserExtractionAction @Inject() (
       request: RequestWithTrace[A]
   ): EitherT[Future, Result, RequestWithUser[A]] =
     for {
-      userRecord <- EitherT(getUser(id))
-      result <- EitherT(Future(validateUser(userRecord, request)))
+      userRecord <- getUser(id)
+      result <- validateUser(userRecord, request)
     } yield result
 
-  private def getUser[A](id: String): Future[Either[Result, User]] =
+  private def getUser[A](id: String): EitherT[Future, Result, User] =
     userService
       .getUserByIdWithoutRequestContext(UserId(id))
-      .map(_.leftMap[Result](_ => NotFound(ErrorResponse.fromMessage("User not Found"))))
+      .leftMap[Result](_ => NotFound(ErrorResponse.fromMessage("User not Found")))
 
-  private def validateUser[A](userRecord: User, request: RequestWithTrace[A]): Either[Result, RequestWithUser[A]] =
-    Validated
-      .cond[Result, RequestWithUser[A]](
-        userRecord.emailVerified,
-        new RequestWithUser[A](
-          userRecord,
-          request,
-          request.traceSpan
-        ),
-        FailedDependency(
-          ErrorResponse.fromMessage("Email not verified")
+  private def validateUser[A](
+      userRecord: User,
+      request: RequestWithTrace[A]
+  ): EitherT[Future, Result, RequestWithUser[A]] =
+    EitherTF(
+      Validated
+        .cond[Result, RequestWithUser[A]](
+          userRecord.emailVerified,
+          new RequestWithUser[A](
+            userRecord,
+            request,
+            request.traceSpan
+          ),
+          FailedDependency(
+            ErrorResponse.fromMessage("Email not verified")
+          )
         )
-      )
-      .toEither
+        .toEither
+    )
 
   private def extractUserIdFromRequest[A](request: Request[A]): Future[Results.Result[String]] = {
     val token = request.headers.get("Authorization").map(JWTToken)

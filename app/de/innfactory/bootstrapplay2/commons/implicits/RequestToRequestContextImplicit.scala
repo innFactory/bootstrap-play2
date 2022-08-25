@@ -1,7 +1,7 @@
 package de.innfactory.bootstrapplay2.commons.implicits
 
 import de.innfactory.bootstrapplay2.commons.RequestContext
-
+import de.innfactory.play.smithy4play.HttpHeaders
 import io.opencensus.scala.Tracing.{startSpanWithRemoteParent, traceWithParent}
 import io.opencensus.trace.{SpanContext, SpanId, TraceId, TraceOptions, Tracestate}
 import play.api.mvc.{AnyContent, Request}
@@ -30,7 +30,7 @@ object RequestToRequestContextImplicit {
       )
 
       traceWithParent(spanString, span) { spanChild =>
-        val rc = new RequestContext(spanChild, request.headers.toMap)
+        val rc = new RequestContext(HttpHeaders(request.headers.toMap), Some(spanChild))
         val result = f(rc)
         result.map { r =>
           spanChild.end()

@@ -1,56 +1,43 @@
 package de.innfactory.bootstrapplay2.commons
-
-import de.innfactory.bootstrapplay2.commons.application.actions.models.RequestWithUser
-import de.innfactory.bootstrapplay2.commons.logging.TraceLogger
-import de.innfactory.bootstrapplay2.users.domain.models.User
-import de.innfactory.play.tracing.TraceRequest
+import cats.implicits.toBifunctorOps
+import de.innfactory.bootstrapplay2.users.domain.models.{User, UserId}
+import de.innfactory.play.smithy4play.{HttpHeaders, TraceContext}
 import io.opencensus.trace.Span
+import org.joda.time.DateTime
 
 import scala.util.Try
 
-abstract class TraceContext {
+trait ApplicationTraceContext extends TraceContext {
 
-  def span: Span
-
-  private val traceLogger = new TraceLogger(span)
-
-  final def log: TraceLogger = traceLogger
-
+  def timeOverride: Option[DateTime] = Try(
+    httpHeaders.getHeader("x-app-datetime").map(DateTime.parse)
+  ).toEither
+    .leftMap(left => this.log.error("cannot parse x-app-time, because of error " + left.getMessage))
+    .toOption
+    .flatten
 }
 
-trait RequestContextUser[USER] {
-  def user: USER
+class RequestContext(
+    rhttpHeaders: HttpHeaders,
+    rSpan: Option[Span] = None
+) extends ApplicationTraceContext {
+  override def httpHeaders: HttpHeaders = rhttpHeaders
+  override def span: Option[Span] = rSpan
 }
 
-class RequestContext(rcSpan: Span, rcHeaders: Map[String, Seq[String]]) extends TraceContext {
-  def headers: Map[String, Seq[String]] = rcHeaders
-  override def span: Span = rcSpan
+object RequestContext {
+  implicit def fromRequestContextWithUser(requestContextWithUser: RequestContextWithUser): RequestContext =
+    new RequestContext(requestContextWithUser.httpHeaders, requestContextWithUser.span)
+
+  def empty = new RequestContext(HttpHeaders(Map.empty))
 }
 
 case class RequestContextWithUser(
-    override val span: Span,
-    override val headers: Map[String, Seq[String]],
+    override val httpHeaders: HttpHeaders,
+    override val span: Option[Span],
     user: User
-) extends RequestContext(span, headers)
-    with RequestContextUser[User] {}
+) extends RequestContext(httpHeaders, span)
 
 object RequestContextWithUser {
-  implicit def toRequestContext(requestContextWithUser: RequestContextWithUser): RequestContext =
-    new RequestContext(requestContextWithUser.span, requestContextWithUser.headers)
-}
-
-object ReqConverterHelper {
-
-  def requestContext(implicit req: TraceRequest[_]): RequestContext = {
-    val headers = Try(req.request.headers.toMap).toOption.getOrElse(Map.empty)
-    new RequestContext(req.traceSpan, headers)
-  }
-
-  def requestContextWithUser[Q](implicit
-      req: RequestWithUser[Q]
-  ): RequestContextWithUser = {
-    val headers = Try(req.request.headers.toMap).toOption.getOrElse(Map.empty)
-    RequestContextWithUser(req.traceSpan, headers, req.user)
-  }
-
+  implicit def toUserId(requestContextWithUser: RequestContextWithUser): UserId = requestContextWithUser.user.userId
 }

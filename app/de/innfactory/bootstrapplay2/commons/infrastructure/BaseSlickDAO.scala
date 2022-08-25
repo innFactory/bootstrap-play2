@@ -5,12 +5,12 @@ import cats.data.EitherT
 import cats.implicits._
 import cats.syntax._
 import dbdata.Tables
-import de.innfactory.bootstrapplay2.commons.logging.ImplicitLogContext
+import de.innfactory.play.smithy4play.ImplicitLogContext
 import de.innfactory.bootstrapplay2.commons.implicits.FutureTracingImplicits.EnhancedFuture
 import de.innfactory.bootstrapplay2.commons.results.Results.Result
 import de.innfactory.bootstrapplay2.commons.results.errors.Errors.{BadRequest, DatabaseResult, NotFound}
 import de.innfactory.bootstrapplay2.commons.implicits.OptionUtils._
-import de.innfactory.bootstrapplay2.commons.TraceContext
+import de.innfactory.play.smithy4play.TraceContext
 import de.innfactory.bootstrapplay2.commons.implicits.EitherImplicits.EitherFuture
 import de.innfactory.bootstrapplay2.commons.implicits.EitherTTracingImplicits.EnhancedTracingEitherT
 import de.innfactory.play.controller.ResultStatus
@@ -25,7 +25,7 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
 
   def lookupGeneric[R, T](
       queryHeadOption: DBIOAction[Option[R], NoStream, Nothing]
-  )(implicit rowToObject: R => T, rc: TraceContext): Future[Result[T]] = {
+  )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, T] = EitherT {
     val queryResult: Future[Option[R]] = db.run(queryHeadOption).trace("lookupGeneric")
     queryResult.map { res: Option[R] =>
       if (res.isDefined)
@@ -39,29 +39,29 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
 
   def lookupGenericOption[R, T](
       queryHeadOption: DBIOAction[Option[R], NoStream, Nothing]
-  )(implicit rowToObject: R => T, rc: TraceContext): Future[Option[T]] = {
+  )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, Option[T]] = EitherT {
     val queryResult: Future[Option[R]] = db.run(queryHeadOption).trace("lookupGenericOption")
     queryResult.map { res: Option[R] =>
       if (res.isDefined)
-        Some(rowToObject(res.get))
+        Some(rowToObject(res.get)).asRight[ResultStatus]
       else
-        None
+        None.asRight[ResultStatus]
     }
   }
 
   def countGeneric[R, T](
       querySeq: DBIOAction[Seq[R], NoStream, Nothing]
-  )(implicit rc: TraceContext): Future[Result[Int]] = {
+  )(implicit rc: TraceContext): EitherT[Future, ResultStatus, Int] = EitherT {
     val queryResult: Future[Seq[R]] = db.run(querySeq).trace("countGeneric")
-    queryResult.map(seq => Right(seq.length))
+    queryResult.map(seq => seq.length.asRight[ResultStatus])
   }
 
   def lookupSequenceGeneric[R, T](
       querySeq: DBIOAction[Seq[R], NoStream, Nothing]
-  )(implicit rowToObject: R => T, rc: TraceContext): Future[Result[Seq[T]]] = {
+  )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, Seq[T]] = EitherT {
     val queryResult: Future[Seq[R]] = db.run(querySeq).trace("lookupSequenceGeneric")
     queryResult.map { res: Seq[R] =>
-      Right(res.map(rowToObject))
+      res.map(rowToObject).asRight[ResultStatus]
     }
   }
 
@@ -77,10 +77,10 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
   def lookupSequenceGeneric[R, T](
       querySeq: DBIOAction[Seq[R], NoStream, Nothing],
       count: Int
-  )(implicit rowToObject: R => T, rc: TraceContext): Future[Result[Seq[T]]] = {
+  )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, Seq[T]] = EitherT {
     val queryResult: Future[Seq[R]] = db.run(querySeq).trace("lookupSequenceGeneric")
     queryResult.map { res: Seq[R] =>
-      Right(res.takeRight(count).map(rowToObject))
+      res.takeRight(count).map(rowToObject).asRight[ResultStatus]
     }
   }
 
@@ -88,10 +88,10 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
       querySeq: DBIOAction[Seq[R], NoStream, Nothing],
       from: Int,
       to: Int
-  )(implicit rowToObject: R => T, rc: TraceContext): Future[Result[Seq[T]]] = {
+  )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, Seq[T]] = EitherT {
     val queryResult: Future[Seq[R]] = db.run(querySeq).trace("lookupSequenceGeneric")
     queryResult.map { res: Seq[R] =>
-      Right(res.slice(from, to + 1).map(rowToObject))
+      res.slice(from, to + 1).map(rowToObject).asRight[ResultStatus]
     }
   }
 
@@ -103,7 +103,7 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
   )(implicit rowToObject: R => T, rc: TraceContext): Future[Result[Seq[Z]]] = {
     val queryResult: Future[Seq[R]] = db.run(querySeq).trace("lookupSequenceGeneric")
     queryResult.map { res: Seq[R] =>
-      Right(res.map(rowToObject).map(mapping).filter(filter).map(afterFilterMapping))
+      res.map(rowToObject).map(mapping).filter(filter).map(afterFilterMapping).asRight[ResultStatus]
     }
   }
 
@@ -114,7 +114,7 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
     val queryResult: Future[Seq[R]] = db.run(querySeq).trace("lookupSequenceGeneric")
     queryResult.map { res: Seq[R] =>
       val sequence = res.map(rowToObject)
-      Right(sequenceMapping(sequence))
+      sequenceMapping(sequence).asRight[ResultStatus]
     }
   }
 
@@ -122,7 +122,7 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
       queryById: DBIOAction[Option[R], NoStream, Nothing],
       update: T => DBIOAction[Int, NoStream, Effect.Write],
       patch: T => T
-  )(implicit rowToObject: R => T, rc: TraceContext): Future[Result[T]] = {
+  )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, T] = EitherT {
     val result = for {
       lookup <- EitherT(db.run(queryById).map(_.toEither(BadRequest())).trace("updateGeneric lookup"))
       patchedObject <- EitherT(Future(Option(patch(rowToObject(lookup))).toEither(BadRequest())))
@@ -148,7 +148,7 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
       entity: T,
       queryById: DBIOAction[Option[R], NoStream, Nothing],
       create: R => DBIOAction[R, NoStream, Effect.Write]
-  )(implicit rowToObject: R => T, objectToRow: T => R, rc: TraceContext): Future[Result[T]] = {
+  )(implicit rowToObject: R => T, objectToRow: T => R, rc: TraceContext): EitherT[Future, ResultStatus, T] = EitherT {
     val entityToSave = objectToRow(entity)
     val result = for {
       _ <- EitherT(db.run(queryById).map(_.toInverseEither(BadRequest())).trace("createGeneric lookup"))
@@ -165,7 +165,7 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
   def createGeneric[R, T](
       entity: T,
       create: R => DBIOAction[R, NoStream, Effect.Write]
-  )(implicit rowToObject: R => T, objectToRow: T => R, rc: TraceContext): Future[Result[T]] = {
+  )(implicit rowToObject: R => T, objectToRow: T => R, rc: TraceContext): EitherT[Future, ResultStatus, T] = EitherT {
     val entityToSave = objectToRow(entity)
     val result = for {
       createdObject <- EitherT(
@@ -181,7 +181,7 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
   def deleteGeneric[R, T](
       queryById: DBIOAction[Option[R], NoStream, Nothing],
       delete: DBIOAction[Int, NoStream, Effect.Write]
-  )(implicit rc: TraceContext): Future[Result[Boolean]] = {
+  )(implicit rc: TraceContext): EitherT[Future, ResultStatus, Boolean] = EitherT {
 
     val result = for {
       _ <- EitherT(

@@ -4,9 +4,8 @@ import akka.NotUsed
 import akka.stream.scaladsl.Source
 import cats.data.{EitherT, Validated}
 import dbdata.Tables
-import de.innfactory.bootstrapplay2.commons.TraceContext
+import de.innfactory.play.smithy4play.TraceContext
 import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickDAO
-import de.innfactory.bootstrapplay2.commons.results.Results
 import de.innfactory.bootstrapplay2.commons.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationRepository
 import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
@@ -33,10 +32,8 @@ private[locations] class SlickLocationRepository @Inject() (db: Database, lifecy
   def getAllLocationsByCompany(
       companyId: LocationCompanyId
   )(implicit rc: TraceContext): EitherT[Future, ResultStatus, Seq[Location]] =
-    EitherT(
-      lookupSequenceGeneric(
-        queryByCompanyId(companyId).result
-      )
+    lookupSequenceGeneric(
+      queryByCompanyId(companyId).result
     )
 
   def getAllLocationsAsSource(implicit rc: TraceContext): Source[Location, NotUsed] = {
@@ -55,36 +52,32 @@ private[locations] class SlickLocationRepository @Inject() (db: Database, lifecy
   }
 
   def getById(locationId: LocationId)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location] =
-    EitherT(lookupGeneric(queryById(locationId).result.headOption))
+    lookupGeneric(queryById(locationId).result.headOption)
 
   def createLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location] =
-    EitherT(
-      createGeneric(
-        location,
-        l => (Tables.Location returning Tables.Location) += l
-      )
+    createGeneric(
+      location,
+      l => (Tables.Location returning Tables.Location) += l
     )
 
   def updateLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location] =
     for {
       _ <- EitherT(Future(Validated.cond(location.id.isDefined, (), BadRequest("")).toEither))
-      updated <- EitherT(
+      updated <-
         updateGeneric(
           queryById(location.id.get).result.headOption,
           (l: Location) => Tables.Location insertOrUpdate locationToLocationRow(l),
           old => patch(location, old)
         )
-      )
+
     } yield updated
 
   def deleteLocation(
       locationId: LocationId
   )(implicit rc: TraceContext): EitherT[Future, ResultStatus, Boolean] =
-    EitherT(
-      deleteGeneric(
-        queryById(locationId).result.headOption,
-        queryById(locationId).delete
-      )
+    deleteGeneric(
+      queryById(locationId).result.headOption,
+      queryById(locationId).delete
     )
 
   lifecycle.addStopHook(() =>

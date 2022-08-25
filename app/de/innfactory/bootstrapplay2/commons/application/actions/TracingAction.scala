@@ -1,8 +1,8 @@
 package de.innfactory.bootstrapplay2.commons.application.actions
 
 import de.innfactory.bootstrapplay2.commons.application.actions.models.RequestWithTrace
-import de.innfactory.bootstrapplay2.commons.logging.LogContext
 import de.innfactory.bootstrapplay2.commons.tracing.Common._
+import de.innfactory.play.smithy4play.LogContext
 import de.innfactory.play.tracing.TraceRequest
 import io.opencensus.scala.Tracing.{startSpan, startSpanWithRemoteParent, traceWithParent}
 import io.opencensus.trace._

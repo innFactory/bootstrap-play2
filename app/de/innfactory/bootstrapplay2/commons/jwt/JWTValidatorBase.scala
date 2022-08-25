@@ -5,6 +5,7 @@ import com.nimbusds.jose.proc.SecurityContext
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.proc.BadJWTException
 import de.innfactory.bootstrapplay2.commons.jwt.algorithm.JWTAlgorithm
+import de.innfactory.play.smithy4play.JWTToken
 
 abstract class JWTValidatorBase extends JWTValidator {
 

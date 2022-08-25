@@ -75,7 +75,7 @@ class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) e
       val end = DateTime.now
 
       // Add Metric with Span Processing Time
-      statsRecorder.newMeasureMap.put(LATENCY_MS, end.getMillis - start.getMillis).record()
+      statsRecorder.newMeasureMap.put(LATENCY_MS, (end.getMillis - start.getMillis).toDouble).record()
 
       // Add xTracingId to Result Header
       res.withHeaders(xTracingId)
