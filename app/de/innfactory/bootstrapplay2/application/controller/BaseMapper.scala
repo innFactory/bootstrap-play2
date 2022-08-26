@@ -22,6 +22,9 @@ trait BaseMapper {
   implicit def dateTimeToDateWithTime(dateTime: DateTime): DateWithTime =
     DateWithTime(dateTime.toString())
 
+  implicit def optionMapper[T, R](option: Option[T])(implicit optionValueMapper: T => R): Option[R] =
+    option.map(optionValueMapper)
+
   implicit def sequenceTransformer[T, R](seq: Seq[T])(implicit transform: T => R): List[R] =
     seq.map(transform).toList
 

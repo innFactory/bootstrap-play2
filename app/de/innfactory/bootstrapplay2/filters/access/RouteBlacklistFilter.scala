@@ -19,9 +19,7 @@ class RouteBlacklistFilter @Inject() (config: Config, implicit val mat: Material
 
   private val accessLogger = Logger("AccessFilterLog")
 
-  private val blacklistedRoutes = Seq[BlackListEntry](
-    BlackListEntry("/v1/assets/swagger.json", Prod, "GET")
-  )
+  private val blacklistedRoutes = Seq[BlackListEntry]()
 
   /**
    * Check if route is contained in blacklistedRoutes and block request if true
@@ -31,7 +29,7 @@ class RouteBlacklistFilter @Inject() (config: Config, implicit val mat: Material
    */
   def apply(nextFilter: RequestHeader => Future[Result])(request: RequestHeader): Future[Result] =
     if (shouldBeBlocked(request.path, request.method)) {
-      accessLogger.logger.warn("Illegal access to swagger.json in production")
+      accessLogger.logger.warn(s"Illegal access to ${request.path} with ${request.method} in production")
       Future(NotFound(""))
     } else
       nextFilter.apply(request)

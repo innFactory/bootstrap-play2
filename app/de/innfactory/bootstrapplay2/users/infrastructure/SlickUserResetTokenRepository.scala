@@ -6,7 +6,7 @@ import dbdata.Tables
 import de.innfactory.play.db.codegen.XPostgresProfile.api._
 import de.innfactory.bootstrapplay2.commons.results.Results.Result
 import de.innfactory.play.controller.ResultStatus
-import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickDAO
+import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
 import de.innfactory.bootstrapplay2.users.domain.interfaces.UserPasswordResetTokenRepository
 import de.innfactory.bootstrapplay2.users.domain.models.{UserId, UserPasswordResetToken}
 import de.innfactory.bootstrapplay2.users.infrastructure.mappers.UserPasswordResetTokenMapper._
@@ -21,7 +21,7 @@ import scala.language.implicitConversions
 
 class SlickUserResetTokenRepository @Inject() (db: Database, lifecycle: ApplicationLifecycle)(implicit
     ec: ExecutionContext
-) extends BaseSlickDAO(db)
+) extends BaseSlickRepository(db)
     with UserPasswordResetTokenRepository {
 
   def getForUser(userId: UserId)(implicit rc: TraceContext): EitherT[Future, ResultStatus, UserPasswordResetToken] =

@@ -21,9 +21,7 @@ This project is built with:
    - Scala 2.13.X
    
   A PostgreSQL Database with activated postgis extensions is needed (for geolocation queries)
-   
-   **Swagger.json is available at /v1/swagger.json**
-   
+    
 ## Table of Contents:
 
 - [Play2-Bootstrap](#play2-bootstrap)
@@ -59,7 +57,7 @@ This is necessary to load the packages from Github-Package-Registry.
 #### Insomnia:
 
 - [Download Insomnia](https://insomnia.rest/download) | [Docs](https://support.insomnia.rest/)
-- Download and import Swagger.json to Insomnia:  
+- Download and import to Insomnia:  
 <a href="https://github.com/innFactory/bootstrap-play2/blob/master/doc-assets/insomnia-workspace.json" target="_blank"><img src="https://insomnia.rest/images/run.svg" alt="Run in Insomnia"></a>
 
 - Configure Environment in Insomnia to match with local or prod/staging services

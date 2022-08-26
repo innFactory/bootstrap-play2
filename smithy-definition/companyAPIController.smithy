@@ -52,10 +52,16 @@ operation deleteCompany {
 structure CompanyIdRequest {
     @httpLabel
     @required
-    companyId: String
+    companyId: Long
 }
 
 structure CompanyRequest {
+    @httpPayload
+    @required
+    body: CompanyRequestBody
+}
+
+structure CompanyRequestBody {
     id: Long,
     settings: Document,
     stringAttribute1: String,

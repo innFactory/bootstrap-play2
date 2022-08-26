@@ -21,7 +21,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scala.util.Try
 
-class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends ImplicitLogContext {
+class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext) extends ImplicitLogContext {
 
   def lookupGeneric[R, T](
       queryHeadOption: DBIOAction[Option[R], NoStream, Nothing]
@@ -123,6 +123,7 @@ class BaseSlickDAO(db: Database)(implicit ec: ExecutionContext) extends Implicit
       update: T => DBIOAction[Int, NoStream, Effect.Write],
       patch: T => T
   )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, T] = EitherT {
+    // TODO rc.logIfDebug("", )
     val result = for {
       lookup <- EitherT(db.run(queryById).map(_.toEither(BadRequest())).trace("updateGeneric lookup"))
       patchedObject <- EitherT(Future(Option(patch(rowToObject(lookup))).toEither(BadRequest())))

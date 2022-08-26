@@ -38,26 +38,7 @@
      ```
        GET       /v1/test/:id          controllers.TestController.test(id: String)
       ```
-   
-9. Add Swagger Description above route. [iheartradio/play-swagger](https://github.com/iheartradio/play-swagger) 
- 
-    ```
-      summary: MethodName
-      tags:
-        - mydefinedtag
-      responses:
-         '200':
-           description: Response
-    ```
 
-    Models can be referenced after being defined in [build.sbt](../build.sbt).
-    ```
-     responses:
-          '200':
-          description: success
-           schema:
-             $ref: '#/components/schemas/de.innfactory.bootstrapplay2.models.api.Company'
-    ```
 10. To create Tests add a new ControllerTest to __./test/controllers/*__. Test Data can be added to the Database by editing the [V999__DATA.sql](../test/resources/migration/V999__DATA.sql) in __./test/resources/migration/*__. Flyway will then automatically migrate the data into the database before each Controller Test. So each controller starts with a freshly cleaned an migrated Database.
 
 11. Run test with the runForScript. Make sure no Docker database container is running with the port bound to 5432!  

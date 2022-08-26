@@ -115,7 +115,7 @@ slickGen := Def.taskDyn(generateTablesTask((Global / dbConf).value)).value
 /*project definitions*/
 
 lazy val root = (project in file("."))
-  .enablePlugins(PlayScala, DockerPlugin, SwaggerPlugin, Smithy4sCodegenPlugin)
+  .enablePlugins(PlayScala, DockerPlugin, Smithy4sCodegenPlugin)
   .dependsOn(slick)
   .settings(
     scalaVersion := Dependencies.scalaVersion,
@@ -124,11 +124,6 @@ lazy val root = (project in file("."))
     // Adding Cache
     libraryDependencies ++= Seq(ehcache),
     dependencyOverrides += Dependencies.sl4j, // Override to avoid problems with HikariCP 4.x
-    swaggerDomainNameSpaces := Seq(
-      "models"
-    ), // New Models have to be added here to be referencable in routes
-    swaggerPrettyJson := true,
-    swaggerV3 := true,
     githubSettings,
     Compile / smithy4sInputDir := (ThisBuild / baseDirectory).value / "smithy-definition",
     Compile / smithy4sOutputDir := (ThisBuild / baseDirectory).value / "app"
@@ -180,3 +175,4 @@ Compile / sourceGenerators += Def.taskDyn(generateTablesTask((Global / dbConf).v
 Compile / compile := {
   (Compile / compile).value
 }
+scalacOptions += "-Ymacro-annotations"

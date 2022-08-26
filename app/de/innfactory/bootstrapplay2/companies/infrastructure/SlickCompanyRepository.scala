@@ -7,7 +7,7 @@ import dbdata.Tables
 import de.innfactory.bootstrapplay2.commons.RequestContext
 import de.innfactory.bootstrapplay2.commons.filteroptions.FilterOptionUtils
 import de.innfactory.play.controller.ResultStatus
-import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickDAO
+import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
 import de.innfactory.bootstrapplay2.commons.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyRepository
 import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
@@ -24,7 +24,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 private[companies] class SlickCompanyRepository @Inject() (db: Database)(implicit ec: ExecutionContext)
-    extends BaseSlickDAO(db)
+    extends BaseSlickRepository(db)
     with CompanyRepository {
 
   private val queryById = (id: CompanyId) => Compiled(Tables.Company.filter(_.id === id.value))

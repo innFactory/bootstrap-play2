@@ -5,7 +5,7 @@ import akka.stream.scaladsl.Source
 import cats.data.{EitherT, Validated}
 import dbdata.Tables
 import de.innfactory.play.smithy4play.TraceContext
-import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickDAO
+import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
 import de.innfactory.bootstrapplay2.commons.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationRepository
 import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
@@ -23,7 +23,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 private[locations] class SlickLocationRepository @Inject() (db: Database, lifecycle: ApplicationLifecycle)(implicit
     ec: ExecutionContext
-) extends BaseSlickDAO(db)
+) extends BaseSlickRepository(db)
     with LocationRepository {
 
   private val queryById = (id: LocationId) => Compiled(Tables.Location.filter(_.id === id.value))
