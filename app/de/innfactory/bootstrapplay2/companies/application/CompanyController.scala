@@ -1,14 +1,12 @@
 package de.innfactory.bootstrapplay2.companies.application
 
-import akka.stream.Materializer
 import de.innfactory.bootstrapplay2.application.controller.BaseController
 import de.innfactory.bootstrapplay2.companies.application.mapper.CompanyMapper
 import de.innfactory.play.smithy4play.ImplicitLogContext
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyService
 import play.api.mvc.ControllerComponents
 import de.innfactory.bootstrapplay2.companies.domain.models.CompanyId
-import de.innfactory.bootstrapplay2.definition
-import de.innfactory.bootstrapplay2.definition.{
+import de.innfactory.bootstrapplay2.apidefinition.{
   CompaniesResponse,
   CompanyAPIController,
   CompanyRequestBody,
@@ -34,7 +32,7 @@ class CompanyController @Inject() (
     with CompanyAPIController[ContextRoute]
     with CompanyMapper {
 
-  override def getCompanyById(companyId: Long): ContextRoute[definition.CompanyResponse] =
+  override def getCompanyById(companyId: Long): ContextRoute[CompanyResponse] =
     Endpoint.withAuth
       .execute(companyService.getById(CompanyId(companyId))(_))
       .complete

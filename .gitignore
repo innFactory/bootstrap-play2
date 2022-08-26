@@ -58,9 +58,4 @@ out/doc
 .bin/postgis-volume
 .bloop/
 
-smithy-definition/output
-
-app/smithy4s/*
-app/smithy4s
-app/de/innfactory/bootstrapplay2/definition
-app/de/innfactory/bootstrapplay2/definition/*
+modules/api/src

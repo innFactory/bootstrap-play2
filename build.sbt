@@ -8,22 +8,6 @@ scalaVersion := Dependencies.scalaVersion
 
 resolvers += Resolver.githubPackages("innFactory")
 
-val token = sys.env.getOrElse("GITHUB_TOKEN", "")
-
-val githubSettings = Seq(
-  githubOwner := "innFactory",
-  githubRepository := "bootstrap-play2",
-  credentials :=
-    Seq(
-      Credentials(
-        "GitHub Package Registry",
-        "maven.pkg.github.com",
-        "innFactory",
-        token
-      )
-    )
-)
-
 val latest = sys.env.get("BRANCH") match {
   case Some(str) => if (str.equals("master")) true else false
   case None      => false
@@ -115,8 +99,8 @@ slickGen := Def.taskDyn(generateTablesTask((Global / dbConf).value)).value
 /*project definitions*/
 
 lazy val root = (project in file("."))
-  .enablePlugins(PlayScala, DockerPlugin, Smithy4sCodegenPlugin)
-  .dependsOn(slick)
+  .enablePlugins(PlayScala, DockerPlugin)
+  .dependsOn(slick, api)
   .settings(
     scalaVersion := Dependencies.scalaVersion,
     dbConfSettings,
@@ -124,9 +108,8 @@ lazy val root = (project in file("."))
     // Adding Cache
     libraryDependencies ++= Seq(ehcache),
     dependencyOverrides += Dependencies.sl4j, // Override to avoid problems with HikariCP 4.x
-    githubSettings,
-    Compile / smithy4sInputDir := (ThisBuild / baseDirectory).value / "smithy-definition",
-    Compile / smithy4sOutputDir := (ThisBuild / baseDirectory).value / "app"
+    GithubConfig.settings,
+    scalacOptions += "-Ymacro-annotations"
   )
   .settings(
     Seq(
@@ -148,31 +131,25 @@ lazy val flyway = (project in file("modules/flyway"))
     scalaVersion := Dependencies.scalaVersion,
     libraryDependencies ++= Dependencies.list,
     flywaySettings,
-    githubSettings
+    GithubConfig.settings
   )
 
 lazy val slick = (project in file("modules/slick"))
   .settings(
     scalaVersion := Dependencies.scalaVersion,
     libraryDependencies ++= Dependencies.list,
-    githubSettings
+    GithubConfig.settings
   )
+
+lazy val api = project in file("modules/api")
 
 lazy val globalResources = file("conf")
 
 /* Scala format */
 ThisBuild / scalafmtOnCompile := true // all projects
 
-/*
- * smithy4sOutputDir is added automatically to sbt clean
- * -> prevent source code deletion during sbt clean
- */
-cleanKeepFiles += (ThisBuild / baseDirectory).value / "app"
-cleanFiles += (ThisBuild / baseDirectory).value / "app" / "de" / "innfactory" / "bootstrapplay2"
-
 /* Change compiling */
 Compile / sourceGenerators += Def.taskDyn(generateTablesTask((Global / dbConf).value)).taskValue
 Compile / compile := {
   (Compile / compile).value
 }
-scalacOptions += "-Ymacro-annotations"

@@ -1,6 +1,6 @@
 $version: "1.0"
 
-namespace de.innfactory.bootstrapplay2.definition
+namespace de.innfactory.bootstrapplay2.apidefinition
 
 use smithy4s.api#simpleRestJson
 

@@ -5,8 +5,12 @@ import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
 import de.innfactory.bootstrapplay2.application.controller.BaseController
 import de.innfactory.play.smithy4play.ImplicitLogContext
-import de.innfactory.bootstrapplay2.definition
-import de.innfactory.bootstrapplay2.definition.{LocationAPIController, LocationRequestBody, LocationsResponse}
+import de.innfactory.bootstrapplay2.apidefinition.{
+  LocationAPIController,
+  LocationRequestBody,
+  LocationResponse,
+  LocationsResponse
+}
 import de.innfactory.bootstrapplay2.locations.application.mapper.LocationMapper
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationService
 import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
@@ -48,17 +52,17 @@ class LocationController @Inject() (locationService: LocationService)(implicit
       )
       .complete
 
-  override def getLocationById(locationId: Long): ContextRoute[definition.LocationResponse] =
+  override def getLocationById(locationId: Long): ContextRoute[LocationResponse] =
     Endpoint.withAuth
       .execute(locationService.getById(LocationId(locationId))(_))
       .complete
 
-  override def createLocation(body: LocationRequestBody): ContextRoute[definition.LocationResponse] =
+  override def createLocation(body: LocationRequestBody): ContextRoute[LocationResponse] =
     Endpoint.withAuth
       .execute(locationService.createLocation(body)(_))
       .complete
 
-  override def updateLocation(body: LocationRequestBody): ContextRoute[definition.LocationResponse] =
+  override def updateLocation(body: LocationRequestBody): ContextRoute[LocationResponse] =
     Endpoint.withAuth
       .execute(locationService.updateLocation(body)(_))
       .complete

@@ -1,7 +1,7 @@
 package de.innfactory.bootstrapplay2.locations.application.mapper
 
 import de.innfactory.bootstrapplay2.application.controller.BaseMapper
-import de.innfactory.bootstrapplay2.definition.{LocationRequestBody, LocationResponse, LocationsResponse}
+import de.innfactory.bootstrapplay2.apidefinition.{LocationRequestBody, LocationResponse, LocationsResponse}
 import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
 import io.scalaland.chimney.dsl.TransformerOps
 
