@@ -1,4 +1,4 @@
-INSERT INTO "company" (
+INSERT INTO "company" (  "id",
                          "settings",
                          "string_attribute_1",
                          "string_attribute_2",
@@ -7,6 +7,7 @@ INSERT INTO "company" (
                          "created",
                          "updated")
 VALUES (
+        '0ce84627-9a66-46bf-9a1d-4f38b82a38e3',
         JSON '{"region": "region"}',
         'test 1',
         'test 2',
@@ -16,7 +17,8 @@ VALUES (
         CURRENT_TIMESTAMP
         );
 
-INSERT INTO "company" (  "settings",
+INSERT INTO "company" (  "id",
+                         "settings",
                          "string_attribute_1",
                          "string_attribute_2",
                          "long_attribute_1",
@@ -24,6 +26,7 @@ INSERT INTO "company" (  "settings",
                          "created",
                          "updated")
 VALUES (
+        '7059f786-4633-4ace-a412-2f2e90556f08',
         JSON '{"region": "region"}',
          'test 1',
          'test 2',
@@ -34,7 +37,7 @@ VALUES (
         );
 
 INSERT INTO "location" (
-
+    "id",
     "company",
     "name",
     "settings",
@@ -46,7 +49,8 @@ INSERT INTO "location" (
     "created",
     "updated")
 VALUES (
-        1,
+        '592c5187-cb85-4b66-b0fc-293989923e1e',
+        '0ce84627-9a66-46bf-9a1d-4f38b82a38e3',
         'Location-1',
         JSON '{"location": "location"}',
         'location_1_address_line_1',

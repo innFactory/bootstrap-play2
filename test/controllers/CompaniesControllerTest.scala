@@ -1,9 +1,6 @@
 package controllers
 
-import de.innfactory.bootstrapplay2.companies.application.models.{CompanyRequest, CompanyResponse}
-import de.innfactory.bootstrapplay2.companies.domain.models.Company
-
-import java.util.UUID
+import de.innfactory.bootstrapplay2.apidefinition.CompanyResponse
 import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
 import play.api.libs.json._
 import play.api.test.Helpers._
@@ -11,7 +8,7 @@ import testutils.AuthUtils
 import testutils.FakeRequestUtils._
 
 class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
-
+  implicit val companyResponseFormat: OFormat[CompanyResponse] = Json.format[CompanyResponse]
   private val authUtils = app.injector.instanceOf[AuthUtils]
 
   /** ———————————————— */
@@ -19,14 +16,14 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
   /** ———————————————— */
   "CompaniesController" must {
     "get by id" in {
-      val result = Get("/v1/companies/1", authUtils.CompanyAdminEmailToken)
+      val result = Get("/v1/companies/0ce84627-9a66-46bf-9a1d-4f38b82a38e3", authUtils.CompanyAdminEmailToken)
 
       val body = contentAsJson(result).as[CompanyResponse]
     }
 
     "get single" in {
       val result =
-        Get("/v1/companies/1", authUtils.CompanyAdminEmailToken)
+        Get("/v1/companies/0ce84627-9a66-46bf-9a1d-4f38b82a38e3", authUtils.CompanyAdminEmailToken)
       val body = contentAsJson(result).as[CompanyResponse]
     }
 
@@ -56,7 +53,7 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
           "/v1/companies",
           Json.parse(s"""
                          {
-                        |"id": 1,
+                        |"id": "0ce84627-9a66-46bf-9a1d-4f38b82a38e3",
                         |"settings": {
                         |   "test": "test"
                         | },
@@ -72,8 +69,14 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
     }
 
     "delete" in {
-      Delete("/v1/companies/2", authUtils.CompanyAdminEmailToken).getStatus mustBe 204
-      Delete("/v1/companies/2", authUtils.CompanyAdminEmailToken).getStatus mustBe 404
+      Delete(
+        "/v1/companies/7059f786-4633-4ace-a412-2f2e90556f08",
+        authUtils.CompanyAdminEmailToken
+      ).getStatus mustBe 204
+      Delete(
+        "/v1/companies/7059f786-4633-4ace-a412-2f2e90556f08",
+        authUtils.CompanyAdminEmailToken
+      ).getStatus mustBe 404
     }
 
   }

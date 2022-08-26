@@ -14,7 +14,7 @@ object Companies {
   val CompanyType: ObjectType[GraphQLExecutionContext, Company] = deriveObjectType(
     ReplaceField(
       fieldName = "id",
-      field = Field(name = "id", fieldType = OptionType(LongType), resolve = c => c.value.id.map(_.value))
+      field = Field(name = "id", fieldType = StringType, resolve = c => c.value.id.value)
     ),
     AddFields(
       Field(

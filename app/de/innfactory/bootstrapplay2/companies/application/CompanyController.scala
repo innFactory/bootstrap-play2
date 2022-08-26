@@ -32,7 +32,7 @@ class CompanyController @Inject() (
     with CompanyAPIController[ContextRoute]
     with CompanyMapper {
 
-  override def getCompanyById(companyId: Long): ContextRoute[CompanyResponse] =
+  override def getCompanyById(companyId: String): ContextRoute[CompanyResponse] =
     Endpoint.withAuth
       .execute(companyService.getById(CompanyId(companyId))(_))
       .complete
@@ -50,7 +50,7 @@ class CompanyController @Inject() (
     .execute(companyService.updateCompany(body)(_))
     .complete
 
-  override def deleteCompany(companyId: Long): ContextRoute[Unit] = Endpoint.withAuth
+  override def deleteCompany(companyId: String): ContextRoute[Unit] = Endpoint.withAuth
     .execute(companyService.deleteCompany(CompanyId(companyId))(_))
     .complete
 

@@ -9,7 +9,6 @@ import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
 import de.innfactory.bootstrapplay2.commons.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationRepository
 import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
-import de.innfactory.bootstrapplay2.locations.domain.models.Location.patch
 import de.innfactory.bootstrapplay2.locations.infrastructure.mapper.LocationMapper._
 import de.innfactory.play.controller.ResultStatus
 import slick.jdbc.JdbcBackend.Database
@@ -62,12 +61,11 @@ private[locations] class SlickLocationRepository @Inject() (db: Database, lifecy
 
   def updateLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location] =
     for {
-      _ <- EitherT(Future(Validated.cond(location.id.isDefined, (), BadRequest("")).toEither))
       updated <-
         updateGeneric(
-          queryById(location.id.get).result.headOption,
+          queryById(location.id).result.headOption,
           (l: Location) => Tables.Location insertOrUpdate locationToLocationRow(l),
-          old => patch(location, old)
+          (old: Location) => old.patch(location)
         )
 
     } yield updated

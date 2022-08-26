@@ -11,7 +11,6 @@ import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
 import de.innfactory.bootstrapplay2.commons.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyRepository
 import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
-import de.innfactory.bootstrapplay2.companies.domain.models.Company.patch
 import de.innfactory.bootstrapplay2.companies.infrastructure.mapper.CompanyMapper._
 import de.innfactory.play.db.codegen.XPostgresProfile.api._
 import de.innfactory.play.slick.enhanced.utils.filteroptions.FilterOptions
@@ -70,12 +69,11 @@ private[companies] class SlickCompanyRepository @Inject() (db: Database)(implici
 
   def updateCompany(company: Company)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Company] =
     for {
-      _ <- EitherT(Future(Validated.cond(company.id.isDefined, (), BadRequest("")).toEither))
       updated <-
         updateGeneric(
-          queryById(company.id.get).result.headOption,
+          queryById(company.id).result.headOption,
           (c: Company) => Tables.Company insertOrUpdate companyToCompanyRow(c),
-          oldCompany => patch(company, oldCompany)
+          (oldCompany: Company) => oldCompany.patch(company)
         )
     } yield updated
 

@@ -33,7 +33,7 @@ class LocationController @Inject() (locationService: LocationService)(implicit
     with LocationAPIController[ContextRoute]
     with LocationMapper {
 
-  override def getAllLocationsByCompany(companyId: Long): ContextRoute[LocationsResponse] =
+  override def getAllLocationsByCompany(companyId: String): ContextRoute[LocationsResponse] =
     Endpoint.withAuth
       .execute(locationService.getAllByCompany(LocationCompanyId(companyId))(_))
       .complete
@@ -52,7 +52,7 @@ class LocationController @Inject() (locationService: LocationService)(implicit
       )
       .complete
 
-  override def getLocationById(locationId: Long): ContextRoute[LocationResponse] =
+  override def getLocationById(locationId: String): ContextRoute[LocationResponse] =
     Endpoint.withAuth
       .execute(locationService.getById(LocationId(locationId))(_))
       .complete
@@ -67,7 +67,7 @@ class LocationController @Inject() (locationService: LocationService)(implicit
       .execute(locationService.updateLocation(body)(_))
       .complete
 
-  override def deleteLocation(locationId: Long): ContextRoute[Unit] =
+  override def deleteLocation(locationId: String): ContextRoute[Unit] =
     Endpoint.withAuth
       .execute(locationService.deleteLocation(LocationId(locationId))(_))
       .complete
