@@ -4,6 +4,9 @@ import de.innfactory.bootstrapplay2.application.controller.BaseMapper
 import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import de.innfactory.bootstrapplay2.apidefinition.{CompaniesResponse, CompanyRequestBody, CompanyResponse}
 import io.scalaland.chimney.dsl.TransformerOps
+import org.joda.time.DateTime
+
+import java.util.UUID
 
 trait CompanyMapper extends BaseMapper {
   implicit val companyToCompanyResponse: Company => CompanyResponse = (
@@ -11,9 +14,9 @@ trait CompanyMapper extends BaseMapper {
   ) =>
     company
       .into[CompanyResponse]
-      .withFieldComputed(_.id, c => c.id.get.value)
-      .withFieldComputed(_.created, c => dateTimeToDateWithTime(c.created.get))
-      .withFieldComputed(_.updated, c => dateTimeToDateWithTime(c.updated.get))
+      .withFieldComputed(_.id, c => c.id.value)
+      .withFieldComputed(_.created, c => dateTimeToDateWithTime(c.created))
+      .withFieldComputed(_.updated, c => dateTimeToDateWithTime(c.updated))
       .transform
 
   implicit val companiesToCompaniesResponse: Seq[Company] => CompaniesResponse = (companies: Seq[Company]) =>
@@ -22,8 +25,8 @@ trait CompanyMapper extends BaseMapper {
   implicit val companyRequestBodyToCompany: CompanyRequestBody => Company = (companyRequestBody: CompanyRequestBody) =>
     companyRequestBody
       .into[Company]
-      .withFieldComputed(_.id, c => c.id.map(CompanyId))
-      .withFieldConst(_.created, None)
-      .withFieldConst(_.updated, None)
+      .withFieldComputed(_.id, c => c.id.map(CompanyId).getOrElse(UUID.randomUUID().toString))
+      .withFieldConst(_.created, DateTime.now())
+      .withFieldConst(_.updated, DateTime.now())
       .transform
 }

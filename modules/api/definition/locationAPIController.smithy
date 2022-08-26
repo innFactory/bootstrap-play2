@@ -59,13 +59,13 @@ operation deleteLocation {
 structure GetLocationsByCompanyRequest {
     @httpLabel
     @required
-    companyId: Long
+    companyId: String
 }
 
 structure LocationIdRequest {
     @httpLabel
     @required
-    locationId: Long
+    locationId: String
 }
 
 structure LocationRequest {
@@ -75,9 +75,9 @@ structure LocationRequest {
 }
 
 structure LocationRequestBody {
-    id: Long,
+    id: String,
     @required
-    company: Long,
+    company: String,
     name: String,
     settings: Document,
     addressLine1: String,
@@ -91,7 +91,7 @@ structure LocationRequestBody {
 
 structure LocationResponse {
     @required
-    id: Long,
+    id: String,
     @required
     company: Long,
     name: String,
