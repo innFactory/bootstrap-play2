@@ -100,6 +100,7 @@ slickGen := Def.taskDyn(generateTablesTask((Global / dbConf).value)).value
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, DockerPlugin)
+  .aggregate(api)
   .dependsOn(slick, api)
   .settings(
     scalaVersion := Dependencies.scalaVersion,

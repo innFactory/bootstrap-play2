@@ -2,6 +2,8 @@ val releaseVersion = "0.0.1"
 
 resolvers += Resolver.githubPackages("innFactory")
 
+addCommandAlias("smithy", "; clean; compile")
+
 lazy val api = (project in file("."))
   .enablePlugins(Smithy4sCodegenPlugin)
   .settings(
