@@ -17,7 +17,6 @@ object Dependencies {
 
   // innFactory Utils
   val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "1.5.8"
-  val endpointBuilder = "de.innfactory" %% "smithy4play" % "0.2.2-HOTFIX-4"
 
   // Prod
   val slickPg = "com.github.tminglei" %% "slick-pg" % "0.20.4"
@@ -90,8 +89,7 @@ object Dependencies {
     playAhcWS,
     slickPgJts,
     akkaStreams,
-    cats,
-    endpointBuilder
+    cats
   )
 
 }

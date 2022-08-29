@@ -58,4 +58,5 @@ out/doc
 .bin/postgis-volume
 .bloop/
 
-modules/api/src
+modules/api/src/main/scala/*
+!modules/api/src/main/scala/definition
