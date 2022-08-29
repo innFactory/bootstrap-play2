@@ -11,11 +11,11 @@ object Locations {
   val LocationType: ObjectType[Unit, Location] = deriveObjectType(
     ReplaceField(
       fieldName = "id",
-      field = Field(name = "id", fieldType = StringType, resolve = c => c.value.id.get.toString)
+      field = Field(name = "id", fieldType = StringType, resolve = c => c.value.id.value)
     ),
     ReplaceField(
       fieldName = "company",
-      field = Field(name = "company", fieldType = StringType, resolve = c => c.value.company.toString)
+      field = Field(name = "company", fieldType = StringType, resolve = c => c.value.company.value)
     )
   )
 }

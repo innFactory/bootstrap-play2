@@ -8,7 +8,6 @@ import testutils.AuthUtils
 import testutils.FakeRequestUtils._
 
 class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
-  implicit val companyResponseFormat: OFormat[CompanyResponse] = Json.format[CompanyResponse]
   private val authUtils = app.injector.instanceOf[AuthUtils]
 
   /** ———————————————— */
@@ -18,13 +17,13 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
     "get by id" in {
       val result = Get("/v1/companies/0ce84627-9a66-46bf-9a1d-4f38b82a38e3", authUtils.CompanyAdminEmailToken)
 
-      val body = contentAsJson(result).as[CompanyResponse]
+      contentAsJson(result)
     }
 
     "get single" in {
       val result =
         Get("/v1/companies/0ce84627-9a66-46bf-9a1d-4f38b82a38e3", authUtils.CompanyAdminEmailToken)
-      val body = contentAsJson(result).as[CompanyResponse]
+      contentAsJson(result)
     }
 
     "post" in {
@@ -44,7 +43,7 @@ class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with Test
                         |""".stripMargin),
           authUtils.NotVerifiedEmailToken
         )
-      val body = contentAsJson(result).as[CompanyResponse]
+      contentAsJson(result)
     }
 
     "patch" in {

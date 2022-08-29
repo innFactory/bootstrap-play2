@@ -4,6 +4,9 @@
 
 ->        /        de.innfactory.smithy4play.AutoRouter
 
+POST               /graphql                              de.innfactory.bootstrapplay2.graphql.GraphQLController.graphql
+POST               /graphql/schema                              de.innfactory.bootstrapplay2.graphql.GraphQLController.renderSchema
+
 # - - - - - - - - HELLO WORLD ACTOR QUERY - - - - - - - -
 
 ###
@@ -339,9 +342,6 @@
 #       description: bad request
 ###
 #PATCH               /v1/locations                              de.innfactory.bootstrapplay2.locations.application.LocationController.update()
-
-#POST               /graphql                              de.innfactory.bootstrapplay2.graphql.GraphQLController.graphql
-#POST               /graphql/schema                              de.innfactory.bootstrapplay2.graphql.GraphQLController.renderSchema
 
 # Map static resources from the /public folder to the /assets URL path
 ### NoDocs ###

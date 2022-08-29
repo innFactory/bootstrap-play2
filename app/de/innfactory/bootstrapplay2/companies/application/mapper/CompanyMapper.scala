@@ -25,7 +25,7 @@ trait CompanyMapper extends BaseMapper {
   implicit val companyRequestBodyToCompany: CompanyRequestBody => Company = (companyRequestBody: CompanyRequestBody) =>
     companyRequestBody
       .into[Company]
-      .withFieldComputed(_.id, c => c.id.map(CompanyId).getOrElse(UUID.randomUUID().toString))
+      .withFieldComputed(_.id, c => c.id.map(id => CompanyId(id)).getOrElse(CompanyId.create))
       .withFieldConst(_.created, DateTime.now())
       .withFieldConst(_.updated, DateTime.now())
       .transform

@@ -23,7 +23,7 @@ trait LocationMapper extends BaseMapper {
     (locationRequestBody: LocationRequestBody) =>
       locationRequestBody
         .into[Location]
-        .withFieldComputed(_.id, l => l.id.map(LocationId).getOrElse(UUID.randomUUID().toString))
+        .withFieldComputed(_.id, l => l.id.map(id => LocationId(id)).getOrElse(LocationId.create))
         .withFieldComputed(_.company, l => LocationCompanyId(l.company))
         .withFieldConst(_.created, DateTime.now())
         .withFieldConst(_.updated, DateTime.now())

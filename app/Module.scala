@@ -36,8 +36,8 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 
     logger.info(s"- - - Binding Firebase - - -")
 
-    bind(classOf[firebaseCreationService]).asEagerSingleton()
-    bind(classOf[firebaseDeletionService]).asEagerSingleton()
+    // bind(classOf[firebaseCreationService]).asEagerSingleton()
+    // bind(classOf[firebaseDeletionService]).asEagerSingleton()
     bind(classOf[JwtValidator]).to(classOf[JwtValidatorImpl])
 
     /**
@@ -88,8 +88,8 @@ class StackdriverTracingCreator @Inject() (lifecycle: ApplicationLifecycle, conf
 }
 
 /** Migrate Flyway on application start */
-class FlywayMigratorImpl @Inject() (env: Environment, configuration: Configuration)
-    extends FlywayMigrator(configuration, env, configIdentifier = "bootstrap-play2")
+class FlywayMigratorImpl @Inject() (env: Environment, configuration: Configuration, config: Config)
+    extends FlywayMigrator(configuration, env, configIdentifier = s"${config.getString("project.id")}.database")
 
 /** Creates FirebaseApp on Application creation */
 class firebaseCreationService @Inject() (config: Config, env: Environment) {

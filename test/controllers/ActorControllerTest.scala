@@ -18,7 +18,7 @@ class ActorControllerTest extends PlaySpec with BaseOneAppPerSuite with TestAppl
       val result = Get("/v1/public/helloworld/test", "AuthHeader")
       val content = contentAsString(result)
       val parsed = content
-      parsed mustBe "the query was not 'hello'"
+      parsed mustBe "{\"message\":\"the query was not 'hello'\"}"
     }
 
     "throughput" in {

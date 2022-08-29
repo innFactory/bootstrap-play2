@@ -48,7 +48,7 @@ operation updateLocation {
     output: LocationResponse,
 }
 
-@http(method: "DELETE", uri: "/v1/locations/{locationId}", code: 200)
+@http(method: "DELETE", uri: "/v1/locations/{locationId}", code: 204)
 @readonly
 operation deleteLocation {
     input: LocationIdRequest,
@@ -93,7 +93,7 @@ structure LocationResponse {
     @required
     id: String,
     @required
-    company: Long,
+    company: String,
     name: String,
     settings: Document,
     addressLine1: String,

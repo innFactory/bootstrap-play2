@@ -34,14 +34,14 @@ operation createCompany {
     output: CompanyResponse,
 }
 
-@http(method: "PATCH", uri: "/v1/companies", code: 200)
+@http(method: "PATCH", uri: "/v1/companies", code: 204)
 @readonly
 operation updateCompany {
     input: CompanyRequest,
     output: CompanyResponse,
 }
 
-@http(method: "DELETE", uri: "/v1/companies/{companyId}", code: 200)
+@http(method: "DELETE", uri: "/v1/companies/{companyId}", code: 204)
 @readonly
 operation deleteCompany {
     input: CompanyIdRequest,
