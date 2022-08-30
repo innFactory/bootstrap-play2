@@ -20,6 +20,8 @@ object UserRecordMapper {
         innFactoryAdmin = claimsMap.get("innFactoryAdmin").map(v => v.as[Boolean]),
         companyAdmin = claimsMap.get("companyAdmin").map(v => v.as[Long])
       ),
+      firstName = None,
+      lastName = None,
       displayName = userRecord.getDisplayName match {
         case s: String => Some(s)
         case null      => None

@@ -85,6 +85,7 @@ object Dependencies {
     slickPgJts,
     akkaStreams,
     cats,
-    endpointBuilder
+    endpointBuilder,
+    ws
   )
 }

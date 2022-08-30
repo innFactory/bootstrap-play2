@@ -20,6 +20,8 @@ class UserRepositoryMock @Inject() (implicit ec: ExecutionContext) extends UserR
       emailVerified = true,
       disabled = false,
       claims = Claims(),
+      firstName = None,
+      lastName = None,
       displayName = Some("defaultUser"),
       lastSignIn = None,
       lastRefresh = None,
