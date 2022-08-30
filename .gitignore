@@ -59,4 +59,3 @@ out/doc
 .bloop/
 
 modules/api/src/main/scala/*
-!modules/api/src/main/scala/definition

@@ -142,7 +142,23 @@ lazy val slick = (project in file("modules/slick"))
     GithubConfig.settings
   )
 
-lazy val api = project in file("modules/api")
+lazy val api = (project in file("modules/api"))
+  .enablePlugins(Smithy4sCodegenPlugin)
+  .settings(
+    scalaVersion := Dependencies.scalaVersion,
+    libraryDependencies ++= Dependencies.list,
+    GithubConfig.settings,
+    Compile / smithy4sInputDir := baseDirectory.value / "modules" / "apidefinition" / "src" / "main" / "resources" / "META-INF" / "smithy",
+    Compile / smithy4sOutputDir := baseDirectory.value / "modules" / "api" / "src" / "main" / "scala"
+  )
+lazy val apiDefinition = project in file("modules/apidefinition")
+
+/*
+ * smithy4sOutputDir is added automatically to sbt clean
+ * -> prevent source code deletion during sbt clean
+ */
+cleanKeepFiles += baseDirectory.value / "app"
+cleanFiles += baseDirectory.value / "app" / "de" / "innfactory" / "bootstrapplay2" / "apidefinition"
 
 lazy val globalResources = file("conf")
 
