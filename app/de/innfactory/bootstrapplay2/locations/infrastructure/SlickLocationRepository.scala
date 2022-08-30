@@ -6,7 +6,7 @@ import cats.data.{EitherT, Validated}
 import dbdata.Tables
 import de.innfactory.play.smithy4play.TraceContext
 import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
-import de.innfactory.bootstrapplay2.commons.results.errors.Errors.BadRequest
+import de.innfactory.play.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationRepository
 import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
 import de.innfactory.bootstrapplay2.locations.infrastructure.mapper.LocationMapper._

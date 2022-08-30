@@ -4,7 +4,6 @@ import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
 import dbdata.Tables
 import de.innfactory.play.db.codegen.XPostgresProfile.api._
-import de.innfactory.bootstrapplay2.commons.results.Results.Result
 import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
 import de.innfactory.bootstrapplay2.users.domain.interfaces.UserPasswordResetTokenRepository

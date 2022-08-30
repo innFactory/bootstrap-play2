@@ -8,7 +8,7 @@ import de.innfactory.bootstrapplay2.commons.RequestContext
 import de.innfactory.bootstrapplay2.commons.filteroptions.FilterOptionUtils
 import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
-import de.innfactory.bootstrapplay2.commons.results.errors.Errors.BadRequest
+import de.innfactory.play.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyRepository
 import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import de.innfactory.bootstrapplay2.companies.infrastructure.mapper.CompanyMapper._

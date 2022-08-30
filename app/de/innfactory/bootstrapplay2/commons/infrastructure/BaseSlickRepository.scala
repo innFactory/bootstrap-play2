@@ -1,18 +1,15 @@
 package de.innfactory.bootstrapplay2.commons.infrastructure
 
-import akka.stream.scaladsl.Source
 import cats.data.EitherT
 import cats.implicits._
 import cats.syntax._
-import dbdata.Tables
 import de.innfactory.play.smithy4play.ImplicitLogContext
 import de.innfactory.bootstrapplay2.commons.implicits.FutureTracingImplicits.EnhancedFuture
-import de.innfactory.bootstrapplay2.commons.results.Results.Result
-import de.innfactory.bootstrapplay2.commons.results.errors.Errors.{BadRequest, DatabaseResult, NotFound}
-import de.innfactory.bootstrapplay2.commons.implicits.OptionUtils._
+import de.innfactory.play.results.errors.Errors.{BadRequest, DatabaseResult, NotFound}
 import de.innfactory.play.smithy4play.TraceContext
 import de.innfactory.bootstrapplay2.commons.implicits.EitherImplicits.EitherFuture
 import de.innfactory.bootstrapplay2.commons.implicits.EitherTTracingImplicits.EnhancedTracingEitherT
+import de.innfactory.implicits.OptionUtils.EnhancedOption
 import de.innfactory.play.controller.ResultStatus
 import slick.dbio.{DBIOAction, Effect, NoStream}
 import slick.jdbc.JdbcBackend.Database
@@ -100,7 +97,7 @@ class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext) extends I
       mapping: T => X,
       filter: X => Boolean,
       afterFilterMapping: X => Z
-  )(implicit rowToObject: R => T, rc: TraceContext): Future[Result[Seq[Z]]] = {
+  )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, Seq[Z]] = EitherT {
     val queryResult: Future[Seq[R]] = db.run(querySeq).trace("lookupSequenceGeneric")
     queryResult.map { res: Seq[R] =>
       res.map(rowToObject).map(mapping).filter(filter).map(afterFilterMapping).asRight[ResultStatus]
@@ -110,7 +107,7 @@ class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext) extends I
   def lookupSequenceGeneric[R, T, Z](
       querySeq: DBIOAction[Seq[R], NoStream, Nothing],
       sequenceMapping: Seq[T] => Z
-  )(implicit rowToObject: R => T, rc: TraceContext): Future[Result[Z]] = {
+  )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, Z] = EitherT {
     val queryResult: Future[Seq[R]] = db.run(querySeq).trace("lookupSequenceGeneric")
     queryResult.map { res: Seq[R] =>
       val sequence = res.map(rowToObject)
@@ -188,8 +185,8 @@ class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext) extends I
       _ <- EitherT(
         db.run(queryById)
           .map(_.toEither(NotFound("entity not found")))
+          .trace("deleteGeneric lookup")
       )
-        .trace("deleteGeneric lookup")
       dbDeleteResult <- EitherT(
         Try(db.run(delete)).toEither
           .leftMap[ResultStatus](_ => DatabaseResult("Database constraint or foreign key"))

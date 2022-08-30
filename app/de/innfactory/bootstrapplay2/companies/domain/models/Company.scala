@@ -1,6 +1,5 @@
 package de.innfactory.bootstrapplay2.companies.domain.models
 
-import de.innfactory.bootstrapplay2.commons.implicits.OptionUtils._
 import org.joda.time.DateTime
 import play.api.libs.json._
 import play.api.libs.json.JodaWrites._

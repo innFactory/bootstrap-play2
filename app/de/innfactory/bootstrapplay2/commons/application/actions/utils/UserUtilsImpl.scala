@@ -1,9 +1,9 @@
 package de.innfactory.bootstrapplay2.commons.application.actions.utils
 
 import cats.implicits.catsSyntaxEitherId
-import de.innfactory.bootstrapplay2.commons.results.Results.Result
-import de.innfactory.bootstrapplay2.commons.results.errors.Errors.Forbidden
+import de.innfactory.play.results.errors.Errors.Forbidden
 import de.innfactory.play.controller.ResultStatus
+import de.innfactory.play.results.Results.Result
 import de.innfactory.play.smithy4play.JWTToken
 import play.libs.Json
 

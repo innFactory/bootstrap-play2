@@ -4,12 +4,11 @@ import akka.NotUsed
 import akka.stream.scaladsl.Source
 import cats.data.EitherT
 import com.google.inject.ImplementedBy
-import de.innfactory.bootstrapplay2.commons.results.Results.Result
 import de.innfactory.bootstrapplay2.users.domain.models.{Claims, User, UserId}
 import de.innfactory.bootstrapplay2.users.infrastructure.UserRepositoryMock
 import de.innfactory.play.controller.ResultStatus
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @ImplementedBy(classOf[UserRepositoryMock])
 trait UserRepository {

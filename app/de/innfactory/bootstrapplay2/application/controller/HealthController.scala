@@ -1,7 +1,7 @@
 package de.innfactory.bootstrapplay2.application.controller
 
+import cats.data.EitherT
 import de.innfactory.bootstrapplay2.apidefinition.HealthAPIController
-import de.innfactory.bootstrapplay2.commons.implicits.EitherTF
 import de.innfactory.bootstrapplay2.commons.infrastructure.DatabaseHealthSocket
 import de.innfactory.play.results.errors.Errors.InternalServerError
 import de.innfactory.play.smithy4play.ImplicitLogContext
@@ -23,7 +23,7 @@ class HealthController @Inject() (
 
   def ping(): ContextRoute[Unit] = Endpoint
     .execute(_ =>
-      EitherTF(
+      EitherT.rightT(
         if (databaseHealthSocket.isConnectionOpen) Right("")
         else Left(InternalServerError("Database Connection Lost"))
       )
