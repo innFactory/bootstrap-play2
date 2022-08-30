@@ -118,4 +118,4 @@ printf "\n ${BLUE}Generating Code for ${NAME} ${NC} \n"
 sbt slickGen
 clear
 printf "\n ${BLUE}Starting Service for ${NAME} ${NC} \n"
-sbt run
+sbt "run -Dconfig.resource=dev-application.conf -Dlogger.resource=logback-local.xml"

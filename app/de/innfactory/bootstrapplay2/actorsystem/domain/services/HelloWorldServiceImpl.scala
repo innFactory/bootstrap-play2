@@ -1,21 +1,16 @@
-package de.innfactory.bootstrapplay2.actorsystem.infrastructure
+package de.innfactory.bootstrapplay2.actorsystem.domain.services
 
-import de.innfactory.bootstrapplay2.actorsystem.domain.HelloWorldActor
-import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{Command, QueryHelloWorld, Response}
 import akka.actor._
 import akka.actor.typed.scaladsl.AskPattern._
-import akka.util.Timeout
-import com.google.inject.ImplementedBy
-import javax.inject._
 import akka.actor.typed.scaladsl.adapter._
+import akka.util.Timeout
+import de.innfactory.bootstrapplay2.actorsystem.domain.actors.HelloWorldActor
+import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{Command, QueryHelloWorld, Response}
+import de.innfactory.bootstrapplay2.actorsystem.domain.interfaces.HelloWorldService
 
+import javax.inject._
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
-
-@ImplementedBy(classOf[HelloWorldServiceImpl])
-trait HelloWorldService {
-  def queryHelloWorld(query: String): Future[Response]
-}
 
 @Singleton
 class HelloWorldServiceImpl @Inject() (
@@ -40,5 +35,4 @@ class HelloWorldServiceImpl @Inject() (
       helloWorldActor.ask((ref: akka.actor.typed.ActorRef[Response]) => QueryHelloWorld(query, ref))
     result
   }
-
 }

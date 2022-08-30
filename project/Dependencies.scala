@@ -5,10 +5,21 @@ object Dependencies {
 
   val scalaVersion = "2.13.8"
   val akkaVersion = "2.6.19"
+  val akkaManagementVersion = "1.1.3"
 
   val akkaTyped = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
   val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.2.9"
   val akka = "com.typesafe.akka" %% "akka-actor" % akkaVersion
+
+  val akkaDiscovery = "com.typesafe.akka" %% "akka-discovery" % akkaVersion
+  val akkaManagementClusterHttp =
+    "com.lightbend.akka.management" %% "akka-management-cluster-http" % akkaManagementVersion
+  val akkaManagementClusterBootstrap =
+    "com.lightbend.akka.management" %% "akka-management-cluster-bootstrap" % akkaManagementVersion
+  val akkaDiscoveryKubernetes =
+    "com.lightbend.akka.discovery" %% "akka-discovery-kubernetes-api" % akkaManagementVersion
+
+  val akkaClusterShardingTyped = "com.typesafe.akka" %% "akka-cluster-sharding-typed" % akkaVersion
 
   // https://github.com/akka/akka/issues/29351
   val akkaJackson = "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion
@@ -68,6 +79,10 @@ object Dependencies {
     akka,
     akkaTyped,
     akkaJackson,
+    akkaClusterShardingTyped,
+    akkaManagementClusterBootstrap,
+    akkaManagementClusterHttp,
+    akkaDiscoveryKubernetes,
     guice,
     slickPg,
     slickPgPlayJson,

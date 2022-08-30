@@ -1,3 +1,6 @@
+import akka.actor.ActorSystem
+import akka.management.cluster.bootstrap.ClusterBootstrap
+import akka.management.scaladsl.AkkaManagement
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.auth.internal.Utils.isEmulatorMode
 
@@ -39,6 +42,7 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     // bind(classOf[firebaseCreationService]).asEagerSingleton()
     // bind(classOf[firebaseDeletionService]).asEagerSingleton()
     bind(classOf[JwtValidator]).to(classOf[JwtValidatorImpl])
+    bind(classOf[AkkaCluster]).asEagerSingleton()
 
     /**
      * Inject Modules depended on environment (Test, Prod, Dev)
@@ -56,6 +60,12 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 
   }
 
+}
+
+@Singleton
+class AkkaCluster @Inject() (system: ActorSystem) {
+  AkkaManagement(system).start()
+  ClusterBootstrap(system).start()
 }
 
 @Singleton

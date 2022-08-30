@@ -1,16 +1,9 @@
-package de.innfactory.bootstrapplay2.actorsystem.domain
+package de.innfactory.bootstrapplay2.actorsystem.domain.actors
 
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors, StashBuffer}
 import akka.actor.typed.Behavior
+import akka.actor.typed.scaladsl.{ActorContext, Behaviors, StashBuffer}
+import de.innfactory.bootstrapplay2.actorsystem.domain.commands._
 import play.api.Logger
-import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{
-  Command,
-  QueryError,
-  QueryHelloWorld,
-  QueryHelloWorldResult,
-  ResponseQueryHelloWorld,
-  ResponseQueryHelloWorldError
-}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}

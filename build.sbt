@@ -119,7 +119,7 @@ lazy val root = (project in file("."))
       Docker / packageName := "bootstrap-play2",
       dockerUpdateLatest := latest,
       dockerRepository := dockerRegistry,
-      dockerExposedPorts := Seq(8080, 8080),
+      dockerExposedPorts := Seq(8080, 25520, 8558),
       dockerEntrypoint := Seq(""),
       dockerBaseImage := "openjdk:11.0.6-jre-slim",
       dockerEntrypoint := Seq("/opt/docker/bin/bootstrap-play2", "-Dplay.server.pidfile.path=/dev/null")
