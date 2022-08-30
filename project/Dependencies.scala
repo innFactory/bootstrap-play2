@@ -33,8 +33,6 @@ object Dependencies {
   val joda = "joda-time" % "joda-time" % "2.11.0"
   val postgresql = "org.postgresql" % "postgresql" % "42.5.0"
   val cats = "org.typelevel" %% "cats-core" % "2.8.0"
-  val henkanConvert = "com.kailuowang" %% "henkan-convert" % "0.6.5"
-  val henkanOptional = "com.kailuowang" %% "henkan-optional" % "0.6.5"
   val chimney = "io.scalaland" %% "chimney" % "0.6.2"
 
   // Test
@@ -44,7 +42,6 @@ object Dependencies {
   // Dependent on the trace exporters you want to use add one or more of the following
   val opencensusStackdriver = "io.opencensus" % "opencensus-exporter-trace-stackdriver" % "0.31.1"
   val opencensusLoggging = "io.opencensus" % "opencensus-exporter-trace-logging" % "0.31.1"
-  val opencensusJaeger = "io.opencensus" % "opencensus-exporter-trace-jaeger" % "0.31.1"
 
   val opencensusStatsStackdriver = "io.opencensus" % "opencensus-exporter-stats-stackdriver" % "0.31.1"
 
@@ -60,8 +57,6 @@ object Dependencies {
     scalaUtil,
     sl4j,
     chimney,
-    henkanConvert,
-    henkanOptional,
     sharedDeps,
     logback,
     logbackCore,
@@ -69,7 +64,6 @@ object Dependencies {
     opencensusStackdriver,
     opencensusLoggging,
     opencensusStatsStackdriver,
-    opencensusJaeger,
     opencensusAkkaHttp,
     akka,
     akkaTyped,
@@ -93,5 +87,4 @@ object Dependencies {
     cats,
     endpointBuilder
   )
-
 }

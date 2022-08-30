@@ -153,13 +153,6 @@ lazy val api = (project in file("modules/api"))
   )
 lazy val apiDefinition = project in file("modules/apidefinition")
 
-/*
- * smithy4sOutputDir is added automatically to sbt clean
- * -> prevent source code deletion during sbt clean
- */
-cleanKeepFiles += baseDirectory.value / "app"
-cleanFiles += baseDirectory.value / "app" / "de" / "innfactory" / "bootstrapplay2" / "apidefinition"
-
 lazy val globalResources = file("conf")
 
 /* Scala format */
