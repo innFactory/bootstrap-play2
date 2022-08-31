@@ -5,7 +5,7 @@ import io.scalaland.chimney.Transformer
 import org.joda.time.DateTime
 import play.api.libs.json.JsValue
 import smithy4s.Document
-import de.innfactory.bootstrapplay2.apidefinition.DateWithTime
+import de.innfactory.bootstrapplay2.api.DateWithTime
 
 import scala.language.implicitConversions
 

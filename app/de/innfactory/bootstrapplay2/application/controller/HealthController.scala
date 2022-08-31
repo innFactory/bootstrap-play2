@@ -1,7 +1,7 @@
 package de.innfactory.bootstrapplay2.application.controller
 
 import cats.data.EitherT
-import de.innfactory.bootstrapplay2.apidefinition.HealthAPIController
+import de.innfactory.bootstrapplay2.api.HealthAPIController
 import de.innfactory.bootstrapplay2.commons.infrastructure.DatabaseHealthSocket
 import de.innfactory.play.results.errors.Errors.InternalServerError
 import de.innfactory.play.smithy4play.ImplicitLogContext

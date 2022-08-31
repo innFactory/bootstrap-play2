@@ -1,6 +1,6 @@
 package controllers
 
-import de.innfactory.bootstrapplay2.apidefinition.CompanyResponse
+import de.innfactory.bootstrapplay2.api.CompanyResponse
 import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
 import play.api.libs.json._
 import play.api.test.Helpers._

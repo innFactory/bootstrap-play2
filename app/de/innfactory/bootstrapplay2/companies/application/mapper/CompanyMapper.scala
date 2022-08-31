@@ -2,7 +2,7 @@ package de.innfactory.bootstrapplay2.companies.application.mapper
 
 import de.innfactory.bootstrapplay2.application.controller.BaseMapper
 import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
-import de.innfactory.bootstrapplay2.apidefinition.{CompaniesResponse, CompanyRequestBody, CompanyResponse}
+import de.innfactory.bootstrapplay2.api.{CompaniesResponse, CompanyRequestBody, CompanyResponse}
 import io.scalaland.chimney.dsl.TransformerOps
 import org.joda.time.DateTime
 

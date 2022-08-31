@@ -1,6 +1,6 @@
 package testutils.grapqhl
 
-import de.innfactory.bootstrapplay2.apidefinition.CompanyResponse
+import de.innfactory.bootstrapplay2.api.CompanyResponse
 import play.api.libs.json.{JsObject, Json}
 
 object CompanyRequests {

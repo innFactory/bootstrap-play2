@@ -1,6 +1,6 @@
 package controllers
 
-import de.innfactory.bootstrapplay2.apidefinition.LocationResponse
+import de.innfactory.bootstrapplay2.api.LocationResponse
 import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
 import play.api.libs.json._
 import play.api.test.Helpers._

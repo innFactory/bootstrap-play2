@@ -148,10 +148,10 @@ lazy val api = (project in file("modules/api"))
     scalaVersion := Dependencies.scalaVersion,
     libraryDependencies ++= Dependencies.list,
     GithubConfig.settings,
-    Compile / smithy4sInputDir := baseDirectory.value / "modules" / "apidefinition" / "src" / "main" / "resources" / "META-INF" / "smithy",
-    Compile / smithy4sOutputDir := baseDirectory.value / "modules" / "api" / "src" / "main" / "scala"
+    Compile / smithy4sInputDir := (ThisBuild / baseDirectory).value / "modules" / "api-definition" / "src" / "main" / "resources" / "META-INF" / "smithy",
+    Compile / smithy4sOutputDir := (ThisBuild / baseDirectory).value / "modules" / "api" / "src" / "main" / "scala"
   )
-lazy val apiDefinition = project in file("modules/apidefinition")
+lazy val apiDefinition = project in file("modules/api-definition")
 
 lazy val globalResources = file("conf")
 

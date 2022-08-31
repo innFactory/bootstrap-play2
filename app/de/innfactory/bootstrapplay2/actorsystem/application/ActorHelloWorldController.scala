@@ -2,7 +2,7 @@ package de.innfactory.bootstrapplay2.actorsystem.application
 import cats.data.EitherT
 import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{ResponseQueryHelloWorld, ResponseQueryHelloWorldError}
 import de.innfactory.bootstrapplay2.actorsystem.domain.interfaces.HelloWorldService
-import de.innfactory.bootstrapplay2.apidefinition.{ActorAPIController, HelloworldResponse}
+import de.innfactory.bootstrapplay2.api.{ActorAPIController, HelloworldResponse}
 import de.innfactory.play.smithy4play.ImplicitLogContext
 import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
 import play.api.Application

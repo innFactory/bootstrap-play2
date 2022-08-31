@@ -1,4 +1,4 @@
-namespace de.innfactory.bootstrapplay2.apidefinition
+namespace de.innfactory.bootstrapplay2.api
 
 use smithy4s.api#simpleRestJson
 

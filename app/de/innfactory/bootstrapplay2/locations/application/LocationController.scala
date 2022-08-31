@@ -5,7 +5,7 @@ import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
 import de.innfactory.bootstrapplay2.application.controller.BaseController
 import de.innfactory.play.smithy4play.ImplicitLogContext
-import de.innfactory.bootstrapplay2.apidefinition.{
+import de.innfactory.bootstrapplay2.api.{
   LocationAPIController,
   LocationRequestBody,
   LocationResponse,

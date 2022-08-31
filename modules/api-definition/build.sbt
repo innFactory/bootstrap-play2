@@ -1,13 +1,13 @@
-val releaseVersion = "0.0.1"
+val releaseVersion = "0.0.10"
 
 resolvers += Resolver.githubPackages("innFactory")
 
 lazy val apiDefinition = (project in file("."))
+  .enablePlugins(Smithy4sCodegenPlugin)
   .settings(
-    name := "apidefinition",
+    name := "api-definition",
     scalaVersion := Dependencies.scalaVersion,
     organization := "de.innfactory.bootstrap-play2",
     version := releaseVersion,
-    scalaVersion := Dependencies.scalaVersion,
     GithubConfig.settings
   )
