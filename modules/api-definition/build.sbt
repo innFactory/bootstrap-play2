@@ -1,4 +1,4 @@
-val releaseVersion = "0.0.10"
+val releaseVersion = "0.0.1"
 
 resolvers += Resolver.githubPackages("innFactory")
 

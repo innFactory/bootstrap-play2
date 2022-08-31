@@ -1,6 +1,6 @@
 package de.innfactory.bootstrapplay2.actorsystem.domain.actors
 
-import akka.actor.typed.Behavior
+import akka.actor.typed.{Behavior, SupervisorStrategy}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors, StashBuffer}
 import de.innfactory.bootstrapplay2.actorsystem.domain.commands._
 import play.api.Logger
@@ -14,10 +14,12 @@ object HelloWorldActor {
 
   def apply(): Behavior[Command] =
     Behaviors.withStash(100) { buffer => // Create Behaviour with stash to buffer incoming messages while processing
-      Behaviors.setup[Command] { context =>
-        new HelloWorldActor(actorLogger, context, buffer)
-          .ready() // Set initial state to "ready"
-      }
+      Behaviors
+        .supervise(Behaviors.setup[Command] { context =>
+          new HelloWorldActor(actorLogger, context, buffer)
+            .ready() // Set initial state to "ready"
+        })
+        .onFailure(SupervisorStrategy.restart)
     }
 }
 

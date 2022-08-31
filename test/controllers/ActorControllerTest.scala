@@ -13,9 +13,9 @@ class ActorControllerTest extends PlaySpec with BaseOneAppPerSuite with TestAppl
   /** —————————————————————— */
   /** ACTORSCONTROLLER */
   /** —————————————————————— */
-  "Actor" must {
+  "ActorSystem" must {
     "query hello" in {
-      val result = Get("/v1/public/helloworld/test", "AuthHeader")
+      val result = Get("/v1/public/helloworld/system/test", "AuthHeader")
       val content = contentAsString(result)
       val parsed = content
       parsed mustBe "{\"message\":\"the query was not 'hello'\"}"
@@ -23,10 +23,24 @@ class ActorControllerTest extends PlaySpec with BaseOneAppPerSuite with TestAppl
 
     "throughput" in {
       for (_ <- 0 to 10)
-        Get("/v1/public/helloworld/test", "test@test.de")
+        Get("/v1/public/helloworld/system/test", "test@test.de")
 
     }
+  }
 
+  "ActorSharding" must {
+    "query hello" in {
+      val result = Get("/v1/public/helloworld/sharding/test", "AuthHeader")
+      val content = contentAsString(result)
+      val parsed = content
+      parsed mustBe "{\"message\":\"the query was not 'hello'\"}"
+    }
+
+    "throughput" in {
+      for (_ <- 0 to 10)
+        Get("/v1/public/helloworld/sharding/test", "test@test.de")
+
+    }
   }
 
 }

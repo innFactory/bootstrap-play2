@@ -10,7 +10,6 @@ object Dependencies {
   val akkaTyped = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
   val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.2.9"
   val akka = "com.typesafe.akka" %% "akka-actor" % akkaVersion
-
   val akkaDiscovery = "com.typesafe.akka" %% "akka-discovery" % akkaVersion
   val akkaManagementClusterHttp =
     "com.lightbend.akka.management" %% "akka-management-cluster-http" % akkaManagementVersion
@@ -18,13 +17,11 @@ object Dependencies {
     "com.lightbend.akka.management" %% "akka-management-cluster-bootstrap" % akkaManagementVersion
   val akkaDiscoveryKubernetes =
     "com.lightbend.akka.discovery" %% "akka-discovery-kubernetes-api" % akkaManagementVersion
-
   val akkaClusterShardingTyped = "com.typesafe.akka" %% "akka-cluster-sharding-typed" % akkaVersion
-
   // https://github.com/akka/akka/issues/29351
   val akkaJackson = "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion
-
   val akkaStreams = "com.typesafe.akka" %% "akka-stream" % akkaVersion
+  val akkaSpray = "com.typesafe.akka" %% "akka-http-spray-json" % "10.2.9"
 
   // innFactory Utils
   val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "1.5.8"
@@ -83,6 +80,8 @@ object Dependencies {
     akkaManagementClusterBootstrap,
     akkaManagementClusterHttp,
     akkaDiscoveryKubernetes,
+    akkaDiscovery,
+    akkaSpray,
     guice,
     slickPg,
     slickPgPlayJson,

@@ -4,25 +4,25 @@ namespace de.innfactory.bootstrapplay2.api
 use smithy4s.api#simpleRestJson
 
 @simpleRestJson
-service ActorAPIController {
+service ActorSystemAPIController {
     version: "1.0.0",
     operations: [
-        helloworld
+        helloworldViaSystem
     ]
 }
 
 // --------- OPERATIONS -------------
 
-@http(method: "GET", uri: "/v1/public/helloworld/{query}", code: 200)
+@http(method: "GET", uri: "/v1/public/helloworld/system/{query}", code: 200)
 @readonly
-operation helloworld {
-    input: HelloworldRequest,
-    output: HelloworldResponse
+operation helloworldViaSystem {
+    input: HelloworldViaSystemRequest,
+    output: HelloworldViaSystemResponse
 }
 
 // --------- REQUESTS -------------
 
-structure HelloworldRequest {
+structure HelloworldViaSystemRequest {
     @httpLabel
     @required
     query: String
@@ -30,7 +30,7 @@ structure HelloworldRequest {
 
 // --------- RESPONSES -------------
 
-structure HelloworldResponse {
+structure HelloworldViaSystemResponse {
     @httpLabel
     @required
     answer: String

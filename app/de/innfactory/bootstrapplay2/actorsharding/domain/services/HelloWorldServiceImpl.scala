@@ -31,7 +31,10 @@ class HelloWorldServiceImpl @Inject() (
 
   val helloWorldShardRegion: ActorRef[ShardingEnvelope[Command]] =
     clusterShard.init(
-      Entity(helloWorldTypeKey)(createBehavior = entityContext => HelloWorldActor())
+      Entity(helloWorldTypeKey)(createBehavior = entityContext => {
+        println(entityContext.entityId)
+        HelloWorldActor()
+      })
     )
 
   def queryHelloWorld(query: String): Future[Response] = {
