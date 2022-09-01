@@ -2,6 +2,11 @@
 
 modules/play/logs/
 
+.bin/setup/.bsp
+.bin/setup/.idea
+.bin/setup/target
+.bin/setup/project/target
+
 # sbt specific
 .cache
 .history
