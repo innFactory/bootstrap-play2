@@ -26,9 +26,9 @@ object Dependencies {
   val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper" % "2.4.2"
   val playJson = "com.typesafe.play" %% "play-json" % "2.9.3"
   val playJsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.9.3"
-  val slick = "com.typesafe.slick" %% "slick" % "3.3.3"
-  val slickCodegen = "com.typesafe.slick" %% "slick-codegen" % "3.3.3"
-  val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.3.3"
+  val slick = "com.typesafe.slick" %% "slick" % "3.4.0"
+  val slickCodegen = "com.typesafe.slick" %% "slick-codegen" % "3.4.0"
+  val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.4.0"
   val hikariCP = "com.zaxxer" % "HikariCP" % "5.0.1" exclude ("org.slf4j", "slf4j-api")
   val joda = "joda-time" % "joda-time" % "2.11.1"
   val postgresql = "org.postgresql" % "postgresql" % "42.5.0"
