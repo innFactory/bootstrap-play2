@@ -1,8 +1,11 @@
 import actions.Action
 import actions.help.Help
 import actions.packagedomain.PackageDomain
+import config.SetupConfig
 
 object Setup extends App {
+
+  implicit val config: SetupConfig = SetupConfig.get()
 
   args.length match {
     case 0 =>
@@ -14,7 +17,7 @@ object Setup extends App {
       Help.referToHelp()
   }
 
-  def handleArgs(argumentKey: String): Unit =
+  def handleArgs(argumentKey: String)(implicit config: SetupConfig): Unit =
     Action.availableArguments.find(argument => argument.keys.contains(argumentKey)) match {
       case Some(argumentOfKey) =>
         argumentOfKey match {

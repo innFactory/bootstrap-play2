@@ -1,12 +1,24 @@
 package actions.packagedomain
 
 import actions.Action
+import actions.packagedomain.domainfiles.scalafiles.{
+  ApplicationController,
+  ApplicationMapper,
+  DomainModel,
+  DomainModelId,
+  DomainService,
+  Repository,
+  Service,
+  SlickMapper,
+  SlickRepository
+}
 import cats.data.Validated
-import cats.data.Validated.Valid
+import config.SetupConfig
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, OpenOption, Path, Paths}
+import java.nio.file.{Files, Paths}
 import scala.annotation.tailrec
+import scala.io.Source
 import scala.io.StdIn.readLine
 
 case class PackageDomain() extends Action {
@@ -18,30 +30,25 @@ object PackageDomain {
   private def keys: Seq[String] = Seq("-p", "--package")
   private def description: String = "Create a new package"
 
-  def create() = {
-
+  def create()(implicit config: SetupConfig): Unit = {
     val packageName = askForPackage()
     val packageDomain = askForPackageDomain()
 
     println(s"Writing package into ${System.getProperty("user.dir")}...")
 
-    Files.createDirectories(Path.of(s"${System.getProperty("user.dir")}/$packageName/application/mapper/"))
-    Files.createDirectories(Path.of(s"${System.getProperty("user.dir")}/$packageName/domain/interfaces/"))
-    Files.createDirectories(Path.of(s"${System.getProperty("user.dir")}/$packageName/domain/models/"))
-    Files.createDirectories(Path.of(s"${System.getProperty("user.dir")}/$packageName/domain/services/"))
-    Files.createDirectories(Path.of(s"${System.getProperty("user.dir")}/$packageName/infrastructure/mapper"))
+    val config =
+      println(config)
 
-    writeFile(s"$packageName/application/${packageDomain}Controller.scala", "")
-    writeFile(s"$packageName/application/mapper/${packageDomain}Mapper.scala", "")
-    writeFile(s"$packageName/domain/interfaces/${packageDomain}Repository.scala", "")
-    writeFile(s"$packageName/domain/interfaces/${packageDomain}Service.scala", "")
-    writeFile(s"$packageName/domain/models/${packageDomain}.scala", "")
-    writeFile(s"$packageName/domain/models/${packageDomain}Id.scala", "")
-    writeFile(s"$packageName/domain/services/Domain${packageDomain}Service.scala", "")
-    writeFile(s"$packageName/infrastructure/Slick${packageDomain}Repository.scala", "")
-    writeFile(s"$packageName/infrastructure/mapper/${packageDomain}Mapper.scala", "")
-
-    println("Package written")
+    ApplicationController(packageDomain, packageName).writeDomainFile()
+    ApplicationMapper(packageDomain, packageName).writeDomainFile()
+    Repository(packageDomain, packageName).writeDomainFile()
+    Service(packageDomain, packageName).writeDomainFile()
+    DomainModel(packageDomain, packageName).writeDomainFile()
+    DomainModelId(packageDomain, packageName).writeDomainFile()
+    DomainService(packageDomain, packageName).writeDomainFile()
+    SlickRepository(packageDomain, packageName).writeDomainFile()
+    SlickMapper(packageDomain, packageName).writeDomainFile()
+    println(s"Done")
   }
 
   @tailrec

@@ -1,0 +1,10 @@
+{
+  "project": {
+    "sourcesRoot": "app",
+    "packagesRoot": "de.innfactory.bootstrapplay2"
+  },
+  "smithy": {
+    "sourcesRoot": "modules",
+    "apiDefinitionRoot": "api-definition.src.main.resources.META-INF.smithy"
+  }
+}
