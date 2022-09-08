@@ -11,7 +11,7 @@ trait DomainFile {
   def packageDomain: String
   def packageName: String
   protected def fileEnding: String
-  protected def getContent()(implicit config: SetupConfig): String
+  protected def getContent(withCrud: Boolean)(implicit config: SetupConfig): String
 
   protected def getFileName(): String = s"$name.$fileEnding"
 
@@ -28,19 +28,22 @@ trait DomainFile {
 
   protected def getFullDirectoryPath()(implicit config: SetupConfig): String
 
-  def writeDomainFile(openOptions: Option[OpenOption] = None)(implicit config: SetupConfig): Unit = {
+  def writeDomainFile(withCrud: Boolean, openOptions: Option[OpenOption] = None)(implicit config: SetupConfig): Unit = {
     Files.createDirectories(Path.of(getFullDirectoryPath()))
     openOptions match {
       case Some(option) =>
         println(s"Writing ${getFileName()} into ${getFullDirectoryPath()} with option ${option.toString}")
         Files.write(
           Paths.get(getFullDirectoryPath() + getFileName()),
-          getContent().getBytes(StandardCharsets.UTF_8),
+          getContent(withCrud).getBytes(StandardCharsets.UTF_8),
           option
         )
       case None =>
         println(s"Writing ${getFileName()} into ${getFullDirectoryPath()}")
-        Files.write(Paths.get(getFullDirectoryPath() + getFileName()), getContent().getBytes(StandardCharsets.UTF_8))
+        Files.write(
+          Paths.get(getFullDirectoryPath() + getFileName()),
+          getContent(withCrud).getBytes(StandardCharsets.UTF_8)
+        )
     }
   }
 }

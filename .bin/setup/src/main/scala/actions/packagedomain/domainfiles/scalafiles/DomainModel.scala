@@ -6,7 +6,7 @@ case class DomainModel(packageDomain: String, packageName: String) extends Scala
   override def subPath =
     s"/$packageName/domain/models/"
   val name = s"${packageDomain}"
-  override def getContent()(implicit config: SetupConfig): String = {
+  override def getContent(withCrud: Boolean)(implicit config: SetupConfig): String = {
     val domainModelId = DomainModelId(packageDomain, packageName)
     s"""
       |package ${config.project.packagesRoot}.$packageName.domain.models

@@ -7,7 +7,7 @@ case class ApiManifest(packageDomain: String, packageName: String) extends Smith
 
   override val fileEnding: String = ""
 
-  override protected def getContent()(implicit config: SetupConfig): String = {
+  override protected def getContent(withCrud: Boolean)(implicit config: SetupConfig): String = {
     val apiDefinition = ApiDefinition(packageDomain, packageName)
     s"\n${apiDefinition.nameLowerCased()}.${apiDefinition.fileEnding}"
   }

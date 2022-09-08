@@ -31,26 +31,37 @@ object PackageDomain {
   private def keys: Seq[String] = Seq("-p", "--package")
   private def description: String = "Create a new package"
 
-  def create()(implicit config: SetupConfig): Unit = {
-    val packageName = askForPackage()
-    val packageDomain = askForPackageDomain()
+  def create(packageNameArg: Option[String], packageDomainArg: Option[String], withCrudArg: Option[String])(implicit
+      config: SetupConfig
+  ): Unit = {
+    val packageName = packageNameArg.getOrElse(askForPackage())
+    val packageDomain = packageDomainArg.getOrElse(askForPackageDomain())
+    val withCrud = (withCrudArg match {
+      case Some(value) =>
+        value.toLowerCase match {
+          case "y" => Some(true)
+          case "n" => Some(false)
+          case _   => None
+        }
+      case None => None
+    }).getOrElse(askForWithCrud())
 
     println(s"Writing package into ${System.getProperty("user.dir")}/")
 
     // package
-    ApplicationController(packageDomain, packageName).writeDomainFile()
-    ApplicationMapper(packageDomain, packageName).writeDomainFile()
-    Repository(packageDomain, packageName).writeDomainFile()
-    Service(packageDomain, packageName).writeDomainFile()
-    DomainModel(packageDomain, packageName).writeDomainFile()
-    DomainModelId(packageDomain, packageName).writeDomainFile()
-    DomainService(packageDomain, packageName).writeDomainFile()
-    SlickRepository(packageDomain, packageName).writeDomainFile()
-    SlickMapper(packageDomain, packageName).writeDomainFile()
+    ApplicationController(packageDomain, packageName).writeDomainFile(withCrud)
+    ApplicationMapper(packageDomain, packageName).writeDomainFile(withCrud)
+    Repository(packageDomain, packageName).writeDomainFile(withCrud)
+    Service(packageDomain, packageName).writeDomainFile(withCrud)
+    DomainModel(packageDomain, packageName).writeDomainFile(withCrud)
+    DomainModelId(packageDomain, packageName).writeDomainFile(withCrud)
+    DomainService(packageDomain, packageName).writeDomainFile(withCrud)
+    SlickRepository(packageDomain, packageName).writeDomainFile(withCrud)
+    SlickMapper(packageDomain, packageName).writeDomainFile(withCrud)
 
     // smithy
-    ApiDefinition(packageDomain, packageName).writeDomainFile()
-    ApiManifest(packageDomain, packageName).writeDomainFile(Some(StandardOpenOption.APPEND))
+    ApiDefinition(packageDomain, packageName).writeDomainFile(withCrud)
+    ApiManifest(packageDomain, packageName).writeDomainFile(withCrud, Some(StandardOpenOption.APPEND))
     println(s"Done writing, compiling code...")
     Process("sbt compile").run()
   }
@@ -76,6 +87,19 @@ object PackageDomain {
         println(validationErrors)
         askForPackageDomain()
       case Right(_) => packageDomain
+    }
+  }
+
+  @tailrec
+  private def askForWithCrud(): Boolean = {
+    println("With crud (creade, read, update, delete)? (y/n)")
+    val withCrud = readLine().toLowerCase()
+    withCrud match {
+      case "y" | "yes" => true
+      case "n" | "no"  => false
+      case _ =>
+        println("Invalid answer!")
+        askForWithCrud()
     }
   }
 

@@ -1,40 +1,29 @@
-import actions.Action
-import actions.help.Help
+import Args.packageDomainKey
 import actions.packagedomain.PackageDomain
 import config.SetupConfig
+import org.rogach.scallop.{ScallopConf, ScallopOption, Subcommand}
 
 import java.nio.file.{Files, Paths}
 
 object Setup extends App {
 
   implicit val config: SetupConfig = SetupConfig.get()
+  val arguments = new Args(args)
 
   workingDirectoryIsProjectRoot() match {
     case Left(_) => println("Execute this script from your project root!")
     case Right(_) =>
-      args.length match {
-        case 0 =>
-          println("Missing argument!")
-          Help.referToHelp()
-        case 1 => handleArgs(args.head)
-        case _ =>
-          println("Too many arguments!")
-          Help.referToHelp()
+      if (args.isEmpty) {
+        arguments.printHelp()
+      }
+      if (args.contains(Args.packageDomainKey)) {
+        PackageDomain.create(
+          arguments.packageDomain.packageName.toOption,
+          arguments.packageDomain.domain.toOption,
+          arguments.packageDomain.withCrud.toOption
+        )
       }
   }
-
-  def handleArgs(argumentKey: String)(implicit config: SetupConfig): Unit =
-    Action.availableArguments.find(argument => argument.keys.contains(argumentKey)) match {
-      case Some(argumentOfKey) =>
-        argumentOfKey match {
-          case _: Help          => Help.showHelp()
-          case _: PackageDomain => PackageDomain.create()
-          case _                => println("You found an unimplemented argument, report it!")
-        }
-      case None =>
-        println("Unsupported argument!")
-        Help.referToHelp()
-    }
 
   def workingDirectoryIsProjectRoot()(implicit config: SetupConfig) = {
     val filesInProjectRoot = Files.find(
@@ -50,5 +39,23 @@ object Setup extends App {
     if (filesInProjectRoot.count() == 2) Right(())
     else Left(())
   }
+}
 
+class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
+  object packageDomain extends Subcommand(packageDomainKey) {
+    val packageName: ScallopOption[String] = opt[String](descr = "Name of the package e.g. companies")
+    val domain: ScallopOption[String] = opt[String](descr = "Name of the domain e.g. company")
+    val withCrud: ScallopOption[String] =
+      opt[String](
+        name = "crud",
+        short = 'c',
+        descr = "(y/n) generates code for crud operations"
+      )
+  }
+  addSubcommand(packageDomain)
+  verify()
+}
+
+object Args {
+  val packageDomainKey = "package"
 }

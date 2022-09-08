@@ -1,27 +1,53 @@
 package actions.packagedomain.domainfiles.scalafiles
 
+import actions.packagedomain.domainfiles.common.CrudHelper
 import actions.packagedomain.domainfiles.smithyfiles.ApiDefinition
 import config.SetupConfig
 
-case class ApplicationMapper(packageDomain: String, packageName: String) extends ScalaDomainFile {
+case class ApplicationMapper(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
   override def subPath =
     s"/$packageName/application/mapper/"
   val name = s"${packageDomain}Mapper"
-  override def getContent()(implicit config: SetupConfig): String = {
+  override def getContent(withCrud: Boolean)(implicit config: SetupConfig): String = {
     val domainModel = DomainModel(packageDomain, packageName)
     val domainModelId = DomainModelId(packageDomain, packageName)
     val apiDefinition = ApiDefinition(packageDomain, packageName)
 
-    s"""
+    val content = s"""
        |package ${config.project.packagesRoot}.$packageName.application.mapper
        |
        |import ${config.project.packagesRoot}.application.controller.BaseMapper
+       |${CrudImportsKey}
+       |
+       |trait $name extends BaseMapper {
+       |  ${CrudLogicKey}
+       |}
+       |""".stripMargin
+
+    replaceForCrud(
+      content,
+      withCrud,
+      createCrudLogic(domainModel, domainModelId, apiDefinition),
+      createCrudImports(domainModel, domainModelId, apiDefinition)
+    )
+  }
+
+  private def createCrudImports(domainModel: DomainModel, domainModelId: DomainModelId, apiDefinition: ApiDefinition)(
+      implicit config: SetupConfig
+  ): String =
+    s"""
        |import ${config.project.packagesRoot}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
        |import ${config.project.packagesRoot}.api.{${apiDefinition.responsesName}, ${apiDefinition.requestBodyName}, ${apiDefinition.responseName}}
        |import io.scalaland.chimney.dsl.TransformerOps
        |import org.joda.time.DateTime
-       |
-       |trait $name extends BaseMapper {
+       |""".stripMargin
+
+  private def createCrudLogic(
+      domainModel: DomainModel,
+      domainModelId: DomainModelId,
+      apiDefinition: ApiDefinition
+  ): String =
+    s"""
        |  implicit val ${domainModel
         .nameLowerCased()}To${apiDefinition.responseName}: ${domainModel.name} => ${apiDefinition.responseName} = (
        |    ${domainModel.nameLowerCased()}: ${domainModel.name}
@@ -46,7 +72,5 @@ case class ApplicationMapper(packageDomain: String, packageName: String) extends
        |      .withFieldConst(_.created, DateTime.now())
        |      .withFieldConst(_.updated, DateTime.now())
        |      .transform
-       |}
        |""".stripMargin
-  }
 }
