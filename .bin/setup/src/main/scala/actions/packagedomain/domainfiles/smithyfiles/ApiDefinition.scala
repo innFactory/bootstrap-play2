@@ -1,9 +1,10 @@
 package actions.packagedomain.domainfiles.smithyfiles
 
 import actions.packagedomain.domainfiles.scalafiles.DomainModelId
+import config.SetupConfig
 
 case class ApiDefinition(packageDomain: String, packageName: String) extends SmithyDomainFile {
-  val path = s"${System.getProperty("user.dir")}/modules/api"
+  def path()(implicit config: SetupConfig) = s"${System.getProperty("user.dir")}/modules/api"
   def name: String = s"${packageDomain}APIController"
 
   protected def getContent(): String = {

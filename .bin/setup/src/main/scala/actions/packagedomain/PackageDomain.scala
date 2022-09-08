@@ -36,9 +36,6 @@ object PackageDomain {
 
     println(s"Writing package into ${System.getProperty("user.dir")}...")
 
-    val config =
-      println(config)
-
     ApplicationController(packageDomain, packageName).writeDomainFile()
     ApplicationMapper(packageDomain, packageName).writeDomainFile()
     Repository(packageDomain, packageName).writeDomainFile()
