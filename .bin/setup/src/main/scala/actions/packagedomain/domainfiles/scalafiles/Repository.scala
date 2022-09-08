@@ -3,21 +3,24 @@ package actions.packagedomain.domainfiles.scalafiles
 import config.SetupConfig
 
 case class Repository(packageDomain: String, packageName: String) extends ScalaDomainFile {
-  override def path()(implicit config: SetupConfig) =
-    s"${System.getProperty("user.dir")}/$packageName/domain/interfaces/"
+  override def subPath =
+    s"/$packageName/domain/interfaces/"
   val name = s"${packageDomain}Repository"
-  override def getContent(): String = {
+  override def getContent()(implicit config: SetupConfig): String = {
     val domainModel = DomainModel(packageDomain, packageName)
     val domainModelId = DomainModelId(packageDomain, packageName)
     val domainRepository = SlickRepository(packageDomain, packageName)
     s"""
-       |package de.innfactory.bootstrapplay2.$packageName.domain.interfaces
+       |package ${config.project.packagesRoot}.$packageName.domain.interfaces
        |
        |import com.google.inject.ImplementedBy
-       |import de.innfactory.bootstrapplay2.$packageName.infrastructure.${domainRepository.name}
-       |import de.innfactory.bootstrapplay2.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
+       |import ${config.project.packagesRoot}.$packageName.infrastructure.${domainRepository.name}
+       |import ${config.project.packagesRoot}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
+       |import de.innfactory.play.controller.ResultStatus
        |import cats.data.EitherT
        |import de.innfactory.play.smithy4play.TraceContext
+       |
+       |import scala.concurrent.Future
        |
        |@ImplementedBy(classOf[${domainRepository.name}])
        |private[$packageName] trait $name {

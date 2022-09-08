@@ -3,23 +3,25 @@ package actions.packagedomain.domainfiles.scalafiles
 import config.SetupConfig
 
 case class SlickRepository(packageDomain: String, packageName: String) extends ScalaDomainFile {
-  override def path()(implicit config: SetupConfig) = s"${System.getProperty("user.dir")}/$packageName/infrastructure/"
+  override def subPath =
+    s"/$packageName/infrastructure/"
   val name = s"Slick${packageDomain}Repository"
-  override def getContent(): String = {
+  override def getContent()(implicit config: SetupConfig): String = {
     val domainModel = DomainModel(packageDomain, packageName)
     val domainModelId = DomainModelId(packageDomain, packageName)
     val repository = Repository(packageDomain, packageName)
+    val slickMapper = SlickMapper(packageDomain, packageName)
 
     s"""
-       |package de.innfactory.bootstrapplay2.$packageName.infrastructure
+       |package ${config.project.packagesRoot}.$packageName.infrastructure
        |
        |import cats.data.{EitherT, Validated}
        |import dbdata.Tables
        |import de.innfactory.play.controller.ResultStatus
-       |import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
-       |import de.innfactory.bootstrapplay2.$packageName.domain.interfaces.${repository.name}
-       |import de.innfactory.bootstrapplay2.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}
-       |import de.innfactory.bootstrapplay2.$packageName.infrastructure.mapper.CompanyMapper._
+       |import ${config.project.packagesRoot}.commons.infrastructure.BaseSlickRepository
+       |import ${config.project.packagesRoot}.$packageName.domain.interfaces.${repository.name}
+       |import ${config.project.packagesRoot}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
+       |import ${config.project.packagesRoot}.$packageName.infrastructure.mapper.${slickMapper.name}._
        |import de.innfactory.play.db.codegen.XPostgresProfile.api._
        |import slick.jdbc.JdbcBackend.Database
        |import slick.jdbc.{ResultSetConcurrency, ResultSetType}

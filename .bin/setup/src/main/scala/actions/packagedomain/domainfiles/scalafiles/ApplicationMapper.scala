@@ -4,36 +4,39 @@ import actions.packagedomain.domainfiles.smithyfiles.ApiDefinition
 import config.SetupConfig
 
 case class ApplicationMapper(packageDomain: String, packageName: String) extends ScalaDomainFile {
-  override def path()(implicit config: SetupConfig) =
-    s"${System.getProperty("user.dir")}/$packageName/application/mapper/"
+  override def subPath =
+    s"/$packageName/application/mapper/"
   val name = s"${packageDomain}Mapper"
-  override def getContent(): String = {
+  override def getContent()(implicit config: SetupConfig): String = {
     val domainModel = DomainModel(packageDomain, packageName)
     val domainModelId = DomainModelId(packageDomain, packageName)
     val apiDefinition = ApiDefinition(packageDomain, packageName)
 
     s"""
-       |package de.innfactory.bootstrapplay2.$packageName.application.mapper
+       |package ${config.project.packagesRoot}.$packageName.application.mapper
        |
-       |import de.innfactory.bootstrapplay2.application.controller.BaseMapper
-       |import de.innfactory.bootstrapplay2.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
-       |import de.innfactory.bootstrapplay2.api.{${apiDefinition.responsesName}, ${apiDefinition.name}, ${apiDefinition.requestBodyName}, ${apiDefinition.responseName}}
+       |import ${config.project.packagesRoot}.application.controller.BaseMapper
+       |import ${config.project.packagesRoot}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
+       |import ${config.project.packagesRoot}.api.{${apiDefinition.responsesName}, ${apiDefinition.requestBodyName}, ${apiDefinition.responseName}}
        |import io.scalaland.chimney.dsl.TransformerOps
        |import org.joda.time.DateTime
        |
-       |import java.util.UUID
-       |
        |trait $name extends BaseMapper {
        |  implicit val ${domainModel
-        .nameLowerCased()}To${apiDefinition.responsesName}: ${domainModel.name} => ${apiDefinition.responsesName} = (
+        .nameLowerCased()}To${apiDefinition.responseName}: ${domainModel.name} => ${apiDefinition.responseName} = (
        |    ${domainModel.nameLowerCased()}: ${domainModel.name}
        |  ) =>
        |    ${domainModel.nameLowerCased()}
-       |      .into[${apiDefinition.responsesName}]
+       |      .into[${apiDefinition.responseName}]
        |      .withFieldComputed(_.id, c => c.id.value)
        |      .withFieldComputed(_.created, c => dateTimeToDateWithTime(c.created))
        |      .withFieldComputed(_.updated, c => dateTimeToDateWithTime(c.updated))
        |      .transform
+       |      
+       |  implicit val ${domainModel
+        .nameLowerCased()}To${apiDefinition.responsesName}: Seq[${domainModel.name}] => ${apiDefinition.responsesName} = ($packageName: Seq[${domainModel.name}]) =>
+       |    ${apiDefinition.responsesName}($packageName.map(${domainModel
+        .nameLowerCased()}To${apiDefinition.responseName}))
        |
        |  implicit val ${domainModel
         .nameLowerCased()}RequestBodyTo${domainModel.name}: ${apiDefinition.requestBodyName} => ${domainModel.name} = (requestBody: ${apiDefinition.requestBodyName}) =>

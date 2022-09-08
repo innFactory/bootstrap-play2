@@ -7,9 +7,7 @@ import java.nio.file.{Files, Paths}
 
 object Setup extends App {
 
-  println("start")
   implicit val config: SetupConfig = SetupConfig.get()
-  println(config)
 
   workingDirectoryIsProjectRoot() match {
     case Left(_) => println("Execute this script from your project root!")
@@ -41,11 +39,12 @@ object Setup extends App {
   def workingDirectoryIsProjectRoot()(implicit config: SetupConfig) = {
     val filesInProjectRoot = Files.find(
       Paths.get(System.getProperty("user.dir")),
-      0,
+      1,
       (path, basicFileAttributes) => {
-        println(path.getFileName.toFile.getName)
         val fileName = path.getFileName.toFile.getName
-        fileName.matches(config.project.sourcesRoot) || fileName.matches(config.smithy.sourcesRoot)
+        basicFileAttributes.isDirectory && (fileName.matches(config.project.sourcesRoot) || fileName.matches(
+          config.smithy.sourcesRoot
+        ))
       }
     )
     if (filesInProjectRoot.count() == 2) Right(())

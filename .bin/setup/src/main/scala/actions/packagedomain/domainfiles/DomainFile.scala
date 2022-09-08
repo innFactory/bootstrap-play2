@@ -3,26 +3,44 @@ package actions.packagedomain.domainfiles
 import config.SetupConfig
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{Files, OpenOption, Path, Paths, StandardOpenOption}
 
 trait DomainFile {
-  def path()(implicit config: SetupConfig): String
+  def subPath: String
   def name: String
   def packageDomain: String
   def packageName: String
   protected def fileEnding: String
-  protected def getContent(): String
+  protected def getContent()(implicit config: SetupConfig): String
 
-  protected def getFileName(): String = s"$name.${fileEnding}"
+  protected def getFileName(): String = s"$name.$fileEnding"
 
   def nameLowerCased(): String = Character.toLowerCase(name.charAt(0)) + name.substring(1)
 
-  def writeDomainFile()(implicit config: SetupConfig): Unit = {
-    val fullPath = path.last match {
-      case '/' => s"${path}${getFileName()}"
-      case _   => s"$path/${getFileName()}"
+  protected def getAdjustedSubPath(): String = if (subPath.nonEmpty)
+    (subPath.head, subPath.last) match {
+      case ('/', '/') => s"$subPath"
+      case ('/', _)   => s"$subPath/"
+      case (_, '/')   => s"/$subPath"
+      case (_, _)     => s"/$subPath/"
     }
-    Files.createDirectories(Path.of(path))
-    Files.write(Paths.get(fullPath), getContent().getBytes(StandardCharsets.UTF_8))
+  else "/"
+
+  protected def getFullDirectoryPath()(implicit config: SetupConfig): String
+
+  def writeDomainFile(openOptions: Option[OpenOption] = None)(implicit config: SetupConfig): Unit = {
+    Files.createDirectories(Path.of(getFullDirectoryPath()))
+    openOptions match {
+      case Some(option) =>
+        println(s"Writing ${getFileName()} into ${getFullDirectoryPath()} with option ${option.toString}")
+        Files.write(
+          Paths.get(getFullDirectoryPath() + getFileName()),
+          getContent().getBytes(StandardCharsets.UTF_8),
+          option
+        )
+      case None =>
+        println(s"Writing ${getFileName()} into ${getFullDirectoryPath()}")
+        Files.write(Paths.get(getFullDirectoryPath() + getFileName()), getContent().getBytes(StandardCharsets.UTF_8))
+    }
   }
 }

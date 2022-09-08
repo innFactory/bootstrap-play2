@@ -12,14 +12,15 @@ import actions.packagedomain.domainfiles.scalafiles.{
   SlickMapper,
   SlickRepository
 }
+import actions.packagedomain.domainfiles.smithyfiles.{ApiDefinition, ApiManifest}
 import cats.data.Validated
 import config.SetupConfig
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Paths}
+import java.nio.file.{Files, Paths, StandardOpenOption}
 import scala.annotation.tailrec
-import scala.io.Source
 import scala.io.StdIn.readLine
+import scala.sys.process.Process
 
 case class PackageDomain() extends Action {
   override def keys: Seq[String] = PackageDomain.keys
@@ -34,8 +35,9 @@ object PackageDomain {
     val packageName = askForPackage()
     val packageDomain = askForPackageDomain()
 
-    println(s"Writing package into ${System.getProperty("user.dir")}...")
+    println(s"Writing package into ${System.getProperty("user.dir")}/")
 
+    // package
     ApplicationController(packageDomain, packageName).writeDomainFile()
     ApplicationMapper(packageDomain, packageName).writeDomainFile()
     Repository(packageDomain, packageName).writeDomainFile()
@@ -45,7 +47,12 @@ object PackageDomain {
     DomainService(packageDomain, packageName).writeDomainFile()
     SlickRepository(packageDomain, packageName).writeDomainFile()
     SlickMapper(packageDomain, packageName).writeDomainFile()
-    println(s"Done")
+
+    // smithy
+    ApiDefinition(packageDomain, packageName).writeDomainFile()
+    ApiManifest(packageDomain, packageName).writeDomainFile(Some(StandardOpenOption.APPEND))
+    println(s"Done writing, compiling code...")
+    Process("sbt compile").run()
   }
 
   @tailrec

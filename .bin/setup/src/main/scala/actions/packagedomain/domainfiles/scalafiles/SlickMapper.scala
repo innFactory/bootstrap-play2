@@ -3,17 +3,17 @@ package actions.packagedomain.domainfiles.scalafiles
 import config.SetupConfig
 
 case class SlickMapper(packageDomain: String, packageName: String) extends ScalaDomainFile {
-  override def path()(implicit config: SetupConfig) =
-    s"${System.getProperty("user.dir")}/$packageName/infrastructure/mapper/"
-  val name = s"${packageDomain}Mapper.scala"
-  override def getContent(): String = {
+  override def subPath =
+    s"/$packageName/infrastructure/mapper/"
+  val name = s"${packageDomain}Mapper"
+  override def getContent()(implicit config: SetupConfig): String = {
     val domainModel = DomainModel(packageDomain, packageName)
     val domainModelId = DomainModelId(packageDomain, packageName)
     s"""
-       |package de.innfactory.bootstrapplay2.$packageName.infrastructure.mapper
+       |package ${config.project.packagesRoot}.$packageName.infrastructure.mapper
        |
        |import dbdata.Tables
-       |import de.innfactory.bootstrapplay2.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}
+       |import ${config.project.packagesRoot}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
        |import io.scalaland.chimney.dsl.TransformerOps
        |import org.joda.time.DateTime
        |

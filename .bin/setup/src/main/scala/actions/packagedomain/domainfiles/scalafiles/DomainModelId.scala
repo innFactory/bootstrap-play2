@@ -3,11 +3,12 @@ package actions.packagedomain.domainfiles.scalafiles
 import config.SetupConfig
 
 case class DomainModelId(packageDomain: String, packageName: String) extends ScalaDomainFile {
-  override def path()(implicit config: SetupConfig) = s"${System.getProperty("user.dir")}/$packageName/domain/models/"
+  override def subPath =
+    s"/$packageName/domain/models/"
   val name = s"${packageDomain}Id"
-  override def getContent(): String =
+  override def getContent()(implicit config: SetupConfig): String =
     s"""
-      |package de.innfactory.bootstrapplay2.$packageName.domain.models
+      |package ${config.project.packagesRoot}.$packageName.domain.models
       |
       |import java.util.UUID
       |

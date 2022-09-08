@@ -15,11 +15,15 @@ object SetupConfig {
     Json.parse(configString).as[SetupConfig]
   }
 
-  case class ProjectConfig(sourcesRoot: String, packagesRoot: String)
+  case class ProjectConfig(sourcesRoot: String, packagesRoot: String) {
+    def getPackagePath() = s"$sourcesRoot/${packagesRoot.replace('.', '/')}"
+  }
   object ProjectConfig {
     implicit val format: OFormat[ProjectConfig] = Json.format[ProjectConfig]
   }
-  case class SmithyConfig(sourcesRoot: String, apiDefinitionRoot: String)
+  case class SmithyConfig(sourcesRoot: String, apiDefinitionRoot: String) {
+    def getPath() = s"$sourcesRoot/${apiDefinitionRoot.replace('.', '/')}"
+  }
   object SmithyConfig {
     implicit val format: OFormat[SmithyConfig] = Json.format[SmithyConfig]
   }
