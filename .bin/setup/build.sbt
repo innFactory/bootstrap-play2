@@ -1,3 +1,7 @@
+import sbtassembly.MergeStrategy
+
+resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
+
 lazy val root = (project in file("."))
   .settings(
     name := "Setup",
@@ -6,5 +10,6 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-core" % "2.8.0",
       "com.typesafe.play" %% "play-json" % "2.9.2"
-    )
+    ),
+    assembly / assemblyMergeStrategy := (_ => MergeStrategy.first)
   )
