@@ -1,7 +1,8 @@
 {
   "project": {
-    "sourcesRoot": "app",
-    "packagesRoot": "de.innfactory.bootstrapplay2"
+    "name": "bootstrap-play2",
+    "domain": "de.innfactory",
+    "sourcesRoot": "app"
   },
   "smithy": {
     "sourcesRoot": "modules.api-definition",

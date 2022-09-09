@@ -1,7 +1,7 @@
-package packagedomain.domainfiles.scalafiles
+package packagedomain.scalafiles
 
-import packagedomain.domainfiles.common.CrudHelper
-import packagedomain.domainfiles.smithyfiles.ApiDefinition
+import packagedomain.common.CrudHelper
+import packagedomain.smithyfiles.ApiDefinition
 import config.SetupConfig
 
 case class ApplicationMapper(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
@@ -14,9 +14,9 @@ case class ApplicationMapper(packageDomain: String, packageName: String) extends
     val apiDefinition = ApiDefinition(packageDomain, packageName)
 
     val content = s"""
-       |package ${config.project.packagesRoot}.$packageName.application.mapper
+       |package ${config.project.getNamespace()}.$packageName.application.mapper
        |
-       |import ${config.project.packagesRoot}.application.controller.BaseMapper
+       |import ${config.project.getNamespace()}.application.controller.BaseMapper
        |${CrudImportsKey}
        |
        |trait $name extends BaseMapper {
@@ -36,8 +36,9 @@ case class ApplicationMapper(packageDomain: String, packageName: String) extends
       implicit config: SetupConfig
   ): String =
     s"""
-       |import ${config.project.packagesRoot}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
-       |import ${config.project.packagesRoot}.api.{${apiDefinition.responsesName}, ${apiDefinition.requestBodyName}, ${apiDefinition.responseName}}
+       |import ${config.project.getNamespace()}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
+       |import ${config.project
+        .getNamespace()}.api.{${apiDefinition.responsesName}, ${apiDefinition.requestBodyName}, ${apiDefinition.responseName}}
        |import io.scalaland.chimney.dsl.TransformerOps
        |import org.joda.time.DateTime
        |""".stripMargin

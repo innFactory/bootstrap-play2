@@ -1,7 +1,7 @@
-package packagedomain.domainfiles.scalafiles
+package packagedomain.scalafiles
 
-import packagedomain.domainfiles.common.CrudHelper
-import packagedomain.domainfiles.smithyfiles.ApiDefinition
+import packagedomain.common.CrudHelper
+import packagedomain.smithyfiles.ApiDefinition
 import config.SetupConfig
 
 case class ApplicationController(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
@@ -15,11 +15,11 @@ case class ApplicationController(packageDomain: String, packageName: String) ext
     val domainModelId = DomainModelId(packageDomain, packageName)
 
     val content = s"""
-      |package ${config.project.packagesRoot}.$packageName.application
+      |package ${config.project.getNamespace()}.$packageName.application
       |
-      |import ${config.project.packagesRoot}.application.controller.BaseController
-      |import ${config.project.packagesRoot}.$packageName.application.mapper.${applicationMapper.name}
-      |import ${config.project.packagesRoot}.$packageName.domain.interfaces.${service.name}
+      |import ${config.project.getNamespace()}.application.controller.BaseController
+      |import ${config.project.getNamespace()}.$packageName.application.mapper.${applicationMapper.name}
+      |import ${config.project.getNamespace()}.$packageName.domain.interfaces.${service.name}
       |${CrudImportsKey}
       |import de.innfactory.play.smithy4play.ImplicitLogContext
       |import play.api.mvc.ControllerComponents
@@ -57,8 +57,9 @@ case class ApplicationController(packageDomain: String, packageName: String) ext
       config: SetupConfig
   ): String =
     s"""
-       |import ${config.project.packagesRoot}.$packageName.domain.models.${domainModelId.name}
-       |import ${config.project.packagesRoot}.api.{${apiDefinition.responsesName}, ${apiDefinition.name}, ${apiDefinition.requestBodyName}, ${apiDefinition.responseName}}
+       |import ${config.project.getNamespace()}.$packageName.domain.models.${domainModelId.name}
+       |import ${config.project
+        .getNamespace()}.api.{${apiDefinition.responsesName}, ${apiDefinition.name}, ${apiDefinition.requestBodyName}, ${apiDefinition.responseName}}
        |""".stripMargin
 
   private def createCrudLogic(domainModelId: DomainModelId, apiDefinition: ApiDefinition, service: Service): String =

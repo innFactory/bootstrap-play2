@@ -1,4 +1,4 @@
-package packagedomain.domainfiles.smithyfiles
+package packagedomain.smithyfiles
 
 import config.SetupConfig
 import packagedomain.DomainFile

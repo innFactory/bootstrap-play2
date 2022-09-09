@@ -1,7 +1,7 @@
-package packagedomain.domainfiles.scalafiles
+package packagedomain.scalafiles
 
-import packagedomain.domainfiles.common.CrudHelper
-import packagedomain.domainfiles.smithyfiles.ApiDefinition
+import packagedomain.common.CrudHelper
+import packagedomain.smithyfiles.ApiDefinition
 import config.SetupConfig
 
 case class Repository(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
@@ -13,10 +13,10 @@ case class Repository(packageDomain: String, packageName: String) extends ScalaD
     val domainModelId = DomainModelId(packageDomain, packageName)
     val domainRepository = SlickRepository(packageDomain, packageName)
     val content = s"""
-       |package ${config.project.packagesRoot}.$packageName.domain.interfaces
+       |package ${config.project.getNamespace()}.$packageName.domain.interfaces
        |
        |import com.google.inject.ImplementedBy
-       |import ${config.project.packagesRoot}.$packageName.infrastructure.${domainRepository.name}
+       |import ${config.project.getNamespace()}.$packageName.infrastructure.${domainRepository.name}
        |
        |@ImplementedBy(classOf[${domainRepository.name}])
        |private[$packageName] trait $name {
@@ -36,7 +36,7 @@ case class Repository(packageDomain: String, packageName: String) extends ScalaD
       config: SetupConfig
   ): String =
     s"""
-       |import ${config.project.packagesRoot}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
+       |import ${config.project.getNamespace()}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
        |import de.innfactory.play.controller.ResultStatus
        |import cats.data.EitherT
        |import de.innfactory.play.smithy4play.TraceContext

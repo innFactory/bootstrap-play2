@@ -6,5 +6,4 @@ if [ ! -f "$PATH_TO_SETUP_JAR" ]; then
     echo "$PATH_TO_SETUP_JAR does not exist."
     exit
 fi
-
 exec scala "$PATH_TO_SETUP_JAR" "$@"

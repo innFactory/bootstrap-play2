@@ -1,7 +1,7 @@
-package packagedomain.domainfiles.smithyfiles
+package packagedomain.smithyfiles
 
-import packagedomain.domainfiles.common.CrudHelper
-import packagedomain.domainfiles.scalafiles.DomainModelId
+import packagedomain.common.CrudHelper
+import packagedomain.scalafiles.DomainModelId
 import config.SetupConfig
 
 case class ApiDefinition(packageDomain: String, packageName: String) extends SmithyDomainFile with CrudHelper {
@@ -19,7 +19,7 @@ case class ApiDefinition(packageDomain: String, packageName: String) extends Smi
     val content = s"""
       |$$version: "1.0"
       |
-      |namespace ${config.project.packagesRoot}.api
+      |namespace ${config.project.getNamespace()}.api
       |use smithy4s.api#simpleRestJson
       |
       |@simpleRestJson

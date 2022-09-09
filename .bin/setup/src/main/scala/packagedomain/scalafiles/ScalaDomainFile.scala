@@ -1,4 +1,4 @@
-package packagedomain.domainfiles.scalafiles
+package packagedomain.scalafiles
 
 import config.SetupConfig
 import packagedomain.DomainFile

@@ -1,6 +1,6 @@
-package packagedomain.domainfiles.scalafiles
+package packagedomain.scalafiles
 
-import packagedomain.domainfiles.common.CrudHelper
+import packagedomain.common.CrudHelper
 import config.SetupConfig
 
 case class SlickMapper(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
@@ -11,7 +11,7 @@ case class SlickMapper(packageDomain: String, packageName: String) extends Scala
     val domainModel = DomainModel(packageDomain, packageName)
     val domainModelId = DomainModelId(packageDomain, packageName)
     val content = s"""
-       |package ${config.project.packagesRoot}.$packageName.infrastructure.mapper
+       |package ${config.project.getNamespace()}.$packageName.infrastructure.mapper
        |
        |import dbdata.Tables
        |${CrudImportsKey}
@@ -33,7 +33,7 @@ case class SlickMapper(packageDomain: String, packageName: String) extends Scala
       config: SetupConfig
   ): String =
     s"""
-       |import ${config.project.packagesRoot}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
+       |import ${config.project.getNamespace()}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
        |import io.scalaland.chimney.dsl.TransformerOps
        |""".stripMargin
 

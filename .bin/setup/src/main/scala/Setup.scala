@@ -3,6 +3,7 @@ import arguments.Args
 import bootstrap.Bootstrap
 import cats.data.Validated
 import config.SetupConfig
+import config.SetupConfig.{ProjectConfig, SmithyConfig}
 
 import java.nio.file.{Files, Paths}
 
@@ -28,7 +29,19 @@ object Setup extends App {
         )
       }
       if (args.contains(Args.bootstrapKey)) {
-        Bootstrap.init()
+        Bootstrap.init(
+          SetupConfig(
+            project = ProjectConfig(
+              sourcesRoot = arguments.bootstrap.projectSourcesRoot.toOption.getOrElse(""),
+              domain = arguments.bootstrap.projectDomain.toOption.getOrElse(""),
+              name = arguments.bootstrap.projectName.toOption.getOrElse("")
+            ),
+            smithy = SmithyConfig(
+              sourcesRoot = arguments.bootstrap.smithySourcesRoot.toOption.getOrElse(""),
+              apiDefinitionRoot = arguments.bootstrap.smithyApiDefinitionRoot.toOption.getOrElse("")
+            )
+          )
+        )
       }
   }
 

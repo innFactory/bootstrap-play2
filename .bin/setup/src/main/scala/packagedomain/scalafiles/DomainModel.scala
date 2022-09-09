@@ -1,4 +1,4 @@
-package packagedomain.domainfiles.scalafiles
+package packagedomain.scalafiles
 
 import config.SetupConfig
 
@@ -9,7 +9,7 @@ case class DomainModel(packageDomain: String, packageName: String) extends Scala
   override def getContent(withCrud: Boolean)(implicit config: SetupConfig): String = {
     val domainModelId = DomainModelId(packageDomain, packageName)
     s"""
-      |package ${config.project.packagesRoot}.$packageName.domain.models
+      |package ${config.project.getNamespace()}.$packageName.domain.models
       |
       |import org.joda.time.DateTime
       |

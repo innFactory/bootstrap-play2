@@ -1,6 +1,6 @@
 package packagedomain
 
-import packagedomain.domainfiles.scalafiles.{
+import packagedomain.scalafiles.{
   ApplicationController,
   ApplicationMapper,
   DomainModel,
@@ -11,7 +11,7 @@ import packagedomain.domainfiles.scalafiles.{
   SlickMapper,
   SlickRepository
 }
-import packagedomain.domainfiles.smithyfiles.{ApiDefinition, ApiManifest}
+import packagedomain.smithyfiles.{ApiDefinition, ApiManifest}
 import arguments.booleanarg.{BooleanArgRetriever, BooleanArgValidations}
 import arguments.stringarg.StringArgRetriever
 import config.SetupConfig

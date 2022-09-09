@@ -1,4 +1,4 @@
-package packagedomain.domainfiles.scalafiles
+package packagedomain.scalafiles
 
 import config.SetupConfig
 
@@ -8,7 +8,7 @@ case class DomainModelId(packageDomain: String, packageName: String) extends Sca
   val name = s"${packageDomain}Id"
   override def getContent(withCrud: Boolean)(implicit config: SetupConfig): String =
     s"""
-      |package ${config.project.packagesRoot}.$packageName.domain.models
+      |package ${config.project.getNamespace()}.$packageName.domain.models
       |
       |import java.util.UUID
       |

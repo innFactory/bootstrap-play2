@@ -1,6 +1,6 @@
-package packagedomain.domainfiles.scalafiles
+package packagedomain.scalafiles
 
-import packagedomain.domainfiles.common.CrudHelper
+import packagedomain.common.CrudHelper
 import config.SetupConfig
 
 case class SlickRepository(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
@@ -14,11 +14,11 @@ case class SlickRepository(packageDomain: String, packageName: String) extends S
     val slickMapper = SlickMapper(packageDomain, packageName)
 
     val content = s"""
-       |package ${config.project.packagesRoot}.$packageName.infrastructure
+       |package ${config.project.getNamespace()}.$packageName.infrastructure
        |
        |import dbdata.Tables
-       |import ${config.project.packagesRoot}.commons.infrastructure.BaseSlickRepository
-       |import ${config.project.packagesRoot}.$packageName.domain.interfaces.${repository.name}
+       |import ${config.project.getNamespace()}.commons.infrastructure.BaseSlickRepository
+       |import ${config.project.getNamespace()}.$packageName.domain.interfaces.${repository.name}
        |import de.innfactory.play.db.codegen.XPostgresProfile.api._
        |import slick.jdbc.JdbcBackend.Database
        |${CrudImportsKey}
@@ -46,8 +46,8 @@ case class SlickRepository(packageDomain: String, packageName: String) extends S
       implicit config: SetupConfig
   ): String =
     s"""
-       |import ${config.project.packagesRoot}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
-       |import ${config.project.packagesRoot}.$packageName.infrastructure.mapper.${slickMapper.name}._
+       |import ${config.project.getNamespace()}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
+       |import ${config.project.getNamespace()}.$packageName.infrastructure.mapper.${slickMapper.name}._
        |import de.innfactory.play.controller.ResultStatus
        |import de.innfactory.play.smithy4play.TraceContext
        |import cats.data.EitherT

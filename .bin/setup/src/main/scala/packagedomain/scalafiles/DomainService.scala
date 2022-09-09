@@ -1,6 +1,6 @@
-package packagedomain.domainfiles.scalafiles
+package packagedomain.scalafiles
 
-import packagedomain.domainfiles.common.CrudHelper
+import packagedomain.common.CrudHelper
 import config.SetupConfig
 
 case class DomainService(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
@@ -14,10 +14,10 @@ case class DomainService(packageDomain: String, packageName: String) extends Sca
     val repository = Repository(packageDomain, packageName)
 
     val content = s"""
-       |package ${config.project.packagesRoot}.$packageName.domain.services
+       |package ${config.project.getNamespace()}.$packageName.domain.services
        |
        |${CrudImportsKey}
-       |import ${config.project.packagesRoot}.$packageName.domain.interfaces.{${repository.name}, ${service.name}}
+       |import ${config.project.getNamespace()}.$packageName.domain.interfaces.{${repository.name}, ${service.name}}
        |import javax.inject.Inject
        |import scala.concurrent.{ExecutionContext, Future}
        |
@@ -42,8 +42,8 @@ case class DomainService(packageDomain: String, packageName: String) extends Sca
     s"""
        |import de.innfactory.play.controller.ResultStatus
        |import cats.data.EitherT
-       |import ${config.project.packagesRoot}.commons.RequestContextWithUser
-       |import ${config.project.packagesRoot}.$packageName.domain.models.{${domainModelId.name}, ${domainModel.name}}
+       |import ${config.project.getNamespace()}.commons.RequestContextWithUser
+       |import ${config.project.getNamespace()}.$packageName.domain.models.{${domainModelId.name}, ${domainModel.name}}
        |""".stripMargin
 
   private def createCrudLogic(domainModel: DomainModel, domainModelId: DomainModelId, repository: Repository): String =

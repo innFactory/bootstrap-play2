@@ -1,4 +1,4 @@
-package packagedomain.domainfiles.smithyfiles
+package packagedomain.smithyfiles
 import config.SetupConfig
 
 case class ApiManifest(packageDomain: String, packageName: String) extends SmithyDomainFile {
