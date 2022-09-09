@@ -1,7 +1,7 @@
-package actions.packagedomain.domainfiles.smithyfiles
+package packagedomain.domainfiles.smithyfiles
 
-import actions.packagedomain.domainfiles.common.CrudHelper
-import actions.packagedomain.domainfiles.scalafiles.DomainModelId
+import packagedomain.domainfiles.common.CrudHelper
+import packagedomain.domainfiles.scalafiles.DomainModelId
 import config.SetupConfig
 
 case class ApiDefinition(packageDomain: String, packageName: String) extends SmithyDomainFile with CrudHelper {

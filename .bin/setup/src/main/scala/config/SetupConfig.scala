@@ -22,7 +22,7 @@ object SetupConfig {
     implicit val format: OFormat[ProjectConfig] = Json.format[ProjectConfig]
   }
   case class SmithyConfig(sourcesRoot: String, apiDefinitionRoot: String) {
-    def getPath() = s"$sourcesRoot/${apiDefinitionRoot.replace('.', '/')}"
+    def getPath() = s"${sourcesRoot.replace('.', '/')}/${apiDefinitionRoot.replace('.', '/')}"
   }
   object SmithyConfig {
     implicit val format: OFormat[SmithyConfig] = Json.format[SmithyConfig]

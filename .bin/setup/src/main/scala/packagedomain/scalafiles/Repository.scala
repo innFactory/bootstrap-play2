@@ -1,7 +1,7 @@
-package actions.packagedomain.domainfiles.scalafiles
+package packagedomain.domainfiles.scalafiles
 
-import actions.packagedomain.domainfiles.common.CrudHelper
-import actions.packagedomain.domainfiles.smithyfiles.ApiDefinition
+import packagedomain.domainfiles.common.CrudHelper
+import packagedomain.domainfiles.smithyfiles.ApiDefinition
 import config.SetupConfig
 
 case class Repository(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {

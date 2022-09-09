@@ -1,9 +1,9 @@
-package actions.packagedomain.domainfiles
+package packagedomain
 
 import config.SetupConfig
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, OpenOption, Path, Paths, StandardOpenOption}
+import java.nio.file.{Files, OpenOption, Path, Paths}
 
 trait DomainFile {
   def subPath: String

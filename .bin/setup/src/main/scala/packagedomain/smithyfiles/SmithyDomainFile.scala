@@ -1,7 +1,7 @@
-package actions.packagedomain.domainfiles.smithyfiles
+package packagedomain.domainfiles.smithyfiles
 
-import actions.packagedomain.domainfiles.DomainFile
 import config.SetupConfig
+import packagedomain.DomainFile
 
 trait SmithyDomainFile extends DomainFile {
   val fileEnding = "smithy"

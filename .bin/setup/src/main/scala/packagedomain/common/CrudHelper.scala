@@ -1,4 +1,4 @@
-package actions.packagedomain.domainfiles.common
+package packagedomain.domainfiles.common
 
 trait CrudHelper {
   protected val CrudLogicKey = "%%CRUD_LOGIC%%"

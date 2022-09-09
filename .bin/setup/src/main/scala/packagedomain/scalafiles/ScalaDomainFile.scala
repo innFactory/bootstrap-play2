@@ -1,7 +1,7 @@
-package actions.packagedomain.domainfiles.scalafiles
+package packagedomain.domainfiles.scalafiles
 
-import actions.packagedomain.domainfiles.DomainFile
 import config.SetupConfig
+import packagedomain.DomainFile
 
 trait ScalaDomainFile extends DomainFile {
   val fileEnding = "scala"

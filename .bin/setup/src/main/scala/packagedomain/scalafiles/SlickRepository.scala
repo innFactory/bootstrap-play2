@@ -1,6 +1,6 @@
-package actions.packagedomain.domainfiles.scalafiles
+package packagedomain.domainfiles.scalafiles
 
-import actions.packagedomain.domainfiles.common.CrudHelper
+import packagedomain.domainfiles.common.CrudHelper
 import config.SetupConfig
 
 case class SlickRepository(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
