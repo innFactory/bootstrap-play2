@@ -53,8 +53,8 @@ object Dependencies {
 
   val sl4j = "org.slf4j" % "slf4j-api" % "2.0.0" intransitive
   val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.0.1"
-  val logback = "ch.qos.logback" % "logback-classic" % "1.4.0"
-  val logbackCore = "ch.qos.logback" % "logback-core" % "1.4.0"
+  val logback = "ch.qos.logback" % "logback-classic" % "1.2.11"
+  val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.11"
 
   lazy val list = Seq(
     scalaUtil,
