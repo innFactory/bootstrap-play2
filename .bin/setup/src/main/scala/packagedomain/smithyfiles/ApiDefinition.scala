@@ -8,10 +8,10 @@ case class ApiDefinition(packageDomain: String, packageName: String) extends Smi
   override def subPath = ""
   def name: String = s"${packageDomain}APIController"
   val allOperationName = s"getAll${packageName.capitalize}"
-  val getByIdOperationName = s"get${packageDomain}ById"
-  val createOperationName = s"create$packageDomain"
-  val updateOperationName = s"update$packageDomain"
-  val deleteOperationName = s"delete$packageDomain"
+  val getByIdOperationName = s"get${packageDomain.capitalize}ById"
+  val createOperationName = s"create${packageDomain.capitalize}"
+  val updateOperationName = s"update${packageDomain.capitalize}"
+  val deleteOperationName = s"delete${packageDomain.capitalize}"
 
   protected def getContent(withCrud: Boolean)(implicit config: SetupConfig): String = {
     val domainModelId = DomainModelId(packageDomain, packageName)

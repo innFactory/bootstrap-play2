@@ -7,7 +7,7 @@ import config.SetupConfig
 case class Repository(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
   override def subPath =
     s"/$packageName/domain/interfaces/"
-  val name = s"${packageDomain}Repository"
+  val name = s"${packageDomain.capitalize}Repository"
   override def getContent(withCrud: Boolean)(implicit config: SetupConfig): String = {
     val domainModel = DomainModel(packageDomain, packageName)
     val domainModelId = DomainModelId(packageDomain, packageName)
@@ -17,10 +17,11 @@ case class Repository(packageDomain: String, packageName: String) extends ScalaD
        |
        |import com.google.inject.ImplementedBy
        |import ${config.project.getNamespace()}.$packageName.infrastructure.${domainRepository.name}
+       |${CrudImportsKey}
        |
        |@ImplementedBy(classOf[${domainRepository.name}])
        |private[$packageName] trait $name {
-
+       |  ${CrudLogicKey}
        |}
        |""".stripMargin
 

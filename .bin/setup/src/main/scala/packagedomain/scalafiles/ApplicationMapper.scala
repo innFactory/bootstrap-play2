@@ -7,7 +7,7 @@ import config.SetupConfig
 case class ApplicationMapper(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
   override def subPath =
     s"/$packageName/application/mapper/"
-  val name = s"${packageDomain}Mapper"
+  val name = s"${packageDomain.capitalize}Mapper"
   override def getContent(withCrud: Boolean)(implicit config: SetupConfig): String = {
     val domainModel = DomainModel(packageDomain, packageName)
     val domainModelId = DomainModelId(packageDomain, packageName)

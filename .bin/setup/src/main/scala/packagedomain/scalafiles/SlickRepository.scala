@@ -6,7 +6,7 @@ import config.SetupConfig
 case class SlickRepository(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
   override def subPath =
     s"/$packageName/infrastructure/"
-  val name = s"Slick${packageDomain}Repository"
+  val name = s"Slick${packageDomain.capitalize}Repository"
   override def getContent(withCrud: Boolean)(implicit config: SetupConfig): String = {
     val domainModel = DomainModel(packageDomain, packageName)
     val domainModelId = DomainModelId(packageDomain, packageName)

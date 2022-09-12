@@ -8,7 +8,7 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
   object packageDomain extends Subcommand(Args.packageDomainKey) {
     val packageName: ScallopOption[String] = opt[String](
       descr = "Name of the package e.g. companies",
-      validate = (input: String) => StringArgValidations.onlyLettersNumbersHyphen(input).isRight
+      validate = (input: String) => StringArgValidations.onlyLetters(input).isRight
     )
     val domain: ScallopOption[String] = opt[String](
       descr = "Name of the domain e.g. company",

@@ -10,7 +10,7 @@ object StringArgValidations {
   val onlyLettersNumbersHyphen: String => Either[String, Unit] = (toValidate: String) =>
     Validated
       .cond(
-        toValidate.matches("^([a-zA-Z]+(?:\\-[a-zA-Z]+))*?$"),
+        toValidate.matches("^([a-zA-Z0-9]+(?:\\-?[a-zA-Z0-9]+))*?$"),
         (),
         "Can only consist out of letters and numbers separated by a single hyphen!"
       )
@@ -26,7 +26,7 @@ object StringArgValidations {
   val onlyLettersDotHyphen: String => Either[String, Unit] = (toValidate: String) =>
     Validated
       .cond(
-        toValidate.matches("^([a-zA-Z]+(?:[\\.\\-][a-zA-Z]+))*?$"),
+        toValidate.matches("^([a-zA-Z]+(?:[\\.\\-]?[a-zA-Z]+))*?$"),
         (),
         "Can only consist out of letters separated by a single dot or hyphen!"
       )

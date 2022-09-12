@@ -5,7 +5,7 @@ import packagedomain.smithyfiles.ApiDefinition
 import config.SetupConfig
 
 case class ApplicationController(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
-  val name = s"${packageDomain}Controller"
+  val name = s"${packageDomain.capitalize}Controller"
   override def subPath = s"/$packageName/application/"
 
   override def getContent(withCrud: Boolean)(implicit config: SetupConfig): String = {
@@ -64,7 +64,7 @@ case class ApplicationController(packageDomain: String, packageName: String) ext
 
   private def createCrudLogic(domainModelId: DomainModelId, apiDefinition: ApiDefinition, service: Service): String =
     s"""
-       |  override def get${packageDomain}ById(${domainModelId
+       |  override def get${packageDomain.capitalize}ById(${domainModelId
         .nameLowerCased()}: String): ContextRoute[${apiDefinition.responseName}] =
        |    Endpoint.withAuth
        |      .execute(${service.nameLowerCased()}.getById(${domainModelId.name}(${domainModelId.nameLowerCased()}))(_))
@@ -75,15 +75,15 @@ case class ApplicationController(packageDomain: String, packageName: String) ext
        |      .execute(${service.nameLowerCased()}.getAll()(_))
        |      .complete
        |
-       |  override def create$packageDomain(body: ${apiDefinition.requestBodyName}): ContextRoute[${apiDefinition.responseName}] = Endpoint.withAuth
+       |  override def create${packageDomain.capitalize}(body: ${apiDefinition.requestBodyName}): ContextRoute[${apiDefinition.responseName}] = Endpoint.withAuth
        |    .execute(${service.nameLowerCased()}.create(body)(_))
        |    .complete
        |
-       |  override def update$packageDomain(body: ${apiDefinition.requestBodyName}): ContextRoute[${apiDefinition.responseName}] = Endpoint.withAuth
+       |  override def update${packageDomain.capitalize}(body: ${apiDefinition.requestBodyName}): ContextRoute[${apiDefinition.responseName}] = Endpoint.withAuth
        |    .execute(${service.nameLowerCased()}.update(body)(_))
        |    .complete
        |
-       |  override def delete$packageDomain(${domainModelId
+       |  override def delete${packageDomain.capitalize}(${domainModelId
         .nameLowerCased()}: String): ContextRoute[Unit] = Endpoint.withAuth
        |    .execute(${service.nameLowerCased()}.delete(${domainModelId.name}(${domainModelId.nameLowerCased()}))(_))
        |    .complete

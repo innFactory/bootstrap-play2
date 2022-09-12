@@ -6,7 +6,7 @@ import config.SetupConfig
 case class DomainService(packageDomain: String, packageName: String) extends ScalaDomainFile with CrudHelper {
   override def subPath =
     s"/$packageName/domain/services/"
-  val name = s"Domain${packageDomain}Service"
+  val name = s"Domain${packageDomain.capitalize}Service"
   override def getContent(withCrud: Boolean)(implicit config: SetupConfig): String = {
     val domainModelId = DomainModelId(packageDomain, packageName)
     val domainModel = DomainModel(packageDomain, packageName)
