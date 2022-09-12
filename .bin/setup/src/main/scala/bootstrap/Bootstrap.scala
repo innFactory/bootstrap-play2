@@ -2,6 +2,7 @@ package bootstrap
 
 import arguments.stringarg.{StringArgRetriever, StringArgValidations}
 import arguments.stringlistarg.StringListArgRetriever
+import cats.implicits.toBifunctorOps
 import common.SeqImplicit.EmptySeqOption
 import common.StringImplicit.EmptyStringOption
 import config.SetupConfig
@@ -12,6 +13,7 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
 import scala.sys.process.Process
+import scala.util.Try
 
 object Bootstrap {
   def init(configFromArgs: SetupConfig)(implicit config: SetupConfig): Unit = {
@@ -26,34 +28,28 @@ object Bootstrap {
      */
     if (config.project.getNamespace() != configForInit.project.getNamespace()) {
       println(s"Updating namespace from ${config.project.getNamespace()} to ${configForInit.project.getNamespace()}...")
-      updateContent(config.project.getNamespace(), configForInit.project.getNamespace())
+      updateContent(config.project.getNamespace(), configForInit.project.getNamespace(), configForInit.bootstrap.paths)
     }
     if (config.project.name != configForInit.project.name) {
       println(s"Updating project name from ${config.project.name} to ${configForInit.project.name}...")
-      updateContent(config.project.name, configForInit.project.name)
+      updateContent(config.project.name, configForInit.project.name, configForInit.bootstrap.paths)
+      renameParent(config.project.name, configForInit.project.name)
     }
-    if (config.project.sourcesRoot != configForInit.project.sourcesRoot) {
-      println(s"Updating sources root from ${config.project.sourcesRoot} to ${configForInit.project.sourcesRoot}...")
-      updateSourcesRoot(config.project.sourcesRoot, configForInit.project.sourcesRoot)
-    }
-    if (config.smithy.apiDefinitionRoot != configForInit.smithy.apiDefinitionRoot) {
-      println(s"Updating api definition root from ${config.smithy.apiDefinitionRoot
-          .replace('.', '/')} to ${configForInit.smithy.apiDefinitionRoot.replace('.', '/')}...")
-      updateApiDefinitionRoot(
-        config.smithy.apiDefinitionRoot.replace('.', '/'),
-        configForInit.smithy.apiDefinitionRoot.replace('.', '/')
+    if (config.project.getPackagePath() != configForInit.project.getPackagePath()) {
+      println(
+        s"Updating packages path from ${config.project.getPackagePath()} to ${configForInit.project.getPackagePath()}..."
       )
+      rename(config.project.getPackagePath(), configForInit.project.getPackagePath())
     }
-    if (config.smithy.sourcesRoot != configForInit.smithy.sourcesRoot) {
-      println(s"Updating smithy sources root from ${config.smithy.sourcesRoot
-          .replace('.', '/')} to ${configForInit.smithy.sourcesRoot.replace('.', '/')}...")
-      updateSourcesRoot(
-        config.smithy.sourcesRoot.replace('.', '/'),
-        configForInit.smithy.sourcesRoot.replace('.', '/')
-      )
+    if (config.smithy.getPath() != configForInit.smithy.getPath()) {
+      println(s"Updating api definition path from ${config.smithy.getPath()} to ${configForInit.smithy.getPath()}...")
+      rename(config.smithy.getPath(), configForInit.smithy.getPath())
+      updateBuildSbt(config.smithy.getPath(), configForInit.smithy.getPath())
+      updateBuildSbt(config.smithy.sourcesRoot.replace('.', '/'), configForInit.smithy.sourcesRoot.replace('.', '/'))
     }
 
     updateConfig(configForInit)
+    Process("sbt compile").run()
   }
 
   private def askForMissingConfigs(configFromArgs: SetupConfig)(implicit config: SetupConfig) =
@@ -108,7 +104,7 @@ object Bootstrap {
         paths = configFromArgs.bootstrap.paths.toOption.getOrElse(
           StringListArgRetriever
             .askFor(
-              "Paths of files and directories which shall be included during the bootstrap process, 'smithySourcesRoot' and 'projectSourcesRoot' are always included. default build.sbt conf .github",
+              "Paths of files and directories which shall be included during the bootstrap process, sources roots and build.sbt are always included. Default: conf .github",
               Seq(StringArgValidations.onlyLettersDotSlash)
             )
             .toOption
@@ -117,19 +113,13 @@ object Bootstrap {
       )
     )
 
-  private def updateContent(old: String, next: String)(implicit config: SetupConfig): Unit =
-    (config.bootstrap.paths :++ Seq(config.project.sourcesRoot, config.smithy.sourcesRoot)).foreach(path =>
-      updateContentInDirOrFile(s"${System.getProperty("user.dir")}/${path.replace('.', '/')}", old, next)
-    )
-
-  private def updateSourcesRoot(old: String, next: String): Unit =
-    rename(s"${System.getProperty("user.dir")}/$old", s"${System.getProperty("user.dir")}/$next")
-
-  private def updateApiDefinitionRoot(old: String, next: String)(implicit config: SetupConfig): Unit =
-    rename(
-      s"${System.getProperty("user.dir")}/${config.smithy.sourcesRoot.replace('.', '/')}/$old",
-      s"${System.getProperty("user.dir")}/${config.smithy.sourcesRoot.replace('.', '/')}/$next"
-    )
+  private def updateContent(old: String, next: String, bootstrapPaths: Seq[String])(implicit
+      config: SetupConfig
+  ): Unit = {
+    updateBuildSbt(old, next)
+    (bootstrapPaths :++ Seq(config.project.sourcesRoot.replace('.', '/'), config.smithy.sourcesRoot.replace('.', '/')))
+      .foreach(path => updateContentInDirOrFile(path, old, next))
+  }
 
   private def updateConfig(next: SetupConfig): Unit = {
     Files.createDirectories(Paths.get(SetupConfig.pathToProjectSetupConf))
@@ -140,7 +130,7 @@ object Bootstrap {
   }
 
   private def updateContentInDirOrFile(path: String, old: String, next: String): Unit = {
-    val fileOrDir = Paths.get(path).toFile
+    val fileOrDir = Paths.get(s"${System.getProperty("user.dir")}/$path").toFile
     if (fileOrDir.isDirectory) {
       updateContentInDir(path, old, next)
     } else if (fileOrDir.isFile) {
@@ -163,14 +153,34 @@ object Bootstrap {
   }
 
   private def updateContentInFile(path: Path, old: String, next: String): Unit =
-    Files.write(
-      path,
-      Files.readString(path).replaceAll(old, next).getBytes(StandardCharsets.UTF_8)
-    )
+    if (path.toFile.getName.toLowerCase != ".ds_store") { // TODO get files to ignore from .gitignore??
+      Try(
+        Files.write(
+          path,
+          Files.readString(path).replaceAll(old, next).getBytes(StandardCharsets.UTF_8)
+        )
+      ).toEither.leftMap { error =>
+        println(s"Error updating content in file $path")
+        error.printStackTrace()
+      }
+    }
 
   private def rename(oldPath: String, nextPath: String): Unit =
     Paths
-      .get(oldPath)
+      .get(s"${System.getProperty("user.dir")}/$oldPath")
       .toFile
-      .renameTo(new File(nextPath))
+      .renameTo(new File(s"${System.getProperty("user.dir")}/$nextPath"))
+
+  def renameParent(old: String, next: String): Unit = {
+    val parent = Paths
+      .get(s"${System.getProperty("user.dir")}")
+      .toFile
+      .getParentFile
+    if (parent.getName == old) {
+      parent.renameTo(new File(parent.getParent + next))
+    }
+  }
+
+  private def updateBuildSbt(old: String, next: String): Unit =
+    updateContentInFile(Paths.get(s"${System.getProperty("user.dir")}/build.sbt"), old, next)
 }

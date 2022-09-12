@@ -10,11 +10,11 @@ object StringListArgRetriever {
       validations: Seq[String => Either[String, Unit]] = Seq.empty
   ): Seq[String] = {
     println(message)
-    val argsList = readLine().toLowerCase().split(" ").map(_.trim).toSeq
+    val argsList = readLine().toLowerCase().split(" ").map(_.trim).filter(_.nonEmpty).toSeq
     val validationResults =
       argsList
         .flatMap(arg => validations.map(validate => validate(arg)))
-        .reduce { (result, current) =>
+        .fold(Right(())) { (result, current) =>
           result match {
             case Left(errorResult) =>
               current match {

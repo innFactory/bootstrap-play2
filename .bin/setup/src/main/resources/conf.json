@@ -9,6 +9,6 @@
     "apiDefinitionRoot": "src.main.resources.META-INF.smithy"
   },
   "bootstrap": {
-    "paths": ["build.sbt", "conf", ".github"]
+    "paths": ["conf", ".github"]
   }
 }

@@ -51,7 +51,7 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
       )
     val bootstrapPaths: ScallopOption[List[String]] = opt[List[String]](
       descr =
-        "Paths of files and directories which shall be included during the bootstrap process, 'smithySourcesRoot' and 'projectSourcesRoot' are always included",
+        "Paths of files and directories which shall be included during the bootstrap process, sources roots and build.sbt are always included",
       validate =
         (inputs: List[String]) => inputs.forall(input => StringArgValidations.onlyLettersDotSlash(input).isRight)
     )
