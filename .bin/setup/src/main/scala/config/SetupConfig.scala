@@ -1,12 +1,12 @@
 package config
 
-import config.SetupConfig.{ProjectConfig, SmithyConfig}
+import config.SetupConfig.{BootstrapConfig, ProjectConfig, SmithyConfig}
 import play.api.libs.json.{Json, OFormat}
 
 import java.nio.file.{Files, Path, Paths}
 import scala.io.Source
 
-case class SetupConfig(project: ProjectConfig, smithy: SmithyConfig)
+case class SetupConfig(project: ProjectConfig, smithy: SmithyConfig, bootstrap: BootstrapConfig)
 
 object SetupConfig {
   implicit val format: OFormat[SetupConfig] = Json.format[SetupConfig]
@@ -36,5 +36,9 @@ object SetupConfig {
   }
   object SmithyConfig {
     implicit val format: OFormat[SmithyConfig] = Json.format[SmithyConfig]
+  }
+  case class BootstrapConfig(paths: Seq[String])
+  object BootstrapConfig {
+    implicit val format: OFormat[BootstrapConfig] = Json.format[BootstrapConfig]
   }
 }

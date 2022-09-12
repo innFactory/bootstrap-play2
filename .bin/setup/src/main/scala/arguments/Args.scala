@@ -49,6 +49,12 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
         descr = "Folder name of the smithy declaration files, e.g. src.main.resources.META-INF.smithy",
         validate = (input: String) => StringArgValidations.onlyLettersDotHyphen(input).isRight
       )
+    val bootstrapPaths: ScallopOption[List[String]] = opt[List[String]](
+      descr =
+        "Paths of files and directories which shall be included during the bootstrap process, 'smithySourcesRoot' and 'projectSourcesRoot' are always included",
+      validate =
+        (inputs: List[String]) => inputs.forall(input => StringArgValidations.onlyLettersDotSlash(input).isRight)
+    )
   }
   addSubcommand(packageDomain)
   addSubcommand(bootstrap)

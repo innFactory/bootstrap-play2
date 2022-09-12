@@ -31,4 +31,12 @@ object StringArgValidations {
         "Can only consist out of letters separated by a single dot or hyphen!"
       )
       .toEither
+  val onlyLettersDotSlash: String => Either[String, Unit] = (toValidate: String) =>
+    Validated
+      .cond(
+        toValidate.matches("^([a-zA-Z]+(?:[\\.\\/]?[a-zA-Z]+))*?$"),
+        (),
+        "Can only consist out of letters separated by a single dot or slash!"
+      )
+      .toEither
 }

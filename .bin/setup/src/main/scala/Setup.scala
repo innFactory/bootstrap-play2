@@ -3,7 +3,7 @@ import arguments.Args
 import bootstrap.Bootstrap
 import cats.data.Validated
 import config.SetupConfig
-import config.SetupConfig.{ProjectConfig, SmithyConfig}
+import config.SetupConfig.{BootstrapConfig, ProjectConfig, SmithyConfig}
 
 import java.nio.file.{Files, Paths}
 
@@ -39,6 +39,9 @@ object Setup extends App {
             smithy = SmithyConfig(
               sourcesRoot = arguments.bootstrap.smithySourcesRoot.toOption.getOrElse(""),
               apiDefinitionRoot = arguments.bootstrap.smithyApiDefinitionRoot.toOption.getOrElse("")
+            ),
+            bootstrap = BootstrapConfig(
+              paths = arguments.bootstrap.bootstrapPaths.toOption.getOrElse(Seq.empty)
             )
           )
         )

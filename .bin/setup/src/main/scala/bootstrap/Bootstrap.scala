@@ -1,9 +1,11 @@
 package bootstrap
 
 import arguments.stringarg.{StringArgRetriever, StringArgValidations}
+import arguments.stringlistarg.StringListArgRetriever
+import common.SeqImplicit.EmptySeqOption
 import common.StringImplicit.EmptyStringOption
 import config.SetupConfig
-import config.SetupConfig.{ProjectConfig, SmithyConfig}
+import config.SetupConfig.{BootstrapConfig, ProjectConfig, SmithyConfig}
 import play.api.libs.json.Json
 
 import java.io.File
@@ -24,11 +26,11 @@ object Bootstrap {
      */
     if (config.project.getNamespace() != configForInit.project.getNamespace()) {
       println(s"Updating namespace from ${config.project.getNamespace()} to ${configForInit.project.getNamespace()}...")
-      updateNamespace(config.project.getNamespace(), configForInit.project.getNamespace())
+      updateContent(config.project.getNamespace(), configForInit.project.getNamespace())
     }
     if (config.project.name != configForInit.project.name) {
       println(s"Updating project name from ${config.project.name} to ${configForInit.project.name}...")
-      updateProjectName(config.project.name, configForInit.project.name)
+      updateContent(config.project.name, configForInit.project.name)
     }
     if (config.project.sourcesRoot != configForInit.project.sourcesRoot) {
       println(s"Updating sources root from ${config.project.sourcesRoot} to ${configForInit.project.sourcesRoot}...")
@@ -101,33 +103,27 @@ object Bootstrap {
           )
           .toOption
           .getOrElse(config.smithy.apiDefinitionRoot)
+      ),
+      bootstrap = BootstrapConfig(
+        paths = configFromArgs.bootstrap.paths.toOption.getOrElse(
+          StringListArgRetriever
+            .askFor(
+              "Paths of files and directories which shall be included during the bootstrap process, 'smithySourcesRoot' and 'projectSourcesRoot' are always included. default build.sbt conf .github",
+              Seq(StringArgValidations.onlyLettersDotSlash)
+            )
+            .toOption
+            .getOrElse(config.bootstrap.paths)
+        )
       )
     )
 
-  private def updateNamespace(old: String, next: String)(implicit config: SetupConfig): Unit = {
-    updateContentInDir(s"${System.getProperty("user.dir")}/${config.project.sourcesRoot}", old, next)
-    updateContentInDir(s"${System.getProperty("user.dir")}/${config.smithy.getPath()}", old, next)
-    updateContentInDir(s"${System.getProperty("user.dir")}/conf", old, next)
-    val buildSbtPath = Paths.get(s"${System.getProperty("user.dir")}/build.sbt")
-    Files.write(
-      buildSbtPath,
-      Files.readString(buildSbtPath).replaceAll(old, next).getBytes(StandardCharsets.UTF_8)
+  private def updateContent(old: String, next: String)(implicit config: SetupConfig): Unit =
+    (config.bootstrap.paths :++ Seq(config.project.sourcesRoot, config.smithy.sourcesRoot)).foreach(path =>
+      updateContentInDirOrFile(s"${System.getProperty("user.dir")}/${path.replace('.', '/')}", old, next)
     )
-  }
 
   private def updateSourcesRoot(old: String, next: String): Unit =
     rename(s"${System.getProperty("user.dir")}/$old", s"${System.getProperty("user.dir")}/$next")
-
-  private def updateProjectName(old: String, next: String)(implicit config: SetupConfig): Unit = {
-    updateContentInFile(Paths.get(s"${System.getProperty("user.dir")}/build.sbt"), old, next)
-    updateContentInFile(
-      Paths.get(s"${System.getProperty("user.dir")}/${config.project.sourcesRoot}/Module.scala"),
-      old,
-      next
-    )
-    updateContentInDir(s"${System.getProperty("user.dir")}/conf", old, next)
-    updateContentInDir(s"${System.getProperty("user.dir")}/.github", old, next)
-  }
 
   private def updateApiDefinitionRoot(old: String, next: String)(implicit config: SetupConfig): Unit =
     rename(
@@ -141,6 +137,15 @@ object Bootstrap {
       SetupConfig.getFullPath(),
       Json.toJson(next).toString().getBytes(StandardCharsets.UTF_8)
     )
+  }
+
+  private def updateContentInDirOrFile(path: String, old: String, next: String): Unit = {
+    val fileOrDir = Paths.get(path).toFile
+    if (fileOrDir.isDirectory) {
+      updateContentInDir(path, old, next)
+    } else if (fileOrDir.isFile) {
+      updateContentInFile(fileOrDir.toPath, old, next)
+    }
   }
 
   private def updateContentInDir(pathOfDir: String, old: String, next: String): Unit = {

@@ -11,12 +11,12 @@ object StringArgRetriever {
         Seq(StringArgValidations.cantBeEmpty, StringArgValidations.onlyLetters)
   ): String = {
     println(message)
-    val packageName = readLine().toLowerCase()
-    validateInput(validations.map(validate => validate(packageName))) match {
+    val arg = readLine().toLowerCase()
+    validateInput(validations.map(validate => validate(arg))) match {
       case Left(validationErrors) =>
         println(validationErrors)
         askFor(message, validations)
-      case Right(_) => packageName
+      case Right(_) => arg
     }
   }
 
