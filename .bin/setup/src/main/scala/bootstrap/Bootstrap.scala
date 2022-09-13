@@ -33,7 +33,6 @@ object Bootstrap {
     if (config.project.name != configForInit.project.name) {
       println(s"Updating project name from ${config.project.name} to ${configForInit.project.name}...")
       updateContent(config.project.name, configForInit.project.name, configForInit.bootstrap.paths)
-      renameParent(config.project.name, configForInit.project.name)
     }
     if (config.project.getPackagePath() != configForInit.project.getPackagePath()) {
       println(
@@ -151,18 +150,6 @@ object Bootstrap {
         .get(s"${System.getProperty("user.dir")}/$nextPath"),
       StandardCopyOption.ATOMIC_MOVE
     )
-  }
-
-  def renameParent(old: String, next: String): Unit = {
-    println(s"parent ${Paths.get(s"${System.getProperty("user.dir")}")}")
-    val workingDir = Paths
-      .get(s"${System.getProperty("user.dir")}")
-      .toFile
-    println(s"${workingDir.getName} $old")
-    if (workingDir.getName == old) {
-      println(s"rename to ${workingDir.getParent + "/" + next}")
-      workingDir.renameTo(new File(workingDir.getParent + "/" + next))
-    }
   }
 
   private def updateBuildSbt(old: String, next: String): Unit =
