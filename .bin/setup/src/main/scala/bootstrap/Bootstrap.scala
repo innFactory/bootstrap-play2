@@ -154,12 +154,14 @@ object Bootstrap {
   }
 
   def renameParent(old: String, next: String): Unit = {
-    val parent = Paths
+    println(s"parent ${Paths.get(s"${System.getProperty("user.dir")}")}")
+    val workingDir = Paths
       .get(s"${System.getProperty("user.dir")}")
       .toFile
-      .getParentFile
-    if (parent.getName == old) {
-      parent.renameTo(new File(parent.getParent + next))
+    println(s"${workingDir.getName} $old")
+    if (workingDir.getName == old) {
+      println(s"rename to ${workingDir.getParent + "/" + next}")
+      workingDir.renameTo(new File(workingDir.getParent + "/" + next))
     }
   }
 
