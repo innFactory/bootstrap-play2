@@ -32,13 +32,8 @@ object Setup extends App {
         Bootstrap.init(
           SetupConfig(
             project = ProjectConfig(
-              sourcesRoot = arguments.bootstrap.projectSourcesRoot.toOption.getOrElse(""),
               domain = arguments.bootstrap.projectDomain.toOption.getOrElse(""),
               name = arguments.bootstrap.projectName.toOption.getOrElse("")
-            ),
-            smithy = SmithyConfig(
-              sourcesRoot = arguments.bootstrap.smithySourcesRoot.toOption.getOrElse(""),
-              apiDefinitionRoot = arguments.bootstrap.smithyApiDefinitionRoot.toOption.getOrElse("")
             ),
             bootstrap = BootstrapConfig(
               paths = arguments.bootstrap.bootstrapPaths.toOption.getOrElse(Seq.empty)

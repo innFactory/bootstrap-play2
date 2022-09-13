@@ -11,14 +11,14 @@ import play.api.libs.json.Json
 
 import java.io.File
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{Files, Path, Paths, StandardCopyOption}
+import scala.annotation.tailrec
 import scala.sys.process.Process
 import scala.util.Try
 
 object Bootstrap {
   def init(configFromArgs: SetupConfig)(implicit config: SetupConfig): Unit = {
     val configForInit = askForMissingConfigs(configFromArgs)
-    println(configForInit)
 
     println(s"Running sbt clean...")
     Process("sbt clean").run()
@@ -40,30 +40,27 @@ object Bootstrap {
         s"Updating packages path from ${config.project.getPackagePath()} to ${configForInit.project.getPackagePath()}..."
       )
       rename(config.project.getPackagePath(), configForInit.project.getPackagePath())
-    }
-    if (config.smithy.getPath() != configForInit.smithy.getPath()) {
-      println(s"Updating api definition path from ${config.smithy.getPath()} to ${configForInit.smithy.getPath()}...")
-      rename(config.smithy.getPath(), configForInit.smithy.getPath())
-      updateBuildSbt(config.smithy.getPath(), configForInit.smithy.getPath())
-      updateBuildSbt(config.smithy.sourcesRoot.replace('.', '/'), configForInit.smithy.sourcesRoot.replace('.', '/'))
+      deleteRecursivelyIfEmpty(config.project.getPackagePath().split("/").reverse.tail.reverse.mkString("/"))
     }
 
+    println("Updating config...")
     updateConfig(configForInit)
+    println("Running sbt compile")
     Process("sbt compile").run()
+  }
+
+  @tailrec
+  private def deleteRecursivelyIfEmpty(path: String): Unit = {
+    val file = Paths.get(path).toFile
+    if (file.isDirectory && file.listFiles().length == 0) {
+      file.delete()
+      deleteRecursivelyIfEmpty(path.split("/").reverse.tail.reverse.mkString("/"))
+    }
   }
 
   private def askForMissingConfigs(configFromArgs: SetupConfig)(implicit config: SetupConfig) =
     SetupConfig(
       project = ProjectConfig(
-        sourcesRoot = configFromArgs.project.sourcesRoot.toOption
-          .getOrElse(
-            StringArgRetriever.askFor(
-              "Folder name of the projects sources root, default app",
-              Seq(StringArgValidations.onlyLetters)
-            )
-          )
-          .toOption
-          .getOrElse(config.project.sourcesRoot),
         domain = configFromArgs.project.domain.toOption
           .getOrElse(
             StringArgRetriever.askFor(
@@ -79,26 +76,6 @@ object Bootstrap {
             Seq(StringArgValidations.cantBeEmpty, StringArgValidations.onlyLettersNumbersHyphen)
           )
         )
-      ),
-      smithy = SmithyConfig(
-        sourcesRoot = configFromArgs.smithy.sourcesRoot.toOption
-          .getOrElse(
-            StringArgRetriever.askFor(
-              "Folder name of the smithy sources root, default modules.api-definition",
-              Seq(StringArgValidations.onlyLettersDotHyphen)
-            )
-          )
-          .toOption
-          .getOrElse(config.smithy.sourcesRoot),
-        apiDefinitionRoot = configFromArgs.smithy.apiDefinitionRoot.toOption
-          .getOrElse(
-            StringArgRetriever.askFor(
-              "Folder name of the smithy declaration files, default src.main.resources.META-INF.smithy",
-              Seq(StringArgValidations.onlyLettersDotHyphen)
-            )
-          )
-          .toOption
-          .getOrElse(config.smithy.apiDefinitionRoot)
       ),
       bootstrap = BootstrapConfig(
         paths = configFromArgs.bootstrap.paths.toOption.getOrElse(
@@ -165,11 +142,16 @@ object Bootstrap {
       }
     }
 
-  private def rename(oldPath: String, nextPath: String): Unit =
-    Paths
-      .get(s"${System.getProperty("user.dir")}/$oldPath")
-      .toFile
-      .renameTo(new File(s"${System.getProperty("user.dir")}/$nextPath"))
+  private def rename(oldPath: String, nextPath: String): Unit = {
+    Files.createDirectories(Path.of(s"${System.getProperty("user.dir")}/$nextPath"))
+    Files.move(
+      Paths
+        .get(s"${System.getProperty("user.dir")}/$oldPath"),
+      Paths
+        .get(s"${System.getProperty("user.dir")}/$nextPath"),
+      StandardCopyOption.ATOMIC_MOVE
+    )
+  }
 
   def renameParent(old: String, next: String): Unit = {
     val parent = Paths

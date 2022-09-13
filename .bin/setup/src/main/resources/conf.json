@@ -1,14 +1,9 @@
 {
   "project": {
     "name": "bootstrap-play2",
-    "domain": "de.innfactory",
-    "sourcesRoot": "app"
-  },
-  "smithy": {
-    "sourcesRoot": "modules.api-definition",
-    "apiDefinitionRoot": "src.main.resources.META-INF.smithy"
+    "domain": "de.innfactory"
   },
   "bootstrap": {
-    "paths": ["conf", ".github"]
+    "paths": ["conf", "test", ".github"]
   }
 }

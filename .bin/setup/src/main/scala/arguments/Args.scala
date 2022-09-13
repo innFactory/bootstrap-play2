@@ -24,11 +24,6 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
   }
 
   object bootstrap extends Subcommand(Args.bootstrapKey) {
-    val projectSourcesRoot: ScallopOption[String] =
-      opt[String](
-        descr = "Folder name of the projects sources root, e.g. app",
-        validate = (input: String) => StringArgValidations.onlyLetters(input).isRight
-      )
     val projectName: ScallopOption[String] =
       opt[String](
         descr = "Name of the project e.g. bootstrap-play2",
@@ -38,16 +33,6 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
       opt[String](
         descr = "Folder name of the projects packages, e.g. de.innfactory",
         validate = (input: String) => StringArgValidations.onlyLettersDot(input).isRight
-      )
-    val smithySourcesRoot: ScallopOption[String] =
-      opt[String](
-        descr = "Folder name of the smithy sources root, e.g. modules.api-definition",
-        validate = (input: String) => StringArgValidations.onlyLettersDotHyphen(input).isRight
-      )
-    val smithyApiDefinitionRoot: ScallopOption[String] =
-      opt[String](
-        descr = "Folder name of the smithy declaration files, e.g. src.main.resources.META-INF.smithy",
-        validate = (input: String) => StringArgValidations.onlyLettersDotHyphen(input).isRight
       )
     val bootstrapPaths: ScallopOption[List[String]] = opt[List[String]](
       descr =

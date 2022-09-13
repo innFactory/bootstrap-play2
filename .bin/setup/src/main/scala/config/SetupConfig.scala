@@ -6,7 +6,9 @@ import play.api.libs.json.{Json, OFormat}
 import java.nio.file.{Files, Path, Paths}
 import scala.io.Source
 
-case class SetupConfig(project: ProjectConfig, smithy: SmithyConfig, bootstrap: BootstrapConfig)
+case class SetupConfig(project: ProjectConfig, bootstrap: BootstrapConfig) {
+  val smithy: SmithyConfig = SmithyConfig()
+}
 
 object SetupConfig {
   implicit val format: OFormat[SetupConfig] = Json.format[SetupConfig]
@@ -24,18 +26,19 @@ object SetupConfig {
       Json.parse(defaultConfig).as[SetupConfig]
     }
 
-  case class ProjectConfig(sourcesRoot: String, domain: String, name: String) {
+  case class ProjectConfig(domain: String, name: String) {
+    val sourcesRoot: String = "app"
     def getPackagePath() = s"$sourcesRoot/${domain.replace('.', '/')}/${name.replaceAll("-", "")}"
     def getNamespace() = s"$domain.${name.replaceAll("-", "")}"
   }
   object ProjectConfig {
     implicit val format: OFormat[ProjectConfig] = Json.format[ProjectConfig]
   }
-  case class SmithyConfig(sourcesRoot: String, apiDefinitionRoot: String) {
+  case class SmithyConfig(
+  ) {
+    val sourcesRoot: String = "modules/api-definition"
+    val apiDefinitionRoot: String = "src.main.resources.META-INF.smithy"
     def getPath() = s"${sourcesRoot.replace('.', '/')}/${apiDefinitionRoot.replace('.', '/')}"
-  }
-  object SmithyConfig {
-    implicit val format: OFormat[SmithyConfig] = Json.format[SmithyConfig]
   }
   case class BootstrapConfig(paths: Seq[String])
   object BootstrapConfig {
