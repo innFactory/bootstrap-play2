@@ -80,7 +80,7 @@ object Bootstrap {
         paths = configFromArgs.bootstrap.paths.toOption.getOrElse(
           StringListArgRetriever
             .askFor(
-              "Paths of files and directories which shall be included during the bootstrap process, sources roots and build.sbt are always included. Default: conf .github",
+              "Paths of files and directories which shall be included during the bootstrap process, sources roots and build.sbt are always included. Default: conf test .github",
               Seq(StringArgValidations.onlyLettersDotSlash)
             )
             .toOption
