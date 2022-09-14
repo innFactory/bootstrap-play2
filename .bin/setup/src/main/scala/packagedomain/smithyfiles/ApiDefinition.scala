@@ -6,7 +6,7 @@ import config.SetupConfig
 
 case class ApiDefinition(packageDomain: String, packageName: String) extends SmithyDomainFile with CrudHelper {
   override def subPath = ""
-  def name: String = s"${packageDomain}APIController"
+  def name: String = s"${packageDomain.capitalize}APIController"
   val allOperationName = s"getAll${packageName.capitalize}"
   val getByIdOperationName = s"get${packageDomain.capitalize}ById"
   val createOperationName = s"create${packageDomain.capitalize}"

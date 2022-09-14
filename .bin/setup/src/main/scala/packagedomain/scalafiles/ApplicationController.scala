@@ -20,6 +20,7 @@ case class ApplicationController(packageDomain: String, packageName: String) ext
       |import ${config.project.getNamespace()}.application.controller.BaseController
       |import ${config.project.getNamespace()}.$packageName.application.mapper.${applicationMapper.name}
       |import ${config.project.getNamespace()}.$packageName.domain.interfaces.${service.name}
+      |import ${config.project.getNamespace()}.api.${apiDefinition.name}
       |${CrudImportsKey}
       |import de.innfactory.play.smithy4play.ImplicitLogContext
       |import play.api.mvc.ControllerComponents
@@ -59,7 +60,7 @@ case class ApplicationController(packageDomain: String, packageName: String) ext
     s"""
        |import ${config.project.getNamespace()}.$packageName.domain.models.${domainModelId.name}
        |import ${config.project
-        .getNamespace()}.api.{${apiDefinition.responsesName}, ${apiDefinition.name}, ${apiDefinition.requestBodyName}, ${apiDefinition.responseName}}
+        .getNamespace()}.api.{${apiDefinition.responsesName}, ${apiDefinition.requestBodyName}, ${apiDefinition.responseName}}
        |""".stripMargin
 
   private def createCrudLogic(domainModelId: DomainModelId, apiDefinition: ApiDefinition, service: Service): String =

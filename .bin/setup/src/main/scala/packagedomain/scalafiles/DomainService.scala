@@ -21,7 +21,7 @@ case class DomainService(packageDomain: String, packageName: String) extends Sca
        |import javax.inject.Inject
        |import scala.concurrent.{ExecutionContext, Future}
        |
-       |private[companies] class $name @Inject() (${repository.nameLowerCased()}: ${repository.name})(implicit
+       |private[$packageName] class $name @Inject() (${repository.nameLowerCased()}: ${repository.name})(implicit
        |    ec: ExecutionContext
        |) extends ${service.name} {
        |  ${CrudLogicKey}
