@@ -12,8 +12,8 @@ case class SetupConfig(project: ProjectConfig, bootstrap: BootstrapConfig) {
 
 object SetupConfig {
   implicit val format: OFormat[SetupConfig] = Json.format[SetupConfig]
-  val pathToProjectSetupConf = s"${System.getProperty("user.dir")}/.bin/setup/"
-  val fileName = "conf.json"
+  val pathToProjectSetupConf = s"${System.getProperty("user.dir")}/.bin/"
+  val fileName = "bootstrap-conf.json"
 
   def getFullPath(): Path = Paths.get(pathToProjectSetupConf + fileName)
 
