@@ -100,7 +100,6 @@ slickGen := Def.taskDyn(generateTablesTask((Global / dbConf).value)).value
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, DockerPlugin)
-  .aggregate(api)
   .dependsOn(slick, api)
   .settings(
     scalaVersion := Dependencies.scalaVersion,
@@ -110,7 +109,8 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(ehcache),
     dependencyOverrides += Dependencies.sl4j, // Override to avoid problems with HikariCP 4.x
     GithubConfig.settings,
-    scalacOptions += "-Ymacro-annotations"
+    scalacOptions += "-Ymacro-annotations",
+    clean := clean.all(ScopeFilter(inAnyProject)).value
   )
   .settings(
     Seq(
