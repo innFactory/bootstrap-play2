@@ -48,7 +48,7 @@ jobs:
     - name: Run tests
       run: |
         cd .bin
-        firebase emulators:exec "cd .. && export FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' && sbt ciTests" --only auth --project bootstrap-play2 --import=./firebase-data
+        firebase emulators:exec "cd .. && export FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' && sbt ciTests" --only auth --project demo-bootstrap-play2 --import=./firebase-data
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.PUBLIC_GITHUB_TOKEN }}

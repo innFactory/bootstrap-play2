@@ -1,7 +1,8 @@
 import akka.actor.ActorSystem
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
-import com.google.auth.oauth2.GoogleCredentials
+import com.google.auth.oauth2.{AccessToken, GoogleCredentials}
+import com.google.firebase.{FirebaseApp, FirebaseOptions}
 import com.google.firebase.auth.internal.Utils.isEmulatorMode
 
 import javax.inject.{Inject, Provider, Singleton}
@@ -16,6 +17,7 @@ import de.innfactory.play.flyway.FlywayMigrator
 import io.opencensus.exporter.trace.logging.LoggingTraceExporter
 import io.opencensus.exporter.trace.stackdriver.{StackdriverTraceConfiguration, StackdriverTraceExporter}
 import io.opencensus.trace.AttributeValue
+import org.joda.time.DateTime
 import play.api.libs.concurrent.AkkaGuiceSupport
 
 import java.io.InputStream
@@ -103,9 +105,24 @@ class FlywayMigratorImpl @Inject() (env: Environment, configuration: Configurati
 
 /** Creates FirebaseApp on Application creation */
 class firebaseCreationService @Inject() (config: Config, env: Environment) {
-  println(System.getenv("FIREBASE_AUTH_EMULATOR_HOST"))
-  println(isEmulatorMode)
-  FirebaseBase.instantiateFirebase(config.getString("firebase.file"), config.getString("project.id"))
+  if (env.mode == Mode.Prod || env.mode == Mode.Dev) {
+    FirebaseBase.instantiateFirebase(config.getString("firebase.file"), config.getString("project.id"))
+  } else if (isEmulatorMode) {
+    FirebaseApp.initializeApp(
+      FirebaseOptions
+        .builder()
+        .setCredentials(
+          GoogleCredentials.create(
+            new AccessToken(
+              "owner",
+              new DateTime().plusYears(1).toDate
+            )
+          )
+        )
+        .setProjectId(s"demo-bootstrap-play2")
+        .build()
+    )
+  }
 }
 
 /** Deletes FirebaseApp safely. Important on dev restart. */
