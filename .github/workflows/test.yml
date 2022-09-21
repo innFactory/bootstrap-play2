@@ -56,7 +56,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PUBLIC_GITHUB_TOKEN }}
     - name: Visualize DB Schema
       run:
-        pushd $PWD/.bin/schemaspy/
+        pushd "$PWD/.bin/schemaspy/"
         curl -JLO https://search.maven.org/remotecontent?filepath=org/postgresql/postgresql/$POSTGRESQL_VERSION/postgresql-$POSTGRESQL_VERSION.jar
         curl -JLO https://github.com/schemaspy/schemaspy/releases/download/v${SCHEMASPY_VERSION}/schemaspy-${SCHEMASPY_VERSION}.jar -o schemaspy.jar
         java -jar schemaspy.jar -vizjs
