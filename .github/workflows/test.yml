@@ -52,5 +52,19 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.PUBLIC_GITHUB_TOKEN }}
- 
-          
+    - name: Visualize DB Schema
+      run:
+        pushd .bin/schemaspy
+        curl -JLO https://search.maven.org/remotecontent?filepath=org/postgresql/postgresql/$POSTGRESQL_VERSION/postgresql-$POSTGRESQL_VERSION.jar
+        curl -JLO https://github.com/schemaspy/schemaspy/releases/download/v${SCHEMASPY_VERSION}/schemaspy-${SCHEMASPY_VERSION}.jar -o schemaspy.jar
+        java -jar schemaspy.jar -vizjs
+        zip schemaspy.zip output
+        popd
+      env:
+        POSTGRESQL_VERSION: "42.5.0"
+        SCHEMASPY_VERSION: "6.1.0"
+    - name: Archive schemaspy db documentation
+      uses: actions/upload-artifact@v3
+      with:
+        name: database-documentation
+        path: .bin/schemaspy/output.zip
