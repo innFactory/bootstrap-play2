@@ -1,7 +1,5 @@
 val releaseVersion = "0.0.1"
 
-resolvers += Resolver.githubPackages("innFactory")
-
 lazy val apiDefinition = (project in file("."))
   .enablePlugins(Smithy4sCodegenPlugin)
   .settings(
@@ -9,5 +7,6 @@ lazy val apiDefinition = (project in file("."))
     scalaVersion := Dependencies.scalaVersion,
     organization := "de.innfactory.bootstrap-play2",
     version := releaseVersion,
-    GithubConfig.settings
+    GithubConfig.settings,
+    libraryDependencies += "com.disneystreaming.smithy4s" % "smithy4s-protocol" % "0.14.2"
   )
