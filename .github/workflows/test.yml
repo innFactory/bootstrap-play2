@@ -69,4 +69,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: database-documentation
-        path: .bin/schemaspy/output.zip
+        path: .bin/schemaspy/schemaspy.zip
