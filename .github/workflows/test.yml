@@ -60,7 +60,7 @@ jobs:
         curl -JLO https://search.maven.org/remotecontent?filepath=org/postgresql/postgresql/$POSTGRESQL_VERSION/postgresql-$POSTGRESQL_VERSION.jar
         curl -JL https://github.com/schemaspy/schemaspy/releases/download/v${SCHEMASPY_VERSION}/schemaspy-${SCHEMASPY_VERSION}.jar -o schemaspy.jar
         java -jar schemaspy.jar -vizjs
-        zip schemaspy.zip output/*
+        zip -r schemaspy.zip output/
         popd
       env:
         POSTGRESQL_VERSION: "42.5.0"
