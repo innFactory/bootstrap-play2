@@ -1,7 +1,7 @@
 name: Run Tests
 on:
   pull_request:
-    branches: [ feat/v5 ]
+    branches: [ 'feat/v5' ]
 jobs:
   generateSwaggerJson:
     steps:
