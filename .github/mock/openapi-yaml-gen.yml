@@ -1,0 +1,23 @@
+name: Run Tests
+on:
+  pull_request:
+    branches: [ feat/v5 ]
+jobs:
+  generateSwaggerJson:
+    steps:
+      - name: Run merge.sh
+        run: ./.github/swagger/merge.sh
+        shell: bash
+  converter:
+    name: Run converter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: fabasoad/yaml-json-xml-converter-action@main
+        id: json2yaml
+        with:
+          path: 'openapi-merge.json'
+          from: 'json'
+          to: 'yaml'
+      - name: Print json2yaml result
+        run: echo "${{ steps.json2yaml.outputs.data }}"
