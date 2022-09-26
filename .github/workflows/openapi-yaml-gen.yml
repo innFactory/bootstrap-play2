@@ -22,16 +22,16 @@ jobs:
         run: .github/swagger/merge.sh
         shell: bash
       - name: Convert to yaml
-        uses: fabasoad/yaml-json-xml-converter-action@main
+        uses: fabasoad/yaml-json-xml-converter-action@v1.0.14
         id: json2yaml
         with:
           path: 'output.swagger.json'
           from: 'json'
           to: 'yaml'
+      - name: Rename output
+        run: mv output.swagger.yaml api.swagger.yaml
       - name: Update Pull Request with generated swagger file
-        uses: peter-evans/create-pull-request@v4
+        uses: EndBug/add-and-commit@v9
         with:
-          token: ${{ secrets.PUBLIC_GITHUB_TOKEN }}
-          commit-message: 'feat: swagger'
-          add-paths: 'output.swagger.yaml'
-          branch: ${{ github.event.pull_request.title }}
+          message: 'feat: update api.swagger.yaml'
+          add: 'api.swagger.yaml'
