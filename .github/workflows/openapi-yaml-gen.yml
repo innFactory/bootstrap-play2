@@ -31,9 +31,9 @@ jobs:
       - name: Print json2yaml result
         run: echo "${{ steps.json2yaml.outputs.data }}"
       - name: Update Pull Request with generated swagger file
-        env:
-          GITHUB_TOKEN: ${{ secrets.PUBLIC_GITHUB_TOKEN }}
         uses: peter-evans/create-pull-request@v4
-        commit-message: 'feat: swagger'
-        add-paths: 'output.swagger.yaml'
-        branch: github.event.pull_request.title
+        with:
+          token: ${{ secrets.PUBLIC_GITHUB_TOKEN }}
+          commit-message: 'feat: swagger'
+          add-paths: 'output.swagger.yaml'
+          branch: github.event.pull_request.title
