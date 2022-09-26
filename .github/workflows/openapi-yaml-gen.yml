@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run merge.sh
-        run: ./.github/swagger/merge.sh
+        run: .github/swagger/merge.sh
         shell: bash
       - uses: actions/checkout@v1
       - uses: fabasoad/yaml-json-xml-converter-action@main
