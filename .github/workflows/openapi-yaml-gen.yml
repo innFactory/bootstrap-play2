@@ -31,4 +31,4 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           message: 'feat: update api.swagger.yaml'
-          add: 'doc-assets/api.swagger.json'
+          add: 'doc-assets/api.swagger.yaml'
