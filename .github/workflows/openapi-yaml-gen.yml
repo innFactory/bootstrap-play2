@@ -29,7 +29,7 @@ jobs:
           from: 'json'
           to: 'yaml'
       - name: Rename output
-        run: mv output.swagger.yaml api.swagger.yaml
+        run: ls -a; mv output.swagger.yaml api.swagger.yaml
       - name: Update Pull Request with generated swagger file
         uses: EndBug/add-and-commit@v9
         with:
