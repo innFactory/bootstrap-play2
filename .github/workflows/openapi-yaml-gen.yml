@@ -28,8 +28,8 @@ jobs:
           path: 'output.swagger.json'
           from: 'json'
           to: 'yaml'
-      - name: Rename output
-        run: ls -a; mv output.swagger.yaml api.swagger.yaml
+      - name: Write converted yaml into file
+        run: echo "${{ steps.json2yaml.outputs.data }}" > 'api.swagger.yaml'
       - name: Update Pull Request with generated swagger file
         uses: EndBug/add-and-commit@v9
         with:
