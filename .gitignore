@@ -2,10 +2,16 @@
 
 modules/play/logs/
 
+# setup/bootstrap script
 .bin/setup/.bsp
 .bin/setup/.idea
 .bin/setup/target
 .bin/setup/project/target
+
+# openapi yaml generation
+.bin/mock/yaml
+openapi-merge.json
+output.swagger.json
 
 # sbt specific
 .cache

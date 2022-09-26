@@ -1,7 +1,7 @@
 name: Run Tests
 on:
-  pull_request:
-    branches: [ master ]
+  push:
+    branches: [ 'feat/openapiYamlGen' ]
 jobs:
   generateSwagger:
     name: Run swagger generation
@@ -18,7 +18,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PUBLIC_GITHUB_TOKEN }}
         run: sbt compile || true
       - name: Run merge.sh
-        run: .github/swagger/merge.sh
+        run: .bin/swagger/merge.sh
         shell: bash
       - name: Convert to yaml
         uses: fabasoad/yaml-json-xml-converter-action@v1.0.14

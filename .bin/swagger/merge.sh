@@ -16,5 +16,5 @@ for file in $json_files; do
 done
 
 jsons=$(find "$scala_folder" -type f -name "*.json" -exec echo '{ "inputFile": "{}" }' \; | paste -d , -s -)
-jq ".inputs += [$jsons]" .github/swagger/openapi-merge.json >>openapi-merge.json
+jq ".inputs += [$jsons]" .bin/swagger/openapi-merge.json >>openapi-merge.json
 npx openapi-merge-cli --config openapi-merge.json
