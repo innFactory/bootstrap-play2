@@ -9,10 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 11
+      - name: Compile project
+        run: sbt compile
       - name: Run merge.sh
         run: .github/swagger/merge.sh
         shell: bash
-      - uses: fabasoad/yaml-json-xml-converter-action@main
+      - name: Convert to yaml
+        uses: fabasoad/yaml-json-xml-converter-action@main
         id: json2yaml
         with:
           path: 'openapi-merge.json'
