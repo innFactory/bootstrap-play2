@@ -1,0 +1,561 @@
+---
+  openapi: "3.0.3"
+  info: 
+    title: "API"
+    version: "1.0.0"
+  paths: 
+    /v1/companies/{companyId}/locations: 
+      get: 
+        operationId: "getAllLocationsByCompany"
+        parameters: 
+          - 
+            name: "companyId"
+            in: "path"
+            schema: 
+              type: "string"
+            required: true
+        responses: 
+          200: 
+            description: "getAllLocationsByCompany 200 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/getAllLocationsByCompanyOutputPayload"
+        tags: 
+          - "LocationAPIController"
+    /v1/locations: 
+      get: 
+        operationId: "getAllLocations"
+        responses: 
+          200: 
+            description: "getAllLocations 200 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/getAllLocationsOutputPayload"
+        tags: 
+          - "LocationAPIController"
+      patch: 
+        operationId: "updateLocation"
+        requestBody: 
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/LocationRequestBody"
+          required: true
+        responses: 
+          200: 
+            description: "updateLocation 200 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/updateLocationResponseContent"
+        tags: 
+          - "LocationAPIController"
+      post: 
+        operationId: "createLocation"
+        requestBody: 
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/LocationRequestBody"
+          required: true
+        responses: 
+          200: 
+            description: "createLocation 200 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/createLocationResponseContent"
+        tags: 
+          - "LocationAPIController"
+    /v1/locations/{locationId}: 
+      delete: 
+        operationId: "deleteLocation"
+        parameters: 
+          - 
+            name: "locationId"
+            in: "path"
+            schema: 
+              type: "string"
+            required: true
+        responses: 
+          204: 
+            description: "deleteLocation 204 response"
+        tags: 
+          - "LocationAPIController"
+      get: 
+        operationId: "getLocationById"
+        parameters: 
+          - 
+            name: "locationId"
+            in: "path"
+            schema: 
+              type: "string"
+            required: true
+        responses: 
+          200: 
+            description: "getLocationById 200 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/getLocationByIdResponseContent"
+        tags: 
+          - "LocationAPIController"
+    /v1/public/helloworld/system/{query}: 
+      get: 
+        operationId: "helloworldViaSystem"
+        parameters: 
+          - 
+            name: "query"
+            in: "path"
+            schema: 
+              type: "string"
+            required: true
+        responses: 
+          200: 
+            description: "helloworldViaSystem 200 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/helloworldViaSystemResponseContent"
+        tags: 
+          - "ActorSystemAPIController"
+    /: 
+      get: 
+        operationId: "ping"
+        responses: 
+          200: 
+            description: "ping 200 response"
+        tags: 
+          - "HealthAPIController"
+    /liveness: 
+      get: 
+        operationId: "liveness"
+        responses: 
+          200: 
+            description: "liveness 200 response"
+        tags: 
+          - "HealthAPIController"
+    /readiness: 
+      get: 
+        operationId: "readiness"
+        responses: 
+          200: 
+            description: "readiness 200 response"
+        tags: 
+          - "HealthAPIController"
+    /v1/public/helloworld/sharding/{query}: 
+      get: 
+        operationId: "helloworldViaSharding"
+        parameters: 
+          - 
+            name: "query"
+            in: "path"
+            schema: 
+              type: "string"
+            required: true
+        responses: 
+          200: 
+            description: "helloworldViaSharding 200 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/helloworldViaShardingResponseContent"
+        tags: 
+          - "ActorShardingAPIController"
+    /v1/companies: 
+      get: 
+        operationId: "getAllCompanies"
+        responses: 
+          200: 
+            description: "getAllCompanies 200 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/getAllCompaniesOutputPayload"
+        tags: 
+          - "CompanyAPIController"
+      patch: 
+        operationId: "updateCompany"
+        requestBody: 
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/CompanyRequestBody"
+          required: true
+        responses: 
+          204: 
+            description: "updateCompany 204 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/updateCompanyResponseContent"
+        tags: 
+          - "CompanyAPIController"
+      post: 
+        operationId: "createCompany"
+        requestBody: 
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/CompanyRequestBody"
+          required: true
+        responses: 
+          200: 
+            description: "createCompany 200 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/createCompanyResponseContent"
+        tags: 
+          - "CompanyAPIController"
+    /v1/companies/{companyId}: 
+      delete: 
+        operationId: "deleteCompany"
+        parameters: 
+          - 
+            name: "companyId"
+            in: "path"
+            schema: 
+              type: "string"
+            required: true
+        responses: 
+          204: 
+            description: "deleteCompany 204 response"
+        tags: 
+          - "CompanyAPIController"
+      get: 
+        operationId: "getCompanyById"
+        parameters: 
+          - 
+            name: "companyId"
+            in: "path"
+            schema: 
+              type: "string"
+            required: true
+        responses: 
+          200: 
+            description: "getCompanyById 200 response"
+            content: 
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/getCompanyByIdResponseContent"
+        tags: 
+          - "CompanyAPIController"
+  components: 
+    schemas: 
+      LocationRequestBody: 
+        type: "object"
+        properties: 
+          id: 
+            type: "string"
+          company: 
+            type: "string"
+          name: 
+            type: "string"
+          settings: {}
+          addressLine1: 
+            type: "string"
+          addressLine2: 
+            type: "string"
+          zip: 
+            type: "string"
+          city: 
+            type: "string"
+          country: 
+            type: "string"
+        required: 
+          - "company"
+      LocationResponse: 
+        type: "object"
+        properties: 
+          id: 
+            type: "string"
+          company: 
+            type: "string"
+          name: 
+            type: "string"
+          settings: {}
+          addressLine1: 
+            type: "string"
+          addressLine2: 
+            type: "string"
+          zip: 
+            type: "string"
+          city: 
+            type: "string"
+          country: 
+            type: "string"
+          created: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+          updated: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+        required: 
+          - "company"
+          - "created"
+          - "id"
+          - "updated"
+      createLocationResponseContent: 
+        type: "object"
+        properties: 
+          id: 
+            type: "string"
+          company: 
+            type: "string"
+          name: 
+            type: "string"
+          settings: {}
+          addressLine1: 
+            type: "string"
+          addressLine2: 
+            type: "string"
+          zip: 
+            type: "string"
+          city: 
+            type: "string"
+          country: 
+            type: "string"
+          created: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+          updated: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+        required: 
+          - "company"
+          - "created"
+          - "id"
+          - "updated"
+      getAllLocationsByCompanyOutputPayload: 
+        type: "array"
+        items: 
+          $ref: "#/components/schemas/LocationResponse"
+      getAllLocationsOutputPayload: 
+        type: "array"
+        items: 
+          $ref: "#/components/schemas/LocationResponse"
+      getLocationByIdResponseContent: 
+        type: "object"
+        properties: 
+          id: 
+            type: "string"
+          company: 
+            type: "string"
+          name: 
+            type: "string"
+          settings: {}
+          addressLine1: 
+            type: "string"
+          addressLine2: 
+            type: "string"
+          zip: 
+            type: "string"
+          city: 
+            type: "string"
+          country: 
+            type: "string"
+          created: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+          updated: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+        required: 
+          - "company"
+          - "created"
+          - "id"
+          - "updated"
+      updateLocationResponseContent: 
+        type: "object"
+        properties: 
+          id: 
+            type: "string"
+          company: 
+            type: "string"
+          name: 
+            type: "string"
+          settings: {}
+          addressLine1: 
+            type: "string"
+          addressLine2: 
+            type: "string"
+          zip: 
+            type: "string"
+          city: 
+            type: "string"
+          country: 
+            type: "string"
+          created: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+          updated: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+        required: 
+          - "company"
+          - "created"
+          - "id"
+          - "updated"
+      helloworldViaSystemResponseContent: 
+        type: "object"
+        properties: 
+          answer: 
+            type: "string"
+        required: 
+          - "answer"
+      helloworldViaShardingResponseContent: 
+        type: "object"
+        properties: 
+          answer: 
+            type: "string"
+        required: 
+          - "answer"
+      CompanyRequestBody: 
+        type: "object"
+        properties: 
+          id: 
+            type: "string"
+          settings: {}
+          stringAttribute1: 
+            type: "string"
+          stringAttribute2: 
+            type: "string"
+          longAttribute1: 
+            type: "integer"
+            format: "int64"
+            nullable: true
+          booleanAttribute: 
+            type: "boolean"
+            nullable: true
+      CompanyResponse: 
+        type: "object"
+        properties: 
+          id: 
+            type: "string"
+          settings: {}
+          stringAttribute1: 
+            type: "string"
+          stringAttribute2: 
+            type: "string"
+          longAttribute1: 
+            type: "integer"
+            format: "int64"
+            nullable: true
+          booleanAttribute: 
+            type: "boolean"
+            nullable: true
+          created: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+          updated: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+        required: 
+          - "created"
+          - "id"
+          - "updated"
+      createCompanyResponseContent: 
+        type: "object"
+        properties: 
+          id: 
+            type: "string"
+          settings: {}
+          stringAttribute1: 
+            type: "string"
+          stringAttribute2: 
+            type: "string"
+          longAttribute1: 
+            type: "integer"
+            format: "int64"
+            nullable: true
+          booleanAttribute: 
+            type: "boolean"
+            nullable: true
+          created: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+          updated: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+        required: 
+          - "created"
+          - "id"
+          - "updated"
+      getAllCompaniesOutputPayload: 
+        type: "array"
+        items: 
+          $ref: "#/components/schemas/CompanyResponse"
+      getCompanyByIdResponseContent: 
+        type: "object"
+        properties: 
+          id: 
+            type: "string"
+          settings: {}
+          stringAttribute1: 
+            type: "string"
+          stringAttribute2: 
+            type: "string"
+          longAttribute1: 
+            type: "integer"
+            format: "int64"
+            nullable: true
+          booleanAttribute: 
+            type: "boolean"
+            nullable: true
+          created: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+          updated: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+        required: 
+          - "created"
+          - "id"
+          - "updated"
+      updateCompanyResponseContent: 
+        type: "object"
+        properties: 
+          id: 
+            type: "string"
+          settings: {}
+          stringAttribute1: 
+            type: "string"
+          stringAttribute2: 
+            type: "string"
+          longAttribute1: 
+            type: "integer"
+            format: "int64"
+            nullable: true
+          booleanAttribute: 
+            type: "boolean"
+            nullable: true
+          created: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+          updated: 
+            type: "string"
+            pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$"
+            description: "ISO Date With Time"
+        required: 
+          - "created"
+          - "id"
+          - "updated"
+
