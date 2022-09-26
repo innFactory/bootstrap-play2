@@ -8,10 +8,10 @@ jobs:
     name: Run swagger generation
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Run merge.sh
         run: .github/swagger/merge.sh
         shell: bash
-      - uses: actions/checkout@v1
       - uses: fabasoad/yaml-json-xml-converter-action@main
         id: json2yaml
         with:
