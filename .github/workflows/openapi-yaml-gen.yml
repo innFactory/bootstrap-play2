@@ -15,8 +15,8 @@ jobs:
       - uses: fabasoad/yaml-json-xml-converter-action@main
         id: json2yaml
         with:
-        path: 'openapi-merge.json'
-        from: 'json'
-        to: 'yaml'
+          path: 'openapi-merge.json'
+          from: 'json'
+          to: 'yaml'
       - name: Print json2yaml result
         run: echo "${{ steps.json2yaml.outputs.data }}"
