@@ -34,4 +34,4 @@ jobs:
           token: ${{ secrets.PUBLIC_GITHUB_TOKEN }}
           commit-message: 'feat: swagger'
           add-paths: 'output.swagger.yaml'
-          branch: github.event.pull_request.title
+          branch: ${{ github.event.pull_request.title }}
