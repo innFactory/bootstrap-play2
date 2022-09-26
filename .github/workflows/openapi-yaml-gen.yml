@@ -28,8 +28,6 @@ jobs:
           path: 'output.swagger.json'
           from: 'json'
           to: 'yaml'
-      - name: Print json2yaml result
-        run: echo "${{ steps.json2yaml.outputs.data }}"
       - name: Update Pull Request with generated swagger file
         uses: peter-evans/create-pull-request@v4
         with:
