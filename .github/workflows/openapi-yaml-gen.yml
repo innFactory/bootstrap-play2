@@ -26,9 +26,9 @@ jobs:
           generator: openapi-yaml
           openapi-file: 'output.swagger.json'
       - name: Move converted yaml
-        run: mv openapi.yaml doc-assets/api.swagger.json
+        run: mv openapi-yaml-client/openapi.yaml doc-assets/api.swagger.json
       - name: Update Pull Request with generated swagger file
         uses: EndBug/add-and-commit@v9
         with:
           message: 'feat: update api.swagger.yaml'
-          add: 'api.swagger.yaml'
+          add: 'doc-assets/api.swagger.json'
