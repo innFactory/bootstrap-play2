@@ -2,7 +2,7 @@ name: Run Tests
 on:
   push:
     branches:
-      - 'feat/v5'
+      - 'feat/openapiYamlGen'
 jobs:
   generateSwagger:
     name: Run swagger generation
