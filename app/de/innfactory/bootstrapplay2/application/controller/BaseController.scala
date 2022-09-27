@@ -4,7 +4,7 @@ import cats.data.{EitherT, Kleisli}
 import de.innfactory.bootstrapplay2.commons.{RequestContext, RequestContextWithUser}
 import de.innfactory.bootstrapplay2.commons.application.actions.utils.UserUtils
 import de.innfactory.bootstrapplay2.users.domain.interfaces.UserService
-import de.innfactory.bootstrapplay2.users.domain.models.UserId
+import de.innfactory.bootstrapplay2.users.domain.models.{User, UserId}
 import de.innfactory.play.controller.{ErrorResult, ResultStatus}
 import de.innfactory.smithy4play.{ContextRouteError, RoutingContext}
 import play.api.Application
@@ -17,15 +17,13 @@ class BaseController(implicit ec: ExecutionContext, app: Application)
     with ImplicitLogContext
     with BaseMapper {
 
-  private val userUtils = app.injector.instanceOf[UserUtils]
-  private val userService = app.injector.instanceOf[UserService]
+  private val userUtils = app.injector.instanceOf[UserUtils[User]]
 
   override def AuthAction: Kleisli[ApplicationRouteResult, RequestContext, RequestContextWithUser] = Kleisli {
     context =>
       val result = for {
         _ <- EitherT(userUtils.validateJwtToken(context.httpHeaders.authAsJwt))
-        userId <- EitherT(userUtils.extractUserId(context.httpHeaders.authAsJwt))
-        user <- userService.getUserByIdWithoutRequestContext(UserId(userId))
+        user <- EitherT(userUtils.getUser(context.httpHeaders.authAsJwt))
       } yield RequestContextWithUser(context.httpHeaders, context.span, user)
       result
   }
