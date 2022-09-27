@@ -7,6 +7,8 @@ modules/play/logs/
 .bin/setup/.idea
 .bin/setup/target
 .bin/setup/project/target
+.bin/schemaspy
+!.bin/schemaspy/schemaspy.properties
 
 # openapi yaml generation
 .bin/mock/yaml
