@@ -2,13 +2,13 @@ package de.innfactory.bootstrapplay2.companies.infrastructure
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source
-import cats.data.{EitherT, Validated}
+import cats.data.EitherT
+import com.typesafe.config.Config
 import dbdata.Tables
 import de.innfactory.bootstrapplay2.commons.RequestContext
 import de.innfactory.bootstrapplay2.commons.filteroptions.FilterOptionUtils
 import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
-import de.innfactory.play.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyRepository
 import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import de.innfactory.bootstrapplay2.companies.infrastructure.mapper.CompanyMapper._
@@ -17,12 +17,12 @@ import de.innfactory.play.slick.enhanced.utils.filteroptions.FilterOptions
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.{ResultSetConcurrency, ResultSetType}
 import de.innfactory.play.slick.enhanced.query.EnhancedQuery._
-import de.innfactory.play.smithy4play.TraceContext
+import de.innfactory.play.tracing.TraceContext
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-private[companies] class SlickCompanyRepository @Inject() (db: Database)(implicit ec: ExecutionContext)
+private[companies] class SlickCompanyRepository @Inject() (db: Database)(implicit ec: ExecutionContext, config: Config)
     extends BaseSlickRepository(db)
     with CompanyRepository {
 

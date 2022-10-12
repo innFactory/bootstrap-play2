@@ -1,10 +1,11 @@
 package de.innfactory.bootstrapplay2.application.controller
 
 import cats.data.EitherT
+import com.typesafe.config.Config
 import de.innfactory.bootstrapplay2.api.HealthAPIController
 import de.innfactory.bootstrapplay2.commons.infrastructure.DatabaseHealthSocket
 import de.innfactory.play.results.errors.Errors.InternalServerError
-import de.innfactory.play.smithy4play.ImplicitLogContext
+import de.innfactory.play.tracing.ImplicitLogContext
 import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
 import play.api.Application
 import play.api.mvc.ControllerComponents
@@ -16,7 +17,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class HealthController @Inject() (
     databaseHealthSocket: DatabaseHealthSocket
-)(implicit ec: ExecutionContext, cc: ControllerComponents, app: Application)
+)(implicit ec: ExecutionContext, cc: ControllerComponents, app: Application, config: Config)
     extends BaseController
     with ImplicitLogContext
     with HealthAPIController[ContextRoute] {

@@ -40,7 +40,7 @@ case class Repository(packageDomain: String, packageName: String) extends ScalaD
        |import ${config.project.getNamespace()}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
        |import de.innfactory.play.controller.ResultStatus
        |import cats.data.EitherT
-       |import de.innfactory.play.smithy4play.TraceContext
+       |import de.innfactory.play.tracing.TraceContext
        |import scala.concurrent.Future
        |""".stripMargin
 

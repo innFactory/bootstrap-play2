@@ -2,7 +2,7 @@ package de.innfactory.bootstrapplay2.users.domain.interfaces
 
 import cats.data.EitherT
 import com.google.inject.ImplementedBy
-import de.innfactory.play.smithy4play.TraceContext
+import de.innfactory.play.tracing.TraceContext
 import de.innfactory.bootstrapplay2.users.domain.models.{UserId, UserPasswordResetToken}
 import de.innfactory.bootstrapplay2.users.infrastructure.SlickUserResetTokenRepository
 import de.innfactory.play.controller.ResultStatus

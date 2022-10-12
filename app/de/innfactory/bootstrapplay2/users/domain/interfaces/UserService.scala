@@ -8,7 +8,7 @@ import de.innfactory.bootstrapplay2.commons.RequestContextWithUser
 import de.innfactory.bootstrapplay2.users.domain.models.{Claims, User, UserId}
 import de.innfactory.bootstrapplay2.users.domain.services.DomainUserService
 import de.innfactory.play.controller.ResultStatus
-import de.innfactory.play.smithy4play.TraceContext
+import de.innfactory.play.tracing.TraceContext
 
 import scala.concurrent.Future
 

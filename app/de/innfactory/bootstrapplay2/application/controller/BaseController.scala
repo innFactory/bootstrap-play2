@@ -3,12 +3,12 @@ package de.innfactory.bootstrapplay2.application.controller
 import cats.data.{EitherT, Kleisli}
 import de.innfactory.bootstrapplay2.commons.{RequestContext, RequestContextWithUser}
 import de.innfactory.bootstrapplay2.commons.application.actions.utils.UserUtils
-import de.innfactory.bootstrapplay2.users.domain.interfaces.UserService
-import de.innfactory.bootstrapplay2.users.domain.models.{User, UserId}
+import de.innfactory.bootstrapplay2.users.domain.models.User
 import de.innfactory.play.controller.{ErrorResult, ResultStatus}
 import de.innfactory.smithy4play.{ContextRouteError, RoutingContext}
 import play.api.Application
-import de.innfactory.play.smithy4play.{AbstractBaseController, HttpHeaders, ImplicitLogContext}
+import de.innfactory.play.smithy4play.{AbstractBaseController, HttpHeaders}
+import de.innfactory.play.tracing.ImplicitLogContext
 
 import scala.concurrent.ExecutionContext
 

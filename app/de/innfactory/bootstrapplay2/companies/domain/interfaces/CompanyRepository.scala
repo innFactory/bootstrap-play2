@@ -8,7 +8,7 @@ import de.innfactory.bootstrapplay2.commons.RequestContext
 import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.companies.domain.models.{Company, CompanyId}
 import de.innfactory.bootstrapplay2.companies.infrastructure.SlickCompanyRepository
-import de.innfactory.play.smithy4play.TraceContext
+import de.innfactory.play.tracing.TraceContext
 
 import scala.concurrent.Future
 

@@ -3,14 +3,15 @@ package de.innfactory.bootstrapplay2.commons.infrastructure
 import cats.data.EitherT
 import cats.implicits._
 import cats.syntax._
-import de.innfactory.play.smithy4play.ImplicitLogContext
-import de.innfactory.bootstrapplay2.commons.implicits.FutureTracingImplicits.EnhancedFuture
+import com.typesafe.config.Config
 import de.innfactory.play.results.errors.Errors.{BadRequest, DatabaseResult, NotFound}
-import de.innfactory.play.smithy4play.TraceContext
 import de.innfactory.bootstrapplay2.commons.implicits.EitherImplicits.EitherFuture
-import de.innfactory.bootstrapplay2.commons.implicits.EitherTTracingImplicits.EnhancedTracingEitherT
 import de.innfactory.implicits.OptionUtils.EnhancedOption
 import de.innfactory.play.controller.ResultStatus
+import de.innfactory.play.tracing.{ImplicitLogContext, TraceContext}
+import de.innfactory.play.tracing.implicits.EitherTTracingImplicits.EnhancedTracingEitherT
+import de.innfactory.play.tracing.implicits.FutureTracingImplicits.EnhancedFuture
+import io.opentelemetry.api.trace.Tracer
 import slick.dbio.{DBIOAction, Effect, NoStream}
 import slick.jdbc.JdbcBackend.Database
 
@@ -18,7 +19,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scala.util.Try
 
-class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext) extends ImplicitLogContext {
+class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext, config: Config) extends ImplicitLogContext {
 
   def lookupGeneric[R, T](
       queryHeadOption: DBIOAction[Option[R], NoStream, Nothing]
@@ -36,15 +37,16 @@ class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext) extends I
 
   def lookupGenericOption[R, T](
       queryHeadOption: DBIOAction[Option[R], NoStream, Nothing]
-  )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, Option[T]] = EitherT {
-    val queryResult: Future[Option[R]] = db.run(queryHeadOption).trace("lookupGenericOption")
-    queryResult.map { res: Option[R] =>
-      if (res.isDefined)
-        Some(rowToObject(res.get)).asRight[ResultStatus]
-      else
-        None.asRight[ResultStatus]
+  )(implicit rowToObject: R => T, rc: TraceContext): EitherT[Future, ResultStatus, Option[T]] =
+    EitherT {
+      val queryResult: Future[Option[R]] = db.run(queryHeadOption).trace("lookupGenericOption")
+      queryResult.map { res: Option[R] =>
+        if (res.isDefined)
+          Some(rowToObject(res.get)).asRight[ResultStatus]
+        else
+          None.asRight[ResultStatus]
+      }
     }
-  }
 
   def countGeneric[R, T](
       querySeq: DBIOAction[Seq[R], NoStream, Nothing]
@@ -146,7 +148,11 @@ class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext) extends I
       entity: T,
       queryById: DBIOAction[Option[R], NoStream, Nothing],
       create: R => DBIOAction[R, NoStream, Effect.Write]
-  )(implicit rowToObject: R => T, objectToRow: T => R, rc: TraceContext): EitherT[Future, ResultStatus, T] = EitherT {
+  )(implicit
+      rowToObject: R => T,
+      objectToRow: T => R,
+      rc: TraceContext
+  ): EitherT[Future, ResultStatus, T] = EitherT {
     val entityToSave = objectToRow(entity)
     val result = for {
       _ <- EitherT(db.run(queryById).map(_.toInverseEither(BadRequest())).trace("createGeneric lookup"))
@@ -163,7 +169,11 @@ class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext) extends I
   def createGeneric[R, T](
       entity: T,
       create: R => DBIOAction[R, NoStream, Effect.Write]
-  )(implicit rowToObject: R => T, objectToRow: T => R, rc: TraceContext): EitherT[Future, ResultStatus, T] = EitherT {
+  )(implicit
+      rowToObject: R => T,
+      objectToRow: T => R,
+      rc: TraceContext
+  ): EitherT[Future, ResultStatus, T] = EitherT {
     val entityToSave = objectToRow(entity)
     val result = for {
       createdObject <- EitherT(

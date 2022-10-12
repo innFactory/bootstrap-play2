@@ -1,12 +1,13 @@
 package de.innfactory.bootstrapplay2.companies.application
 
+import com.typesafe.config.Config
 import de.innfactory.bootstrapplay2.application.controller.BaseController
 import de.innfactory.bootstrapplay2.companies.application.mapper.CompanyMapper
-import de.innfactory.play.smithy4play.ImplicitLogContext
 import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyService
 import play.api.mvc.ControllerComponents
 import de.innfactory.bootstrapplay2.companies.domain.models.CompanyId
 import de.innfactory.bootstrapplay2.api.{CompaniesResponse, CompanyAPIController, CompanyRequestBody, CompanyResponse}
+import de.innfactory.play.tracing.ImplicitLogContext
 import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
 import play.api.Application
 
@@ -21,7 +22,8 @@ class CompanyController @Inject() (
 )(implicit
     ec: ExecutionContext,
     cc: ControllerComponents,
-    app: Application
+    app: Application,
+    config: Config
 ) extends BaseController
     with ImplicitLogContext
     with CompanyAPIController[ContextRoute]

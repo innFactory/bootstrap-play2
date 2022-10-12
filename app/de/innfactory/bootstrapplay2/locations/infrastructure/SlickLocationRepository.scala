@@ -3,8 +3,9 @@ package de.innfactory.bootstrapplay2.locations.infrastructure
 import akka.NotUsed
 import akka.stream.scaladsl.Source
 import cats.data.{EitherT, Validated}
+import com.typesafe.config.Config
 import dbdata.Tables
-import de.innfactory.play.smithy4play.TraceContext
+import de.innfactory.play.tracing.TraceContext
 import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
 import de.innfactory.play.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationRepository
@@ -21,7 +22,8 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 private[locations] class SlickLocationRepository @Inject() (db: Database, lifecycle: ApplicationLifecycle)(implicit
-    ec: ExecutionContext
+    ec: ExecutionContext,
+    config: Config
 ) extends BaseSlickRepository(db)
     with LocationRepository {
 

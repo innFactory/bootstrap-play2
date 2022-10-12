@@ -24,7 +24,7 @@ object Dependencies {
   val akkaSpray = "com.typesafe.akka" %% "akka-http-spray-json" % "10.2.9"
 
   // innFactory Utils
-  val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "1.5.8"
+  val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "2.0.0"
   val endpointBuilder = "de.innfactory" %% "smithy4play" % "0.2.2-HOTFIX-4"
 
   // Prod
@@ -56,10 +56,18 @@ object Dependencies {
   // If you want to use opencensus-scala inside an Akka HTTP project
   val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
+  // opentelemetry
+  val opentelemetryApi = "io.opentelemetry" % "opentelemetry-api" % "1.18.0"
+  val opentelemetryBom = "io.opentelemetry" % "opentelemetry-bom" % "1.18.0"
+
   val sl4j = "org.slf4j" % "slf4j-api" % "2.0.0" intransitive
   val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.0.1"
   val logback = "ch.qos.logback" % "logback-classic" % "1.2.11"
   val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.11"
+
+  val nimbusJwt = "com.nimbusds" % "nimbus-jose-jwt" % "9.15.2"
+
+  val firebase = "com.google.firebase" % "firebase-admin" % "8.1.0"
 
   lazy val list = Seq(
     scalaUtil,
@@ -100,6 +108,10 @@ object Dependencies {
     akkaStreams,
     cats,
     endpointBuilder,
-    ws
+    ws,
+    opentelemetryApi,
+    opentelemetryBom,
+    nimbusJwt,
+    firebase
   )
 }

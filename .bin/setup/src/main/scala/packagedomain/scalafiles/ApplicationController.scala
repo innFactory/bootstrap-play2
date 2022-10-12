@@ -17,12 +17,13 @@ case class ApplicationController(packageDomain: String, packageName: String) ext
     val content = s"""
       |package ${config.project.getNamespace()}.$packageName.application
       |
+      |import com.typesafe.config.Config
       |import ${config.project.getNamespace()}.application.controller.BaseController
       |import ${config.project.getNamespace()}.$packageName.application.mapper.${applicationMapper.name}
       |import ${config.project.getNamespace()}.$packageName.domain.interfaces.${service.name}
       |import ${config.project.getNamespace()}.api.${apiDefinition.name}
       |${CrudImportsKey}
-      |import de.innfactory.play.smithy4play.ImplicitLogContext
+      |import de.innfactory.play.tracing.ImplicitLogContext
       |import play.api.mvc.ControllerComponents
       |import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
       |import play.api.Application
@@ -37,7 +38,8 @@ case class ApplicationController(packageDomain: String, packageName: String) ext
       |)(implicit
       |    ec: ExecutionContext,
       |    cc: ControllerComponents,
-      |    app: Application
+      |    app: Application,
+      |    config: Config
       |) extends BaseController
       |    with ImplicitLogContext
       |    with ${apiDefinition.name}[ContextRoute]

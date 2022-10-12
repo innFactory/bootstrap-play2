@@ -11,8 +11,7 @@ import play.api.inject.ApplicationLifecycle
 import play.api.{Configuration, Environment, Logger, Mode}
 import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
-import de.innfactory.auth.firebase.FirebaseBase
-import de.innfactory.auth.firebase.validator.{JwtValidator, JwtValidatorImpl}
+import de.innfactory.bootstrapplay2.commons.firebase.FirebaseBase
 import de.innfactory.play.flyway.FlywayMigrator
 import io.opencensus.exporter.trace.logging.LoggingTraceExporter
 import io.opencensus.exporter.trace.stackdriver.{StackdriverTraceConfiguration, StackdriverTraceExporter}
@@ -43,7 +42,6 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 
     // bind(classOf[firebaseCreationService]).asEagerSingleton()
     // bind(classOf[firebaseDeletionService]).asEagerSingleton()
-    bind(classOf[JwtValidator]).to(classOf[JwtValidatorImpl])
     bind(classOf[AkkaCluster]).asEagerSingleton()
 
     /**

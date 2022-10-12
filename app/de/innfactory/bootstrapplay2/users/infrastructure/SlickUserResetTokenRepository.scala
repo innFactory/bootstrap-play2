@@ -2,6 +2,7 @@ package de.innfactory.bootstrapplay2.users.infrastructure
 
 import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
+import com.typesafe.config.Config
 import dbdata.Tables
 import de.innfactory.play.db.codegen.XPostgresProfile.api._
 import de.innfactory.play.controller.ResultStatus
@@ -9,7 +10,7 @@ import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
 import de.innfactory.bootstrapplay2.users.domain.interfaces.UserPasswordResetTokenRepository
 import de.innfactory.bootstrapplay2.users.domain.models.{UserId, UserPasswordResetToken}
 import de.innfactory.bootstrapplay2.users.infrastructure.mappers.UserPasswordResetTokenMapper._
-import de.innfactory.play.smithy4play.TraceContext
+import de.innfactory.play.tracing.TraceContext
 import play.api.inject.ApplicationLifecycle
 
 import javax.inject.Inject
@@ -19,7 +20,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
 class SlickUserResetTokenRepository @Inject() (db: Database, lifecycle: ApplicationLifecycle)(implicit
-    ec: ExecutionContext
+    ec: ExecutionContext,
+    config: Config
 ) extends BaseSlickRepository(db)
     with UserPasswordResetTokenRepository {
 

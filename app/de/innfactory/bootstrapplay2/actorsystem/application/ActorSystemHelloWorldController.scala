@@ -1,13 +1,14 @@
 package de.innfactory.bootstrapplay2.actorsystem.application
 import cats.data.EitherT
+import com.typesafe.config.Config
 import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{ResponseQueryHelloWorld, ResponseQueryHelloWorldError}
 import de.innfactory.bootstrapplay2.actorsystem.domain.interfaces.HelloWorldService
 import de.innfactory.bootstrapplay2.api.{ActorSystemAPIController, HelloworldViaSystemResponse}
-import de.innfactory.play.smithy4play.ImplicitLogContext
 import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
 import play.api.Application
 import de.innfactory.bootstrapplay2.application.controller.BaseController
 import de.innfactory.play.results.errors.Errors.BadRequest
+import de.innfactory.play.tracing.ImplicitLogContext
 import play.api.mvc.ControllerComponents
 
 import javax.inject.{Inject, Singleton}
@@ -17,7 +18,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ActorSystemHelloWorldController @Inject() (
     helloWorldService: HelloWorldService
-)(implicit ec: ExecutionContext, cc: ControllerComponents, app: Application)
+)(implicit ec: ExecutionContext, cc: ControllerComponents, app: Application, config: Config)
     extends BaseController
     with ImplicitLogContext
     with ActorSystemAPIController[ContextRoute] {

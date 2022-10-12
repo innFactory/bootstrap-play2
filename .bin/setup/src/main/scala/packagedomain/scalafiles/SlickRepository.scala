@@ -49,7 +49,7 @@ case class SlickRepository(packageDomain: String, packageName: String) extends S
        |import ${config.project.getNamespace()}.$packageName.domain.models.{${domainModel.name}, ${domainModelId.name}}
        |import ${config.project.getNamespace()}.$packageName.infrastructure.mapper.${slickMapper.name}._
        |import de.innfactory.play.controller.ResultStatus
-       |import de.innfactory.play.smithy4play.TraceContext
+       |import de.innfactory.play.tracing.TraceContext
        |import cats.data.EitherT
        |""".stripMargin
 

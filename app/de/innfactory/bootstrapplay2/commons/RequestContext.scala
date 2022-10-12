@@ -1,8 +1,9 @@
 package de.innfactory.bootstrapplay2.commons
 import cats.implicits.toBifunctorOps
 import de.innfactory.bootstrapplay2.users.domain.models.{User, UserId}
-import de.innfactory.play.smithy4play.{HttpHeaders, TraceContext}
-import io.opencensus.trace.Span
+import de.innfactory.play.smithy4play.HttpHeaders
+import de.innfactory.play.tracing.TraceContext
+import io.opentelemetry.api.trace.Span
 import org.joda.time.DateTime
 
 import scala.util.Try

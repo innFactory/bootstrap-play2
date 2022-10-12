@@ -1,12 +1,10 @@
 package de.innfactory.bootstrapplay2.graphql.schema.models
 
 import de.innfactory.bootstrapplay2.commons.RequestContext
-import de.innfactory.bootstrapplay2.commons.filteroptions.FilterOptionUtils
-import de.innfactory.bootstrapplay2.commons.implicits.RequestToRequestContextImplicit.EnhancedRequest
 import de.innfactory.bootstrapplay2.companies.domain.models.Company
 import de.innfactory.bootstrapplay2.graphql.GraphQLExecutionContext
 import sangria.macros.derive.{deriveObjectType, AddFields, ReplaceField}
-import sangria.schema.{Field, IntType, ListType, LongType, ObjectType, OptionType, StringType}
+import sangria.schema.{Field, ListType, ObjectType, StringType}
 import de.innfactory.grapqhl.sangria.implicits.JsonScalarType._
 import de.innfactory.grapqhl.sangria.implicits.JodaScalarType._
 
