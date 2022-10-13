@@ -7,7 +7,7 @@ import de.innfactory.bootstrapplay2.actorsystem.domain.commands.{ResponseQueryHe
 import de.innfactory.bootstrapplay2.api.{ActorShardingAPIController, HelloworldViaShardingResponse}
 import de.innfactory.bootstrapplay2.application.controller.BaseController
 import de.innfactory.play.results.errors.Errors.BadRequest
-import de.innfactory.play.tracing.ImplicitLogContext
+import de.innfactory.play.smithy4play.ImplicitLogContext
 import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
 import play.api.Application
 import play.api.mvc.ControllerComponents

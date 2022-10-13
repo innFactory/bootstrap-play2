@@ -1,6 +1,6 @@
 package de.innfactory.bootstrapplay2.commons.logging
 
-import de.innfactory.play.tracing.LogContext
+import de.innfactory.play.smithy4play.LogContext
 import io.opencensus.trace.Span
 import org.slf4j.{Marker, MarkerFactory}
 import play.api.Logger

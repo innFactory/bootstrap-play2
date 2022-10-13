@@ -11,7 +11,8 @@ import de.innfactory.bootstrapplay2.users.domain.interfaces.{
 }
 import de.innfactory.bootstrapplay2.users.domain.models.{Claims, User, UserId, UserPasswordResetToken}
 import de.innfactory.play.controller.ResultStatus
-import de.innfactory.play.tracing.{ImplicitLogContext, TraceContext}
+import de.innfactory.play.smithy4play.ImplicitLogContext
+import de.innfactory.play.tracing.TraceContext
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}

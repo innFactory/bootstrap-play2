@@ -3,6 +3,7 @@ package de.innfactory.bootstrapplay2.graphql.schema.models
 import de.innfactory.bootstrapplay2.commons.RequestContext
 import de.innfactory.bootstrapplay2.companies.domain.models.Company
 import de.innfactory.bootstrapplay2.graphql.GraphQLExecutionContext
+import de.innfactory.bootstrapplay2.graphql.RequestExecutor.EnhancedRequest
 import sangria.macros.derive.{deriveObjectType, AddFields, ReplaceField}
 import sangria.schema.{Field, ListType, ObjectType, StringType}
 import de.innfactory.grapqhl.sangria.implicits.JsonScalarType._

@@ -7,7 +7,7 @@ import de.innfactory.bootstrapplay2.companies.domain.interfaces.CompanyService
 import play.api.mvc.ControllerComponents
 import de.innfactory.bootstrapplay2.companies.domain.models.CompanyId
 import de.innfactory.bootstrapplay2.api.{CompaniesResponse, CompanyAPIController, CompanyRequestBody, CompanyResponse}
-import de.innfactory.play.tracing.ImplicitLogContext
+import de.innfactory.play.smithy4play.ImplicitLogContext
 import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
 import play.api.Application
 

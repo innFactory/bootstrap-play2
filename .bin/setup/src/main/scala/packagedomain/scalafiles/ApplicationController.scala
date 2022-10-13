@@ -23,7 +23,7 @@ case class ApplicationController(packageDomain: String, packageName: String) ext
       |import ${config.project.getNamespace()}.$packageName.domain.interfaces.${service.name}
       |import ${config.project.getNamespace()}.api.${apiDefinition.name}
       |${CrudImportsKey}
-      |import de.innfactory.play.tracing.ImplicitLogContext
+      |import de.innfactory.play.smithy4play.ImplicitLogContext
       |import play.api.mvc.ControllerComponents
       |import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
       |import play.api.Application

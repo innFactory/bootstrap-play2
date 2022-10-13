@@ -13,22 +13,18 @@ import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
 import de.innfactory.bootstrapplay2.commons.firebase.FirebaseBase
 import de.innfactory.play.flyway.FlywayMigrator
-import io.opencensus.exporter.trace.logging.LoggingTraceExporter
-import io.opencensus.exporter.trace.stackdriver.{StackdriverTraceConfiguration, StackdriverTraceExporter}
-import io.opencensus.trace.AttributeValue
+import de.innfactory.play.tracing.TracerProvider
 import org.joda.time.DateTime
 import play.api.libs.concurrent.AkkaGuiceSupport
 
-import java.io.InputStream
-import scala.concurrent.Future
-import scala.jdk.CollectionConverters.MapHasAsJava
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
  * This module handles the bindings for the API to the Slick implementation.
  *
  * https://www.playframework.com/documentation/latest/ScalaDependencyInjection#Programmatic-bindings
  */
-class Module(environment: Environment, configuration: Configuration) extends AbstractModule with AkkaGuiceSupport {
+class Module(environment: Environment) extends AbstractModule with AkkaGuiceSupport {
 
   val logger = Logger("application")
 
@@ -53,48 +49,20 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
       logger.info(s"- - - Binding Services for for Dev Mode - - -")
     } else {
       logger.info(s"- - - Binding Services for for Prod Mode - - -")
-      // Tracing
-      bind(classOf[StackdriverTracingCreator]).asEagerSingleton()
-      bind(classOf[LoggingTracingCreator]).asEagerSingleton()
+      bind(classOf[TracingConfigurator]).asEagerSingleton()
     }
-
   }
+}
 
+@Singleton
+class TracingConfigurator @Inject() (implicit ec: ExecutionContext, config: Config, lifecycle: ApplicationLifecycle) {
+  TracerProvider.configure("bootstrap-play2")
 }
 
 @Singleton
 class AkkaCluster @Inject() (system: ActorSystem) {
   AkkaManagement(system).start()
   ClusterBootstrap(system).start()
-}
-
-@Singleton
-class LoggingTracingCreator @Inject() (lifecycle: ApplicationLifecycle) {
-  LoggingTraceExporter.register()
-  lifecycle.addStopHook { () =>
-    Future.successful(LoggingTraceExporter.unregister())
-  }
-}
-
-@Singleton
-class StackdriverTracingCreator @Inject() (lifecycle: ApplicationLifecycle, config: Config) {
-  val serviceAccount: InputStream = getClass.getClassLoader.getResourceAsStream(config.getString("firebase.file"))
-  val credentials: GoogleCredentials = GoogleCredentials.fromStream(serviceAccount)
-  val stackDriverTraceExporterConfig: StackdriverTraceConfiguration = StackdriverTraceConfiguration
-    .builder()
-    .setProjectId(config.getString("project.id"))
-    .setCredentials(credentials)
-    .setFixedAttributes(
-      Map(
-        ("/component", AttributeValue.stringAttributeValue("PlayServer"))
-      ).asJava
-    )
-    .build()
-
-  StackdriverTraceExporter.createAndRegister(stackDriverTraceExporterConfig)
-  lifecycle.addStopHook { () =>
-    Future.successful(StackdriverTraceExporter.unregister())
-  }
 }
 
 /** Migrate Flyway on application start */

@@ -8,7 +8,7 @@ import de.innfactory.play.controller.{ErrorResult, ResultStatus}
 import de.innfactory.smithy4play.{ContextRouteError, RoutingContext}
 import play.api.Application
 import de.innfactory.play.smithy4play.{AbstractBaseController, HttpHeaders}
-import de.innfactory.play.tracing.ImplicitLogContext
+import de.innfactory.play.smithy4play.ImplicitLogContext
 
 import scala.concurrent.ExecutionContext
 

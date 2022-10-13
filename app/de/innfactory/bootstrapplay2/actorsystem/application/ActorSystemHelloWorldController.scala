@@ -8,7 +8,7 @@ import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
 import play.api.Application
 import de.innfactory.bootstrapplay2.application.controller.BaseController
 import de.innfactory.play.results.errors.Errors.BadRequest
-import de.innfactory.play.tracing.ImplicitLogContext
+import de.innfactory.play.smithy4play.ImplicitLogContext
 import play.api.mvc.ControllerComponents
 
 import javax.inject.{Inject, Singleton}
@@ -18,8 +18,11 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ActorSystemHelloWorldController @Inject() (
     helloWorldService: HelloWorldService
-)(implicit ec: ExecutionContext, cc: ControllerComponents, app: Application, config: Config)
-    extends BaseController
+)(implicit
+    ec: ExecutionContext,
+    cc: ControllerComponents,
+    app: Application
+) extends BaseController
     with ImplicitLogContext
     with ActorSystemAPIController[ContextRoute] {
 

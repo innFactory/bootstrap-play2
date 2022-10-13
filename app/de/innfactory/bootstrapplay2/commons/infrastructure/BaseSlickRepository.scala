@@ -8,7 +8,8 @@ import de.innfactory.play.results.errors.Errors.{BadRequest, DatabaseResult, Not
 import de.innfactory.bootstrapplay2.commons.implicits.EitherImplicits.EitherFuture
 import de.innfactory.implicits.OptionUtils.EnhancedOption
 import de.innfactory.play.controller.ResultStatus
-import de.innfactory.play.tracing.{ImplicitLogContext, TraceContext}
+import de.innfactory.play.smithy4play.ImplicitLogContext
+import de.innfactory.play.tracing.TraceContext
 import de.innfactory.play.tracing.implicits.EitherTTracingImplicits.EnhancedTracingEitherT
 import de.innfactory.play.tracing.implicits.FutureTracingImplicits.EnhancedFuture
 import io.opentelemetry.api.trace.Tracer
@@ -19,7 +20,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scala.util.Try
 
-class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext, config: Config) extends ImplicitLogContext {
+class BaseSlickRepository(db: Database)(implicit ec: ExecutionContext) extends ImplicitLogContext {
 
   def lookupGeneric[R, T](
       queryHeadOption: DBIOAction[Option[R], NoStream, Nothing]

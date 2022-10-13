@@ -47,12 +47,6 @@ object Dependencies {
   val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.8.16" % Test
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
-  // Dependent on the trace exporters you want to use add one or more of the following
-  val opencensusStackdriver = "io.opencensus" % "opencensus-exporter-trace-stackdriver" % "0.31.1"
-  val opencensusLoggging = "io.opencensus" % "opencensus-exporter-trace-logging" % "0.31.1"
-
-  val opencensusStatsStackdriver = "io.opencensus" % "opencensus-exporter-stats-stackdriver" % "0.31.1"
-
   // If you want to use opencensus-scala inside an Akka HTTP project
   val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
@@ -77,9 +71,6 @@ object Dependencies {
     logback,
     logbackCore,
     akkaHttp,
-    opencensusStackdriver,
-    opencensusLoggging,
-    opencensusStatsStackdriver,
     opencensusAkkaHttp,
     akka,
     akkaTyped,

@@ -3,7 +3,6 @@ package de.innfactory.bootstrapplay2.locations.application
 import akka.stream.Materializer
 import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
-import com.typesafe.config.Config
 import de.innfactory.bootstrapplay2.application.controller.BaseController
 import de.innfactory.bootstrapplay2.api.{
   LocationAPIController,
@@ -15,7 +14,6 @@ import de.innfactory.bootstrapplay2.locations.application.mapper.LocationMapper
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationService
 import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
 import de.innfactory.play.controller.ResultStatus
-import de.innfactory.play.tracing.ImplicitLogContext
 import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
 import play.api.Application
 import play.api.mvc.ControllerComponents
@@ -28,10 +26,8 @@ class LocationController @Inject() (locationService: LocationService)(implicit
     ec: ExecutionContext,
     app: Application,
     cc: ControllerComponents,
-    mat: Materializer,
-    config: Config
+    mat: Materializer
 ) extends BaseController
-    with ImplicitLogContext
     with LocationAPIController[ContextRoute]
     with LocationMapper {
 
