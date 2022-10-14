@@ -14,17 +14,19 @@ import com.google.inject.AbstractModule
 import de.innfactory.bootstrapplay2.commons.firebase.FirebaseBase
 import de.innfactory.play.flyway.FlywayMigrator
 import de.innfactory.play.tracing.TracerProvider
+import io.opentelemetry.api.{GlobalOpenTelemetry, OpenTelemetry}
 import org.joda.time.DateTime
 import play.api.libs.concurrent.AkkaGuiceSupport
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 /**
  * This module handles the bindings for the API to the Slick implementation.
  *
  * https://www.playframework.com/documentation/latest/ScalaDependencyInjection#Programmatic-bindings
  */
-class Module(environment: Environment) extends AbstractModule with AkkaGuiceSupport {
+class Module(environment: Environment, configuration: Configuration) extends AbstractModule with AkkaGuiceSupport {
 
   val logger = Logger("application")
 
@@ -36,8 +38,8 @@ class Module(environment: Environment) extends AbstractModule with AkkaGuiceSupp
 
     logger.info(s"- - - Binding Firebase - - -")
 
-    // bind(classOf[firebaseCreationService]).asEagerSingleton()
-    // bind(classOf[firebaseDeletionService]).asEagerSingleton()
+    bind(classOf[firebaseCreationService]).asEagerSingleton()
+    bind(classOf[firebaseDeletionService]).asEagerSingleton()
     bind(classOf[AkkaCluster]).asEagerSingleton()
 
     /**
@@ -45,8 +47,10 @@ class Module(environment: Environment) extends AbstractModule with AkkaGuiceSupp
      */
     if (environment.mode == Mode.Test) {
       logger.info(s"- - - Binding Services for for Test Mode - - -")
+      bind(classOf[TracingConfiguratorMock]).asEagerSingleton()
     } else if (environment.mode == Mode.Dev) {
       logger.info(s"- - - Binding Services for for Dev Mode - - -")
+      bind(classOf[TracingConfigurator]).asEagerSingleton()
     } else {
       logger.info(s"- - - Binding Services for for Prod Mode - - -")
       bind(classOf[TracingConfigurator]).asEagerSingleton()
@@ -56,7 +60,22 @@ class Module(environment: Environment) extends AbstractModule with AkkaGuiceSupp
 
 @Singleton
 class TracingConfigurator @Inject() (implicit ec: ExecutionContext, config: Config, lifecycle: ApplicationLifecycle) {
-  TracerProvider.configure("bootstrap-play2")
+  Try(
+    TracerProvider.configure(
+      "bootstrap-play2",
+      "bluevis", // config.getString("project.id")
+      Some(config.getString("gcp.serviceAccount"))
+    )
+  )
+}
+
+@Singleton
+class TracingConfiguratorMock @Inject() (implicit
+    ec: ExecutionContext,
+    config: Config,
+    lifecycle: ApplicationLifecycle
+) {
+  TracerProvider.configure("bootstrap-play2", config.getString("project.id"), None)
 }
 
 @Singleton

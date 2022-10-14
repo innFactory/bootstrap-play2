@@ -19,11 +19,12 @@
   </appender>
 
   <appender name="CLOUD" class="de.innfactory.play.logging.logback.LoggingAppender">
-    <credentialsFile>conf/firebase.json</credentialsFile>
+    <credentialsFile>conf/gcp-backend-sa.json</credentialsFile>
     <enhancer>de.innfactory.play.logging.logback.BaseEnhancer</enhancer>
   </appender>
 
   <logger name="scala.slick" level="INFO" />
+  <logger name="io.opentelemetry" level="DEBUG" />
   <logger name="com.github.tminglei.slickpg" level="NONE" />
   <logger name="play" level="INFO"/>
   <logger name="application" level="INFO"/>

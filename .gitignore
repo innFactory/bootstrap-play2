@@ -51,6 +51,7 @@ test.mv.db
 
 #Firebase
 conf/firebase.json
+conf/gcp-backend-sa.json
 
 influx2.properties
 
