@@ -157,6 +157,31 @@ sbt slickGen
 
 after that you will have to mark the folder target/scala-x.xx/scr_managed as "generated sources root"
 
+### Setup
+
+You can find a setup script in `.bin/setup`. Run it from your projects root with 
+```bash
+.bin/setup/setup.sh
+```
+
+It supports bootstrapping your project to rename the project and domain with 
+```bash
+.bin/setup/setup.sh bootstrap
+```
+
+As well as creating new packages with
+```bash
+.bin/setup/setup.sh package
+```
+
+You need to repackage the setup application, located in `.bin/setup`, if you made some changes to it
+```bash
+# Assuming you are located in your applications root
+cd .bin/setup
+sbt assembly
+cd ../..
+```
+
 ## Testing
 
 You can run functional tests against an in memory database and Slick easily with Play from a clean slate:
