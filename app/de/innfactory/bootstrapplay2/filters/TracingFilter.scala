@@ -11,7 +11,7 @@ import de.innfactory.play.tracing.GoogleTracingIdentifier.GoogleAttributes.{
   STATUS
 }
 import de.innfactory.play.tracing.GoogleTracingIdentifier.XTRACINGID
-import de.innfactory.play.tracing.TracerProvider
+import de.innfactory.play.tracing.OpentelemetryProvider
 import io.opentelemetry.api.GlobalOpenTelemetry
 import io.opentelemetry.context.Context
 import org.joda.time.DateTime
@@ -35,7 +35,13 @@ class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) e
 
   def handleLoggingAndTracing(next: RequestHeader => Future[Result])(request: RequestHeader): Future[Result] = {
     // Start Trace Span Root
-    val span = TracerProvider.getTracer().spanBuilder(request.path).startSpan()
+    val span = OpentelemetryProvider.getTracer().spanBuilder(request.path).startSpan()
+    val latencyRecorder = OpentelemetryProvider
+      .getMeter()
+      .histogramBuilder("task_latency")
+      .setDescription("The task latency in milliseconds")
+      .setUnit("ms")
+      .build()
 
     var xTracingId = (XTRACINGID, span.getSpanContext.getTraceId)
 
@@ -87,7 +93,7 @@ class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) e
       val end = DateTime.now
 
       // Add Metric with Span Processing Time
-      // TODO statsRecorder.newMeasureMap.put(LATENCY_MS, (end.getMillis - start.getMillis).toDouble).record()
+      latencyRecorder.record((end.getMillis - start.getMillis).toDouble)
 
       logResult(xTracingId, msg, res, request)(logger)
 

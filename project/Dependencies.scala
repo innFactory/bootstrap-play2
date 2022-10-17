@@ -42,6 +42,7 @@ object Dependencies {
   val postgresql = "org.postgresql" % "postgresql" % "42.5.0"
   val cats = "org.typelevel" %% "cats-core" % "2.8.0"
   val chimney = "io.scalaland" %% "chimney" % "0.6.2"
+  val jodaJackson = "com.fasterxml.jackson.datatype" % "jackson-datatype-joda" % "2.11.4"
 
   // Test
   val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.8.16" % Test
@@ -99,6 +100,7 @@ object Dependencies {
     opentelemetryApi,
     opentelemetryBom,
     nimbusJwt,
-    firebase
+    firebase,
+    jodaJackson
   )
 }

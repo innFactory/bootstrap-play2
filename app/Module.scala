@@ -13,8 +13,7 @@ import slick.jdbc.JdbcBackend.Database
 import com.google.inject.AbstractModule
 import de.innfactory.bootstrapplay2.commons.firebase.FirebaseBase
 import de.innfactory.play.flyway.FlywayMigrator
-import de.innfactory.play.tracing.TracerProvider
-import io.opentelemetry.api.{GlobalOpenTelemetry, OpenTelemetry}
+import de.innfactory.play.tracing.OpentelemetryProvider
 import org.joda.time.DateTime
 import play.api.libs.concurrent.AkkaGuiceSupport
 
@@ -61,9 +60,9 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 @Singleton
 class TracingConfigurator @Inject() (implicit ec: ExecutionContext, config: Config, lifecycle: ApplicationLifecycle) {
   Try(
-    TracerProvider.configure(
+    OpentelemetryProvider.configure(
       "bootstrap-play2",
-      "bluevis", // config.getString("project.id")
+      config.getString("project.id"),
       Some(config.getString("gcp.serviceAccount"))
     )
   )
@@ -75,7 +74,7 @@ class TracingConfiguratorMock @Inject() (implicit
     config: Config,
     lifecycle: ApplicationLifecycle
 ) {
-  TracerProvider.configure("bootstrap-play2", config.getString("project.id"), None)
+  OpentelemetryProvider.configure("bootstrap-play2", config.getString("project.id"), None)
 }
 
 @Singleton

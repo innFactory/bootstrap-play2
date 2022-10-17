@@ -5,7 +5,7 @@ import de.innfactory.bootstrapplay2.commons.RequestContext
 import de.innfactory.bootstrapplay2.graphql.schema.SchemaDefinition
 import de.innfactory.grapqhl.play.request.RequestExecutionBase
 import de.innfactory.play.smithy4play.HttpHeaders
-import de.innfactory.play.tracing.{TracerProvider, TracingHelper}
+import de.innfactory.play.tracing.{OpentelemetryProvider, TracingHelper}
 import io.opentelemetry.api.trace.Span
 import play.api.mvc.{AnyContent, Request}
 
@@ -43,7 +43,7 @@ object RequestExecutor {
         case Some(parent) =>
           TracingHelper.traceWithParent(spanString, parent, child => processRequest(child, parentSpan))
         case None =>
-          val child = TracerProvider.getTracer.spanBuilder(spanString).startSpan()
+          val child = OpentelemetryProvider.getTracer.spanBuilder(spanString).startSpan()
           processRequest(child, parentSpan)
       }
     }
