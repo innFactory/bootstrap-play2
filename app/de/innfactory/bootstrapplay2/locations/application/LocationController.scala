@@ -10,9 +10,10 @@ import de.innfactory.bootstrapplay2.api.{
   LocationResponse,
   LocationsResponse
 }
+import de.innfactory.bootstrapplay2.companies.domain.models.CompanyId
 import de.innfactory.bootstrapplay2.locations.application.mapper.LocationMapper
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationService
-import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
+import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationId}
 import de.innfactory.play.controller.ResultStatus
 import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
 import play.api.Application
@@ -31,9 +32,11 @@ class LocationController @Inject() (locationService: LocationService)(implicit
     with LocationAPIController[ContextRoute]
     with LocationMapper {
 
-  override def getAllLocationsByCompany(companyId: String): ContextRoute[LocationsResponse] =
+  override def getAllLocationsByCompany(
+      companyId: de.innfactory.bootstrapplay2.api.CompanyId
+  ): ContextRoute[LocationsResponse] =
     Endpoint.withAuth
-      .execute(locationService.getAllByCompany(LocationCompanyId(companyId))(_))
+      .execute(locationService.getAllByCompany(companyId)(_))
       .complete
 
   override def getAllLocations(): ContextRoute[LocationsResponse] =
@@ -50,9 +53,11 @@ class LocationController @Inject() (locationService: LocationService)(implicit
       )
       .complete
 
-  override def getLocationById(locationId: String): ContextRoute[LocationResponse] =
+  override def getLocationById(
+      locationId: de.innfactory.bootstrapplay2.api.LocationId
+  ): ContextRoute[LocationResponse] =
     Endpoint.withAuth
-      .execute(locationService.getById(LocationId(locationId))(_))
+      .execute(locationService.getById(locationId)(_))
       .complete
 
   override def createLocation(body: LocationRequestBody): ContextRoute[LocationResponse] =
@@ -65,8 +70,8 @@ class LocationController @Inject() (locationService: LocationService)(implicit
       .execute(locationService.updateLocation(body)(_))
       .complete
 
-  override def deleteLocation(locationId: String): ContextRoute[Unit] =
+  override def deleteLocation(locationId: de.innfactory.bootstrapplay2.api.LocationId): ContextRoute[Unit] =
     Endpoint.withAuth
-      .execute(locationService.deleteLocation(LocationId(locationId))(_))
+      .execute(locationService.deleteLocation(locationId)(_))
       .complete
 }

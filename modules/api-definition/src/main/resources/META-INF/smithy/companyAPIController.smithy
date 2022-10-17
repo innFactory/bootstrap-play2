@@ -1,7 +1,8 @@
-$version: "1.0"
+$version: "2.0"
 
 namespace de.innfactory.bootstrapplay2.api
 
+use de.innfactory.bootstrapplay2.api#CompanyId
 use smithy4s.api#simpleRestJson
 
 @simpleRestJson
@@ -52,7 +53,7 @@ operation deleteCompany {
 structure CompanyIdRequest {
     @httpLabel
     @required
-    companyId: String
+    companyId: CompanyId
 }
 
 structure CompanyRequest {
@@ -62,7 +63,7 @@ structure CompanyRequest {
 }
 
 structure CompanyRequestBody {
-    id: String,
+    id: CompanyId,
     settings: Document,
     stringAttribute1: String,
     stringAttribute2: String,
@@ -74,7 +75,7 @@ structure CompanyRequestBody {
 
 structure CompanyResponse {
     @required
-    id: String,
+    id: CompanyId,
     settings: Document,
     stringAttribute1: String,
     stringAttribute2: String,

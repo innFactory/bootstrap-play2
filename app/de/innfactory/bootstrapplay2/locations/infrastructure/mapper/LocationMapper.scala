@@ -1,7 +1,8 @@
 package de.innfactory.bootstrapplay2.locations.infrastructure.mapper
 
 import dbdata.Tables
-import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
+import de.innfactory.bootstrapplay2.companies.domain.models.CompanyId
+import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationId}
 import io.scalaland.chimney.dsl.TransformerOps
 import org.joda.time.DateTime
 
@@ -11,7 +12,7 @@ private[infrastructure] object LocationMapper {
     row
       .into[Location]
       .withFieldComputed[LocationId, LocationId](_.id, r => LocationId(r.id))
-      .withFieldComputed[LocationCompanyId, LocationCompanyId](_.company, r => LocationCompanyId(r.company))
+      .withFieldComputed[CompanyId, CompanyId](_.company, r => CompanyId(r.company))
       .transform
 
   implicit def locationToLocationRow(location: Location): Tables.LocationRow =

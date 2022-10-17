@@ -1,6 +1,9 @@
-$version: "1.0"
+$version: "2.0"
 
 namespace de.innfactory.bootstrapplay2.api
+
+use de.innfactory.bootstrapplay2.api#LocationId
+use de.innfactory.bootstrapplay2.api#CompanyId
 use smithy4s.api#simpleRestJson
 
 @simpleRestJson
@@ -58,13 +61,13 @@ operation deleteLocation {
 structure GetLocationsByCompanyRequest {
     @httpLabel
     @required
-    companyId: String
+    companyId: CompanyId
 }
 
 structure LocationIdRequest {
     @httpLabel
     @required
-    locationId: String
+    locationId: LocationId
 }
 
 structure LocationRequest {
@@ -74,9 +77,9 @@ structure LocationRequest {
 }
 
 structure LocationRequestBody {
-    id: String,
+    id: LocationId,
     @required
-    company: String,
+    company: CompanyId,
     name: String,
     settings: Document,
     addressLine1: String,
@@ -90,9 +93,9 @@ structure LocationRequestBody {
 
 structure LocationResponse {
     @required
-    id: String,
+    id: LocationId,
     @required
-    company: String,
+    company: CompanyId,
     name: String,
     settings: Document,
     addressLine1: String,

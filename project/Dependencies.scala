@@ -24,8 +24,8 @@ object Dependencies {
   val akkaSpray = "com.typesafe.akka" %% "akka-http-spray-json" % "10.2.9"
 
   // innFactory Utils
-  val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "2.0.0"
-  val endpointBuilder = "de.innfactory" %% "smithy4play" % "0.2.2-HOTFIX-4"
+  val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "2.0.1"
+  val smithy4play = "de.innfactory" %% "smithy4play" % "0.2.3-HOTFIX"
 
   // Prod
   val slickPg = "com.github.tminglei" %% "slick-pg" % "0.20.4"
@@ -95,7 +95,7 @@ object Dependencies {
     slickPgJts,
     akkaStreams,
     cats,
-    endpointBuilder,
+    smithy4play,
     ws,
     opentelemetryApi,
     opentelemetryBom,

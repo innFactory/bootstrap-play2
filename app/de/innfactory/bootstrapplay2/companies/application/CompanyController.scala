@@ -29,9 +29,9 @@ class CompanyController @Inject() (
     with CompanyAPIController[ContextRoute]
     with CompanyMapper {
 
-  override def getCompanyById(companyId: String): ContextRoute[CompanyResponse] =
+  override def getCompanyById(companyId: de.innfactory.bootstrapplay2.api.CompanyId): ContextRoute[CompanyResponse] =
     Endpoint.withAuth
-      .execute(companyService.getById(CompanyId(companyId))(_))
+      .execute(companyService.getById(companyId)(_))
       .complete
 
   override def getAllCompanies(): ContextRoute[CompaniesResponse] =
@@ -47,8 +47,9 @@ class CompanyController @Inject() (
     .execute(companyService.updateCompany(body)(_))
     .complete
 
-  override def deleteCompany(companyId: String): ContextRoute[Unit] = Endpoint.withAuth
-    .execute(companyService.deleteCompany(CompanyId(companyId))(_))
-    .complete
+  override def deleteCompany(companyId: de.innfactory.bootstrapplay2.api.CompanyId): ContextRoute[Unit] =
+    Endpoint.withAuth
+      .execute(companyService.deleteCompany(companyId)(_))
+      .complete
 
 }

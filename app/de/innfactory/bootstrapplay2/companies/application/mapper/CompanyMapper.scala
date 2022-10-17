@@ -6,15 +6,12 @@ import de.innfactory.bootstrapplay2.api.{CompaniesResponse, CompanyRequestBody, 
 import io.scalaland.chimney.dsl.TransformerOps
 import org.joda.time.DateTime
 
-import java.util.UUID
-
 trait CompanyMapper extends BaseMapper {
   implicit val companyToCompanyResponse: Company => CompanyResponse = (
     company: Company
   ) =>
     company
       .into[CompanyResponse]
-      .withFieldComputed(_.id, c => c.id.value)
       .withFieldComputed(_.created, c => dateTimeToDateWithTime(c.created))
       .withFieldComputed(_.updated, c => dateTimeToDateWithTime(c.updated))
       .transform
@@ -25,7 +22,7 @@ trait CompanyMapper extends BaseMapper {
   implicit val companyRequestBodyToCompany: CompanyRequestBody => Company = (companyRequestBody: CompanyRequestBody) =>
     companyRequestBody
       .into[Company]
-      .withFieldComputed(_.id, c => c.id.map(id => CompanyId(id)).getOrElse(CompanyId.create))
+      .withFieldComputed(_.id, c => c.id.map(CompanyId.companyIdToDomain).getOrElse(CompanyId.create))
       .withFieldConst(_.created, DateTime.now())
       .withFieldConst(_.updated, DateTime.now())
       .transform

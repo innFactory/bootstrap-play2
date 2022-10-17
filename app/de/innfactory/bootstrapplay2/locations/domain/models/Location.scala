@@ -1,12 +1,13 @@
 package de.innfactory.bootstrapplay2.locations.domain.models
 
+import de.innfactory.bootstrapplay2.companies.domain.models.CompanyId
 import de.innfactory.implicits.OptionUtils.EnhancedOption
 import org.joda.time.DateTime
 import play.api.libs.json._
 
 case class Location(
     id: LocationId,
-    company: LocationCompanyId,
+    company: CompanyId,
     name: Option[String],
     settings: Option[JsValue],
     addressLine1: Option[String],
