@@ -13,7 +13,6 @@ import io.opentelemetry.api.GlobalOpenTelemetry
  */
 trait TestApplicationFactory extends FakeApplicationFactory {
   GlobalOpenTelemetry.resetForTest()
-  GlobalOpenTelemetry.set(null)
 
   def fakeApplication(): Application =
     new GuiceApplicationBuilder()
