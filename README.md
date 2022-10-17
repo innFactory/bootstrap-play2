@@ -223,4 +223,5 @@ Changes Markdown: [Changes](doc/changes.md)
 ## Contributors:
 
 <a href="https://github.com/jona7o"><img src="https://avatars2.githubusercontent.com/u/8403631?s=460&u=831a4265651db985e3a043ad0fec697f68130c04&v=4" title="jona7o" width="80" height="80"></a>
-<a href="https://github.com/patsta32"><img src="https://avatars2.githubusercontent.com/u/12295003?s=460&u=5f79d4aac3414271cd5393c3b97f413a417925aa&v=4" title="jona7o" width="80" height="80"></a>
+<a href="https://github.com/patsta32"><img src="https://avatars2.githubusercontent.com/u/12295003?s=460&u=5f79d4aac3414271cd5393c3b97f413a417925aa&v=4" title="patsta32" width="80" height="80"></a>
+<a href="https://github.com/anderha"><img src="https://avatars.githubusercontent.com/u/36031262?s=96&v=4" title="anderha" width="80" height="80"></a>
