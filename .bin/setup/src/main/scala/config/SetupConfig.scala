@@ -28,8 +28,8 @@ object SetupConfig {
 
   case class ProjectConfig(domain: String, name: String) {
     val sourcesRoot: String = "app"
-    def getPackagePath() = s"$sourcesRoot/${domain.replace('.', '/')}/${name.replaceAll("-", "")}"
-    def getNamespace() = s"$domain.${name.replaceAll("-", "")}"
+    def getPackagePath() = s"$sourcesRoot/${domain.replace('.', '/')}"
+    def getNamespace() = domain
   }
   object ProjectConfig {
     implicit val format: OFormat[ProjectConfig] = Json.format[ProjectConfig]

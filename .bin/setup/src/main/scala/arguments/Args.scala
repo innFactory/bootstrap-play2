@@ -31,7 +31,7 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
       )
     val projectDomain: ScallopOption[String] =
       opt[String](
-        descr = "Folder name of the projects packages, e.g. de.innfactory",
+        descr = "Folder name of the projects packages, e.g. de.innfactory.bootstrapplay2",
         validate = (input: String) => StringArgValidations.onlyLettersDot(input).isRight
       )
     val bootstrapPaths: ScallopOption[List[String]] = opt[List[String]](

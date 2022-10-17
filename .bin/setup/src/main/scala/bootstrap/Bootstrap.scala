@@ -63,7 +63,7 @@ object Bootstrap {
         domain = configFromArgs.project.domain.toOption
           .getOrElse(
             StringArgRetriever.askFor(
-              "Folder name of the projects packages, default de.innfactory",
+              "Folder name of the projects packages, default de.innfactory.bootstrapplay2",
               Seq(StringArgValidations.onlyLettersDot)
             )
           )

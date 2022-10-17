@@ -1,7 +1,7 @@
 {
   "project": {
     "name": "bootstrap-play2",
-    "domain": "de.innfactory"
+    "domain": "de.innfactory.bootstrapplay2"
   },
   "bootstrap": {
     "paths": ["conf", "test", ".github"]
