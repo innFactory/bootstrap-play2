@@ -38,7 +38,7 @@ object Dependencies {
   val chimney = "io.scalaland" %% "chimney" % "0.6.2"
 
   // Test
-  val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.8.16" % Test
+  val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.8.18" % Test
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   // Dependent on the trace exporters you want to use add one or more of the following
