@@ -90,7 +90,7 @@ class FlywayMigratorImpl @Inject() (env: Environment, configuration: Configurati
 /** Creates FirebaseApp on Application creation */
 class firebaseCreationService @Inject() (config: Config, env: Environment) {
   if (env.mode == Mode.Prod || env.mode == Mode.Dev) {
-    FirebaseBase.instantiateFirebase(config.getString("firebase.file"), config.getString("project.id"))
+    FirebaseBase.instantiateFirebase(config.getString("gcp.serviceAccount"), config.getString("project.id"))
   } else if (isEmulatorMode) {
     FirebaseApp.initializeApp(
       FirebaseOptions
