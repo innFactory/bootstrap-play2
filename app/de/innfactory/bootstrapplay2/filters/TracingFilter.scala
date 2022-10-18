@@ -3,7 +3,6 @@ package de.innfactory.bootstrapplay2.filters
 import akka.stream.Materializer
 import com.google.cloud.opentelemetry.shadow.semconv.trace.attributes.SemanticAttributes
 import com.typesafe.config.Config
-import de.innfactory.bootstrapplay2.commons.logging.TraceLogger
 import de.innfactory.play.smithy4play.ImplicitLogContext
 import de.innfactory.play.tracing.GoogleTracingIdentifier.GoogleAttributes.{
   HTTP_RESPONSE_SIZE,
@@ -11,7 +10,7 @@ import de.innfactory.play.tracing.GoogleTracingIdentifier.GoogleAttributes.{
   STATUS
 }
 import de.innfactory.play.tracing.GoogleTracingIdentifier.XTRACINGID
-import de.innfactory.play.tracing.OpentelemetryProvider
+import de.innfactory.play.tracing.{OpentelemetryProvider, TraceLogger}
 import io.opentelemetry.api.GlobalOpenTelemetry
 import io.opentelemetry.context.Context
 import org.joda.time.DateTime
@@ -73,7 +72,7 @@ class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) e
     // Call Next Filter with new Headers
     val result = next(request.withHeaders(request.headers.add(map.toList: _*)))
 
-    val logger = new TraceLogger(span)
+    val logger = new TraceLogger(Some(span))
     val msg: String = logStart(request, xTracingId)(logger)
 
     // Check Start Time
