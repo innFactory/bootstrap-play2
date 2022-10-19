@@ -36,6 +36,8 @@ class BaseController(implicit ec: ExecutionContext, app: Application)
           override def additionalInfoToLog: Option[String] = result.additionalInfoToLog
           override def additionalInfoErrorCode: Option[String] = result.additionalInfoErrorCode
           override def statusCode: Int = result.statusCode
+
+          override def additionalInformation: Option[String] = None
         }
     }
 

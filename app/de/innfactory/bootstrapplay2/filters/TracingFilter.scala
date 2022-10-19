@@ -62,7 +62,6 @@ class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) e
       Context.current(),
       map,
       (carrier: scala.collection.mutable.Map[String, String], key: String, value: String) => {
-        println((key, value))
         carrier.addOne((key, value))
       }
     )

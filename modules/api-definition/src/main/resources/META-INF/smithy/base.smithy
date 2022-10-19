@@ -1,6 +1,7 @@
 $version: "2.0"
 
 namespace de.innfactory.bootstrapplay2.api
+use smithy4s.api#uuidFormat
 
 @pattern("^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$")
 @documentation("ISO Date With Time")

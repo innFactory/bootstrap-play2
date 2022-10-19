@@ -13,8 +13,8 @@ VALUES (
         'test 2',
         1,
         false,
-        CURRENT_TIMESTAMP,
-        CURRENT_TIMESTAMP
+        '2022-03-07T00:00:00.001Z',
+        '2022-03-07T00:00:00.001Z'
         );
 
 INSERT INTO "company" (  "id",
@@ -32,8 +32,8 @@ VALUES (
          'test 2',
          1,
          false,
-         CURRENT_TIMESTAMP,
-         CURRENT_TIMESTAMP
+         '2022-03-07T00:00:00.001Z',
+         '2022-03-07T00:00:00.001Z'
         );
 
 INSERT INTO "location" (
@@ -58,8 +58,8 @@ VALUES (
         'zip1',
         'city1',
         'country1',
-        CURRENT_TIMESTAMP,
-        CURRENT_TIMESTAMP
+        '2022-03-07T00:00:00.001Z',
+        '2022-03-07T00:00:00.001Z'
         );
 
 

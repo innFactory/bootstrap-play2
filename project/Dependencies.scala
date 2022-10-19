@@ -25,7 +25,7 @@ object Dependencies {
 
   // innFactory Utils
   val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "2.0.1"
-  val smithy4play = "de.innfactory" %% "smithy4play" % "0.2.3-HOTFIX"
+  val smithy4play = "de.innfactory" %% "smithy4play" % "0.3.1"
 
   // Prod
   val slickPg = "com.github.tminglei" %% "slick-pg" % "0.20.4"
