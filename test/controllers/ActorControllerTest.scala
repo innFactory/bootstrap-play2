@@ -1,45 +1,62 @@
 package controllers
 
-import java.util.UUID
+import de.innfactory.bootstrapplay2.api.{ActorShardingAPIControllerGen, ActorSystemAPIControllerGen}
+import de.innfactory.smithy4play.client.GenericAPIClient.EnhancedGenericAPIClient
 
 import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
-import play.api.libs.json._
-import play.api.test.Helpers._
-import testutils.BaseFakeRequest
-import testutils.FakeRequestUtils._
+import testutils.FakeRequestClient
+import de.innfactory.smithy4play.client.SmithyPlayTestUtils._
+
+import java.nio.charset.StandardCharsets
 
 class ActorControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
+  private val actorSystemClient =
+    ActorSystemAPIControllerGen.withClient(new FakeRequestClient(), Some(Map("Authorization" -> Seq("key"))))
+  private val actorShardingClient =
+    ActorShardingAPIControllerGen.withClient(new FakeRequestClient(), Some(Map("Authorization" -> Seq("key"))))
 
   /** —————————————————————— */
   /** ACTORSCONTROLLER */
   /** —————————————————————— */
   "ActorSystem" must {
+    "query invalid message" in {
+      val result = actorSystemClient.helloworldViaSystem("test").awaitLeft
+      result.statusCode mustBe 400
+      val error = new String(result.error, StandardCharsets.UTF_8)
+      error mustBe "{\"message\":\"the query was not 'hello'\"}"
+    }
+
     "query hello" in {
-      val result = Get("/v1/public/helloworld/system/test", "AuthHeader")
-      val content = contentAsString(result)
-      val parsed = content
-      parsed mustBe "{\"message\":\"the query was not 'hello'\"}"
+      val result = actorSystemClient.helloworldViaSystem("hello").awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
 
     "throughput" in {
-      for (_ <- 0 to 10)
-        Get("/v1/public/helloworld/system/test", "test@test.de")
-
+      for (_ <- 0 to 10) {
+        val result = actorSystemClient.helloworldViaSystem("hello").awaitRight
+        result.statusCode mustBe result.expectedStatusCode
+      }
     }
   }
 
   "ActorSharding" must {
+    "query invalid message" in {
+      val result = actorShardingClient.helloworldViaSharding("test").awaitLeft
+      result.statusCode mustBe 400
+      val error = new String(result.error, StandardCharsets.UTF_8)
+      error mustBe "{\"message\":\"the query was not 'hello'\"}"
+    }
+
     "query hello" in {
-      val result = Get("/v1/public/helloworld/sharding/test", "AuthHeader")
-      val content = contentAsString(result)
-      val parsed = content
-      parsed mustBe "{\"message\":\"the query was not 'hello'\"}"
+      val result = actorShardingClient.helloworldViaSharding("hello").awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
 
     "throughput" in {
-      for (_ <- 0 to 10)
-        Get("/v1/public/helloworld/sharding/test", "test@test.de")
-
+      for (_ <- 0 to 10) {
+        val result = actorShardingClient.helloworldViaSharding("hello").awaitRight
+        result.statusCode mustBe result.expectedStatusCode
+      }
     }
   }
 

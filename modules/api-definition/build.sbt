@@ -8,5 +8,5 @@ lazy val apiDefinition = (project in file("."))
     organization := "de.innfactory.bootstrap-play2",
     version := releaseVersion,
     GithubConfig.settings,
-    libraryDependencies += "com.disneystreaming.smithy4s" % "smithy4s-protocol" % "0.14.2"
+    libraryDependencies += "com.disneystreaming.smithy4s" % "smithy4s-protocol" % "0.16.2"
   )

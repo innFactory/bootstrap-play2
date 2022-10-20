@@ -116,7 +116,7 @@ operation createLocation {
 
 apply createLocation @examples([
     {
-        title: "Invoke createLocation"
+        title: "Invoke createLocation",
         input: {
             body: {
                 company: "0ce84627-9a66-46bf-9a1d-4f38b82a38e3",
@@ -141,7 +141,7 @@ operation updateLocation {
 
 apply updateLocation @examples([
     {
-        title: "Invoke updateLocation"
+        title: "Invoke updateLocation",
         input: {
             body: {
                 id: "592c5187-cb85-4b66-b0fc-293989923e1e",
@@ -167,7 +167,7 @@ operation deleteLocation {
 
 apply deleteLocation @examples([
     {
-        title: "Invoke deleteLocation"
+        title: "Invoke deleteLocation",
         input: {
             locationId: "592c5187-cb85-4b66-b0fc-293989923e1e"
         }

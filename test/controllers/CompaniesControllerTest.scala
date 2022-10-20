@@ -1,81 +1,79 @@
 package controllers
 
-import de.innfactory.bootstrapplay2.api.CompanyResponse
+import de.innfactory.bootstrapplay2.api.{CompanyAPIControllerGen, CompanyRequestBody}
+import de.innfactory.smithy4play.client.GenericAPIClient.EnhancedGenericAPIClient
 import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
-import play.api.libs.json._
-import play.api.test.Helpers._
-import testutils.AuthUtils
-import testutils.FakeRequestUtils._
+import testutils.FakeRequestClient
+import de.innfactory.smithy4play.client.SmithyPlayTestUtils._
 
 class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
-  private val authUtils = app.injector.instanceOf[AuthUtils]
+  private val companyAdminCompanyClient = CompanyAPIControllerGen.withClient(
+    new FakeRequestClient(),
+    Some(Map("Authorization" -> Seq(authUtils.CompanyAdminEmailToken)))
+  )
 
   /** ———————————————— */
   /** COMPANIES */
   /** ———————————————— */
   "CompaniesController" must {
     "get by id" in {
-      val result = Get("/v1/companies/0ce84627-9a66-46bf-9a1d-4f38b82a38e3", authUtils.CompanyAdminEmailToken)
-
-      contentAsJson(result)
+      val result =
+        companyAdminCompanyClient.getCompanyById("0ce84627-9a66-46bf-9a1d-4f38b82a38e3").awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
 
-    "get single" in {
+    "get all" in {
       val result =
-        Get("/v1/companies/0ce84627-9a66-46bf-9a1d-4f38b82a38e3", authUtils.CompanyAdminEmailToken)
-      contentAsJson(result)
+        companyAdminCompanyClient.getAllCompanies().awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
 
     "post" in {
       val result =
-        Post(
-          "/v1/companies",
-          Json.parse(s"""
-                        |{
-                        |"settings": {
-                        |   "test": "test"
-                        | },
-                        |"stringAttribute1": "test",
-                        |"stringAttribute2": "test",
-                        |"longAttribute1": 1,
-                        |"booleanAttribute": true
-                        |}
-                        |""".stripMargin),
-          authUtils.NotVerifiedEmailToken
-        )
-      contentAsJson(result)
+        companyAdminCompanyClient
+          .createCompany(
+            CompanyRequestBody(
+              stringAttribute1 = Some("test"),
+              stringAttribute2 = Some("test"),
+              longAttribute1 = Some(1),
+              booleanAttribute = Some(true)
+            )
+          )
+          .awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
 
     "patch" in {
       val result =
-        Patch(
-          "/v1/companies",
-          Json.parse(s"""
-                         {
-                        |"id": "0ce84627-9a66-46bf-9a1d-4f38b82a38e3",
-                        |"settings": {
-                        |   "test": "test"
-                        | },
-                        |"stringAttribute1": "test",
-                        |"stringAttribute2": "test",
-                        |"longAttribute1": 1,
-                        |"booleanAttribute": true
-                        |}
-                        |""".stripMargin),
-          authUtils.CompanyAdminEmailToken
-        )
-      result.getStatus mustBe 204
+        companyAdminCompanyClient
+          .updateCompany(
+            CompanyRequestBody(
+              id = Some(de.innfactory.bootstrapplay2.api.CompanyId("0ce84627-9a66-46bf-9a1d-4f38b82a38e3")),
+              stringAttribute1 = Some("test2"),
+              stringAttribute2 = Some("test2"),
+              longAttribute1 = Some(2),
+              booleanAttribute = Some(false)
+            )
+          )
+          .awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
 
     "delete" in {
-      Delete(
-        "/v1/companies/7059f786-4633-4ace-a412-2f2e90556f08",
-        authUtils.CompanyAdminEmailToken
-      ).getStatus mustBe 204
-      Delete(
-        "/v1/companies/7059f786-4633-4ace-a412-2f2e90556f08",
-        authUtils.CompanyAdminEmailToken
-      ).getStatus mustBe 404
+      val successfulDelete =
+        companyAdminCompanyClient
+          .deleteCompany(
+            de.innfactory.bootstrapplay2.api.CompanyId("7059f786-4633-4ace-a412-2f2e90556f08")
+          )
+          .awaitRight
+      successfulDelete.statusCode mustBe successfulDelete.expectedStatusCode
+      val notFoundAfterDelete =
+        companyAdminCompanyClient
+          .deleteCompany(
+            de.innfactory.bootstrapplay2.api.CompanyId("7059f786-4633-4ace-a412-2f2e90556f08")
+          )
+          .awaitLeft
+      notFoundAfterDelete.statusCode mustBe 404
     }
 
   }

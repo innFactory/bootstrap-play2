@@ -1,32 +1,29 @@
 package controllers
 
+import de.innfactory.bootstrapplay2.api.HealthAPIControllerGen
+import de.innfactory.smithy4play.client.GenericAPIClient.EnhancedGenericAPIClient
 import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
-import play.api.mvc.Result
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
-import scala.concurrent.Future
+import testutils.FakeRequestClient
+import de.innfactory.smithy4play.client.SmithyPlayTestUtils._
 
 class HealthControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
+  private val publicClient = HealthAPIControllerGen.withClient(new FakeRequestClient())
 
   /** ————————————————— */
   /** HEALTH CONTROLLER */
   /** ————————————————— */
   "HealthController" should {
     "accept GET request on base path" in {
-      val future: Future[Result] =
-        route(app, FakeRequest(GET, "/").withHeaders(("Authorization", "GlobalAdmin"))).get
-      status(future) mustEqual 200
+      val result = publicClient.ping().awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
     "accept GET request on liveness check path" in {
-      val future: Future[Result] =
-        route(app, FakeRequest(GET, "/liveness")).get
-      status(future) mustEqual 200
+      val result = publicClient.liveness().awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
     "accept GET request on readiness check path" in {
-      val future: Future[Result] =
-        route(app, FakeRequest(GET, "/readiness")).get
-      status(future) mustEqual 200
+      val result = publicClient.readiness().awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
   }
 }
