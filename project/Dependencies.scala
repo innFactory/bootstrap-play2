@@ -4,10 +4,10 @@ import sbt._
 object Dependencies {
 
   val scalaVersion = "2.13.8"
-  val akkaVersion = "2.6.19"
+  val akkaVersion = "2.6.20"
 
   val akkaTyped = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
-  val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.2.9"
+  val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.2.10"
   val akka = "com.typesafe.akka" %% "akka-actor" % akkaVersion
 
   // https://github.com/akka/akka/issues/29351
@@ -20,19 +20,19 @@ object Dependencies {
   val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "1.4.4"
 
   // Prod
-  val slickPg = "com.github.tminglei" %% "slick-pg" % "0.20.3"
-  val slickPgPlayJson = "com.github.tminglei" %% "slick-pg_play-json" % "0.20.3"
-  val slickPgJts = "com.github.tminglei" %% "slick-pg_jts" % "0.20.3"
+  val slickPg = "com.github.tminglei" %% "slick-pg" % "0.20.4"
+  val slickPgPlayJson = "com.github.tminglei" %% "slick-pg_play-json" % "0.20.4"
+  val slickPgJts = "com.github.tminglei" %% "slick-pg_jts" % "0.20.4"
   val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper" % "2.4.2"
-  val playJson = "com.typesafe.play" %% "play-json" % "2.9.2"
-  val playJsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.9.2"
+  val playJson = "com.typesafe.play" %% "play-json" % "2.9.3"
+  val playJsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.9.3"
   val slick = "com.typesafe.slick" %% "slick" % "3.3.3"
   val slickCodegen = "com.typesafe.slick" %% "slick-codegen" % "3.3.3"
   val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.3.3"
   val hikariCP = "com.zaxxer" % "HikariCP" % "5.0.1" exclude ("org.slf4j", "slf4j-api")
-  val joda = "joda-time" % "joda-time" % "2.11.0"
-  val postgresql = "org.postgresql" % "postgresql" % "42.4.1"
-  val cats = "org.typelevel" %% "cats-core" % "2.8.0"
+  val joda = "joda-time" % "joda-time" % "2.12.2"
+  val postgresql = "org.postgresql" % "postgresql" % "42.5.1"
+  val cats = "org.typelevel" %% "cats-core" % "2.9.0"
   val henkanConvert = "com.kailuowang" %% "henkan-convert" % "0.6.5"
   val henkanOptional = "com.kailuowang" %% "henkan-optional" % "0.6.5"
   val chimney = "io.scalaland" %% "chimney" % "0.6.2"
@@ -51,8 +51,8 @@ object Dependencies {
   // If you want to use opencensus-scala inside an Akka HTTP project
   val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
-  val sl4j = "org.slf4j" % "slf4j-api" % "1.7.36" intransitive
-  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.0.1"
+  val sl4j = "org.slf4j" % "slf4j-api" % "2.0.5" intransitive
+  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.0.6"
   val logback = "ch.qos.logback" % "logback-classic" % "1.2.11"
   val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.11"
 
