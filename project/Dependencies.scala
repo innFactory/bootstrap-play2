@@ -35,7 +35,7 @@ object Dependencies {
   val cats = "org.typelevel" %% "cats-core" % "2.9.0"
   val henkanConvert = "com.kailuowang" %% "henkan-convert" % "0.6.5"
   val henkanOptional = "com.kailuowang" %% "henkan-optional" % "0.6.5"
-  val chimney = "io.scalaland" %% "chimney" % "0.6.2"
+  val chimney = "io.scalaland" %% "chimney" % "0.7.0"
 
   // Test
   val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.8.16" % Test
@@ -52,7 +52,7 @@ object Dependencies {
   val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
   val sl4j = "org.slf4j" % "slf4j-api" % "2.0.6" intransitive
-  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.3.0"
+  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.4.0"
   val logback = "ch.qos.logback" % "logback-classic" % "1.2.11"
   val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.11"
 
