@@ -30,7 +30,7 @@ object Dependencies {
   val slickCodegen = "com.typesafe.slick" %% "slick-codegen" % "3.3.3"
   val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.3.3"
   val hikariCP = "com.zaxxer" % "HikariCP" % "5.0.1" exclude ("org.slf4j", "slf4j-api")
-  val joda = "joda-time" % "joda-time" % "2.12.4"
+  val joda = "joda-time" % "joda-time" % "2.12.5"
   val postgresql = "org.postgresql" % "postgresql" % "42.6.0"
   val cats = "org.typelevel" %% "cats-core" % "2.9.0"
   val henkanConvert = "com.kailuowang" %% "henkan-convert" % "0.6.5"
@@ -52,7 +52,7 @@ object Dependencies {
   val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
   val sl4j = "org.slf4j" % "slf4j-api" % "2.0.7" intransitive
-  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.6.0"
+  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.7.0"
   val logback = "ch.qos.logback" % "logback-classic" % "1.2.12"
   val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.12"
 
