@@ -18,6 +18,6 @@ addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.9")
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.0")
 addSbtPlugin("com.iheart" % "sbt-play-swagger" % "1.0.2")
 
-addSbtPlugin("com.github.sbt" % "sbt-license-report" % "1.4.0")
+addSbtPlugin("com.github.sbt" % "sbt-license-report" % "1.5.0")
 
 addSbtPlugin("com.codecommit" % "sbt-github-packages" % "0.5.3")
