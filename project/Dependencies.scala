@@ -38,7 +38,7 @@ object Dependencies {
   val chimney = "io.scalaland" %% "chimney" % "0.7.5"
 
   // Test
-  val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.8.16" % Test
+  val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.8.20" % Test
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   // Dependent on the trace exporters you want to use add one or more of the following
@@ -52,7 +52,7 @@ object Dependencies {
   val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
   val sl4j = "org.slf4j" % "slf4j-api" % "2.0.7" intransitive
-  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.13.0"
+  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.13.1"
   val logback = "ch.qos.logback" % "logback-classic" % "1.2.12"
   val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.12"
 
