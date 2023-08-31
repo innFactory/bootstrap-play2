@@ -9,15 +9,15 @@ resolvers += Resolver.url("play-sbt-plugins", url("https://dl.bintray.com/playfr
 addSbtPlugin("io.github.davidmweber" % "flyway-sbt" % "7.4.0")
 
 // Slick code generation
-addSbtPlugin("com.github.tototoshi" % "sbt-slick-codegen" % "1.4.0")
+addSbtPlugin("com.github.tototoshi" % "sbt-slick-codegen" % "2.0.0")
 
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.16")
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.3")
 addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.9")
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.0")
-addSbtPlugin("com.iheart" % "sbt-play-swagger" % "0.13.5")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.1")
+addSbtPlugin("com.iheart" % "sbt-play-swagger" % "1.0.2")
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-license-report" % "1.2.0")
+addSbtPlugin("com.github.sbt" % "sbt-license-report" % "1.6.1")
 
 addSbtPlugin("com.codecommit" % "sbt-github-packages" % "0.5.3")
