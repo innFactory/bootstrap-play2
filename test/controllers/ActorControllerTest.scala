@@ -11,9 +11,12 @@ import java.nio.charset.StandardCharsets
 
 class ActorControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
   private val actorSystemClient =
-    ActorSystemAPIControllerGen.withClient(new FakeRequestClient(), Some(Map("Authorization" -> Seq("key"))))
+    ActorSystemAPIControllerGen.withClientAndHeaders(new FakeRequestClient(), Some(Map("Authorization" -> Seq("key"))))
   private val actorShardingClient =
-    ActorShardingAPIControllerGen.withClient(new FakeRequestClient(), Some(Map("Authorization" -> Seq("key"))))
+    ActorShardingAPIControllerGen.withClientAndHeaders(
+      new FakeRequestClient(),
+      Some(Map("Authorization" -> Seq("key")))
+    )
 
   /** —————————————————————— */
   /** ACTORSCONTROLLER */

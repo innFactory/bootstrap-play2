@@ -7,7 +7,7 @@ import de.innfactory.smithy4play.client.SmithyPlayTestUtils._
 import testutils.FakeRequestClient
 
 class LocationsControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
-  private val companyAdminLocationClient = LocationAPIControllerGen.withClient(
+  private val companyAdminLocationClient = LocationAPIControllerGen.withClientAndHeaders(
     new FakeRequestClient(),
     Some(Map("Authorization" -> Seq(authUtils.CompanyAdminEmailToken)))
   )

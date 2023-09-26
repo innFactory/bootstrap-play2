@@ -14,15 +14,15 @@ class HealthControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApp
   /** ————————————————— */
   "HealthController" should {
     "accept GET request on base path" in {
-      val result = publicClient.ping().awaitRight
+      val result = publicClient.ping().run(None).awaitRight
       result.statusCode mustBe result.expectedStatusCode
     }
     "accept GET request on liveness check path" in {
-      val result = publicClient.liveness().awaitRight
+      val result = publicClient.liveness().run(None).awaitRight
       result.statusCode mustBe result.expectedStatusCode
     }
     "accept GET request on readiness check path" in {
-      val result = publicClient.readiness().awaitRight
+      val result = publicClient.readiness().run(None).awaitRight
       result.statusCode mustBe result.expectedStatusCode
     }
   }

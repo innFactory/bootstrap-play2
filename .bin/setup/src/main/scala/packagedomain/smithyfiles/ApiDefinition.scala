@@ -20,7 +20,7 @@ case class ApiDefinition(packageDomain: String, packageName: String) extends Smi
       |$$version: "1.0"
       |
       |namespace ${config.project.getNamespace()}.api
-      |use smithy4s.api#simpleRestJson
+      |use alloy#simpleRestJson
       |
       |@simpleRestJson
       |service $name {

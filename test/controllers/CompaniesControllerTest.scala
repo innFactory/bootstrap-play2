@@ -7,7 +7,7 @@ import testutils.FakeRequestClient
 import de.innfactory.smithy4play.client.SmithyPlayTestUtils._
 
 class CompaniesControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
-  private val companyAdminCompanyClient = CompanyAPIControllerGen.withClient(
+  private val companyAdminCompanyClient = CompanyAPIControllerGen.withClientAndHeaders(
     new FakeRequestClient(),
     Some(Map("Authorization" -> Seq(authUtils.CompanyAdminEmailToken)))
   )

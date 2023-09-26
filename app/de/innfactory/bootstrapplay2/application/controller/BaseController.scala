@@ -9,6 +9,7 @@ import de.innfactory.smithy4play.{ContextRouteError, RoutingContext}
 import play.api.Application
 import de.innfactory.play.smithy4play.{AbstractBaseController, HttpHeaders}
 import de.innfactory.play.smithy4play.ImplicitLogContext
+import play.api.libs.json.{JsValue, Json}
 
 import scala.concurrent.ExecutionContext
 
@@ -28,19 +29,20 @@ class BaseController(implicit ec: ExecutionContext, app: Application)
       result
   }
 
+  case class ErrorJson(message: String, additionalInfoErrorCode: Option[String])
+
+  private val writes = Json.writes[ErrorJson]
+
   override def errorHandler(e: ResultStatus): ContextRouteError =
     e match {
       case result: ErrorResult =>
         new ContextRouteError {
           override def message: String = result.message
-          override def additionalInfoToLog: Option[String] = result.additionalInfoToLog
-          override def additionalInfoErrorCode: Option[String] = result.additionalInfoErrorCode
           override def statusCode: Int = result.statusCode
-
-          override def additionalInformation: Option[String] = None
+          override def toJson: JsValue = Json.toJson(ErrorJson(result.message, result.additionalInfoErrorCode))(writes)
         }
     }
 
   override def createRequestContextFromRoutingContext(r: RoutingContext): RequestContext =
-    new RequestContext(HttpHeaders(r.map))
+    new RequestContext(HttpHeaders(r.headers))
 }
