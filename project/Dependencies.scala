@@ -45,14 +45,14 @@ object Dependencies {
   val jodaJackson = "com.fasterxml.jackson.datatype" % "jackson-datatype-joda" % "2.11.4"
 
   // Test
-  val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.8.16" % Test
+  val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.9.0-RC2" % Test
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   // opentelemetry
   val opentelemetryApi = "io.opentelemetry" % "opentelemetry-api" % "1.18.0"
   val opentelemetryBom = "io.opentelemetry" % "opentelemetry-bom" % "1.18.0"
 
-  val sl4j = "org.slf4j" % "slf4j-api" % "2.0.3" intransitive
+  val sl4j = "org.slf4j" % "slf4j-api" % "2.0.3"
   val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.0.4"
   val logback = "ch.qos.logback" % "logback-classic" % "1.2.11"
   val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.11"
