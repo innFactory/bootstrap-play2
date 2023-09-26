@@ -4,7 +4,7 @@ import sbt._
 object Dependencies {
 
   val scalaVersion = "2.13.8"
-  val akkaVersion = "2.6.20"
+  val akkaVersion = "2.6.21"
   val akkaManagementVersion = "1.1.3"
 
   val akkaTyped = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
@@ -25,7 +25,7 @@ object Dependencies {
 
   // innFactory Utils
   val scalaUtil = "de.innfactory.scala-utils" %% "scala-utils" % "2.0.1"
-  val smithy4play = "de.innfactory" %% "smithy4play" % "0.3.1"
+  val smithy4play = "de.innfactory" %% "smithy4play" % "0.4.4-alpha"
 
   // Prod
   val slickPg = "com.github.tminglei" %% "slick-pg" % "0.20.4"
