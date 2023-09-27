@@ -3,6 +3,9 @@ package de.innfactory.bootstrapplay2.filters.logging
 import javax.inject.Inject
 import akka.stream.Materializer
 import com.typesafe.config.Config
+import de.innfactory.smithy4play
+import de.innfactory.smithy4play.{ContextRouteError, EndpointResult, RouteResult, RoutingContext}
+import de.innfactory.smithy4play.middleware.MiddlewareBase
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -10,40 +13,39 @@ import play.api.Logger
 import play.api.mvc._
 import play.api._
 
-class AccessLoggingFilter @Inject() (config: Config, implicit val mat: Materializer) extends Filter {
+class AccessLoggingFilter @Inject() (config: Config, implicit val mat: Materializer) extends MiddlewareBase {
   val accessLogger = Logger("AccessFilterLog")
 
   /**
    * status list from application.conf
    */
   private val configAccessStatus =
-    config.getIntList("logging.access.statusList ")
+    config.getIntList("logging.access.statusList")
 
   /**
    * Logs requests if result header status is inclueded in logging.access.statusList as defined in application.conf
-   * @param next
-   * @param request
-   * @return
    */
-  def apply(next: RequestHeader => Future[Result])(request: RequestHeader): Future[Result] = {
-    val resultFuture = next(request)
-    resultFuture.foreach { result =>
-      if (shouldBeLogged(result)) {
+  override protected def logic(
+      r: RoutingContext,
+      next: RoutingContext => RouteResult[EndpointResult]
+  ): RouteResult[EndpointResult] = {
+    val request = r.requestHeader
+    val result = next(r)
+    result.leftMap { e =>
+      if (shouldBeLogged(e)) {
         val msg =
-          s"RequestID: status=${result.header.status} method=${request.method} uri=${request.uri} remote-address=${request.remoteAddress}" +
+          s"RequestID: status=${e.statusCode} method=${request.method} uri=${request.uri} remote-address=${request.remoteAddress}" +
             s" authorization-header=${request.headers.get("Authorization")}"
         accessLogger.warn(msg)
       }
+      e
     }
-    resultFuture
   }
 
   /**
    * check if request/result should be logged
-   * @param result
-   * @return
    */
-  def shouldBeLogged(result: Result): Boolean =
-    configAccessStatus.contains(result.header.status)
+  def shouldBeLogged(e: ContextRouteError): Boolean =
+    configAccessStatus.contains(e.statusCode)
 
 }
