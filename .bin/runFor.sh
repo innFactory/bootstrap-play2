@@ -86,7 +86,7 @@ printf ".\n"
 DOCKER_CONNECT=0
 
 docker-compose up -d
-printf "\n ${BLUE}"Wating for Database for ${NAME} "${NC}"
+printf "\n ${BLUE}"Waiting for Database for ${NAME} "${NC}"
 
 (
 for i in `seq 1 20`;
