@@ -32,17 +32,18 @@ object Dependencies {
   val slickPgPlayJson = "com.github.tminglei" %% "slick-pg_play-json" % "0.20.4"
   val slickPgJts = "com.github.tminglei" %% "slick-pg_jts" % "0.20.4"
   val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper" % "2.4.2"
-  val playJson = "com.typesafe.play" %% "play-json" % "2.9.3"
-  val playJsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.9.3"
+  val playJson = "com.typesafe.play" %% "play-json" % "2.9.4"
+  val playJsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.9.4"
   val slick = "com.typesafe.slick" %% "slick" % "3.3.3"
   val slickCodegen = "com.typesafe.slick" %% "slick-codegen" % "3.3.3"
   val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.3.3"
-  val joda = "joda-time" % "joda-time" % "2.12.0"
-  val hikariCP = "com.zaxxer" % "HikariCP" % "5.0.1"
-  val postgresql = "org.postgresql" % "postgresql" % "42.5.0"
-  val cats = "org.typelevel" %% "cats-core" % "2.8.0"
-  val chimney = "io.scalaland" %% "chimney" % "0.6.2"
-  val jodaJackson = "com.fasterxml.jackson.datatype" % "jackson-datatype-joda" % "2.11.4"
+  val joda = "joda-time" % "joda-time" % "2.12.5"
+  val hikariCP = "com.zaxxer" % "HikariCP" % "5.0.1" exclude ("org.slf4j", "slf4j-api")
+  val postgresql = "org.postgresql" % "postgresql" % "42.6.0"
+  val cats = "org.typelevel" %% "cats-core" % "2.10.0"
+  val henkanConvert = "com.kailuowang" %% "henkan-convert" % "0.6.5"
+  val henkanOptional = "com.kailuowang" %% "henkan-optional" % "0.6.5"
+  val chimney = "io.scalaland" %% "chimney" % "0.7.5"
 
   // Test
   val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.9.0-RC2" % Test
@@ -52,10 +53,15 @@ object Dependencies {
   val opentelemetryApi = "io.opentelemetry" % "opentelemetry-api" % "1.18.0"
   val opentelemetryBom = "io.opentelemetry" % "opentelemetry-bom" % "1.18.0"
 
-  val sl4j = "org.slf4j" % "slf4j-api" % "2.0.3"
-  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.0.4"
-  val logback = "ch.qos.logback" % "logback-classic" % "1.2.11"
-  val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.11"
+  val opencensusStatsStackdriver = "io.opencensus" % "opencensus-exporter-stats-stackdriver" % "0.31.1"
+
+  // If you want to use opencensus-scala inside an Akka HTTP project
+  val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
+
+  val sl4j = "org.slf4j" % "slf4j-api" % "2.0.9" intransitive
+  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.16.1"
+  val logback = "ch.qos.logback" % "logback-classic" % "1.2.12"
+  val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.12"
 
   val nimbusJwt = "com.nimbusds" % "nimbus-jose-jwt" % "9.15.2"
 
@@ -103,7 +109,6 @@ object Dependencies {
     opentelemetryBom,
     nimbusJwt,
     firebase,
-    jodaJackson,
     testTraits
   )
 
