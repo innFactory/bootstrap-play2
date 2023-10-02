@@ -1,4 +1,4 @@
-package de.innfactory.bootstrapplay2.filters
+package de.innfactory.bootstrapplay2.filters.tracing
 
 import akka.stream.Materializer
 import com.google.cloud.opentelemetry.shadow.semconv.trace.attributes.SemanticAttributes
@@ -11,6 +11,9 @@ import de.innfactory.play.tracing.GoogleTracingIdentifier.GoogleAttributes.{
 }
 import de.innfactory.play.tracing.GoogleTracingIdentifier.XTRACINGID
 import de.innfactory.play.tracing.{OpentelemetryProvider, TraceLogger}
+import de.innfactory.smithy4play
+import de.innfactory.smithy4play.middleware.MiddlewareBase
+import de.innfactory.smithy4play.{EndpointResult, RouteResult, RoutingContext}
 import io.opentelemetry.api.GlobalOpenTelemetry
 import io.opentelemetry.context.Context
 import org.joda.time.DateTime
@@ -19,21 +22,30 @@ import play.api.mvc._
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
-class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) extends Filter with ImplicitLogContext {
+class TracingFilter @Inject() (config: Config, implicit val mat: Materializer)
+    extends MiddlewareBase
+    with ImplicitLogContext {
   private val healthEndpoints: Map[String, Seq[String]] = Map("GET" -> Seq("/", "/liveness", "/readiness"))
   private val healthLogger = Logger("health").logger
   private val configAccessStatus = config.getIntList("logging.access.statusList")
 
-  def apply(next: RequestHeader => Future[Result])(request: RequestHeader): Future[Result] =
-    if (!healthEndpoints.getOrElse(request.method, Seq.empty).contains(request.path))
-      handleLoggingAndTracing(next)(request)
-    else
-      handleHealthChecksLogging(next, request)
+  override protected def logic(
+      r: RoutingContext,
+      next: RoutingContext => RouteResult[smithy4play.EndpointResult]
+  ): RouteResult[smithy4play.EndpointResult] = if (
+    !healthEndpoints.getOrElse(r.requestHeader.method, Seq.empty).contains(r.requestHeader.path)
+  )
+    handleLoggingAndTracing(next, r)
+  else
+    handleHealthChecksLogging(next, r)
 
-  def handleLoggingAndTracing(next: RequestHeader => Future[Result])(request: RequestHeader): Future[Result] = {
+  def handleLoggingAndTracing(
+      next: RoutingContext => RouteResult[smithy4play.EndpointResult],
+      r: RoutingContext
+  ): RouteResult[smithy4play.EndpointResult] = {
     // Start Trace Span Root
+    val request = r.requestHeader
     val span = OpentelemetryProvider.getTracer().spanBuilder(request.path).startSpan()
     val latencyRecorder = OpentelemetryProvider
       .getMeter()
@@ -68,21 +80,25 @@ class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) e
 
     map.addOne(xTracingId)
 
+    // Check Start Time
+    val start = DateTime.now
+
     // Call Next Filter with new Headers
-    val result = next(request.withHeaders(request.headers.add(map.toList: _*)))
+    val result = next(
+      r.copy(
+        requestHeader = request.withHeaders(request.headers.add(map.toList: _*))
+      )
+    )
 
     val logger = new TraceLogger(Some(span))
     val msg: String = logStart(request, xTracingId)(logger)
 
-    // Check Start Time
-    val start = DateTime.now
-
     // Process Result
     result.map { res =>
       // Add more Attributes to trace
-      span.setAttribute(HTTP_STATUS_CODE, res.header.status)
-      span.setAttribute(STATUS, res.header.status)
-      span.setAttribute(HTTP_RESPONSE_SIZE, res.body.contentLength.getOrElse(0L))
+      span.setAttribute(HTTP_STATUS_CODE, res.code)
+      span.setAttribute(STATUS, res.code)
+      span.setAttribute(HTTP_RESPONSE_SIZE, res.body.map(_.length).getOrElse(0))
 
       // Finish Root Span
       span.end()
@@ -96,17 +112,21 @@ class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) e
       logResult(xTracingId, msg, res, request)(logger)
 
       // Add xTracingId to Result Header
-      res.withHeaders(xTracingId)
+      res.copy(
+        headers = res.headers + xTracingId
+      )
     }
 
   }
 
-  private def handleHealthChecksLogging(next: RequestHeader => Future[Result], request: RequestHeader) = {
-    // Handle Health Check Logging
-    val result = next(request)
-    result.map { res =>
-      if (res.header.status != 200) healthLogger.error(s"[HealthCheck] FAILED with ${res.header.status}")
-      res
+  private def handleHealthChecksLogging(
+      next: RoutingContext => RouteResult[smithy4play.EndpointResult],
+      r: RoutingContext
+  ): RouteResult[smithy4play.EndpointResult] = {
+    val result = next.apply(r)
+    result.leftMap { e =>
+      if (e.statusCode != 200) healthLogger.error(s"[HealthCheck] FAILED with ${e.statusCode}")
+      e
     }
   }
 
@@ -118,12 +138,11 @@ class TracingFilter @Inject() (config: Config, implicit val mat: Materializer) e
     msg
   }
 
-  private def logResult(xTracingId: (String, String), msg: String, res: Result, req: RequestHeader)(
+  private def logResult(xTracingId: (String, String), msg: String, res: EndpointResult, req: RequestHeader)(
       logger: TraceLogger
   ): Unit =
-    if (configAccessStatus.contains(res.header.status))
-      logger.warn(s"[Trace-${xTracingId._2}] $msg status=${res.header.status} END")
+    if (configAccessStatus.contains(res.code))
+      logger.warn(s"[Trace-${xTracingId._2}] $msg status=${res.code} END")
     else
-      logger.info(s"[Trace-${xTracingId._2}] $msg status=${res.header.status} END")
-
+      logger.info(s"[Trace-${xTracingId._2}] $msg status=${res.code} END")
 }
