@@ -39,6 +39,7 @@ object Dependencies {
   val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.3.3"
   val joda = "joda-time" % "joda-time" % "2.12.5"
   val hikariCP = "com.zaxxer" % "HikariCP" % "5.0.1" exclude ("org.slf4j", "slf4j-api")
+
   val postgresql = "org.postgresql" % "postgresql" % "42.6.0"
   val cats = "org.typelevel" %% "cats-core" % "2.10.0"
   val henkanConvert = "com.kailuowang" %% "henkan-convert" % "0.6.5"
