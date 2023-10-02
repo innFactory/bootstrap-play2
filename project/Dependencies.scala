@@ -38,7 +38,7 @@ object Dependencies {
   val slickCodegen = "com.typesafe.slick" %% "slick-codegen" % "3.3.3"
   val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.3.3"
   val joda = "joda-time" % "joda-time" % "2.12.5"
-  val hikariCP = "com.zaxxer" % "HikariCP" % "5.0.1" exclude ("org.slf4j", "slf4j-api")
+  val hikariCP = "com.zaxxer" % "HikariCP" % "5.0.1"
 
   val postgresql = "org.postgresql" % "postgresql" % "42.6.0"
   val cats = "org.typelevel" %% "cats-core" % "2.10.0"
@@ -59,7 +59,7 @@ object Dependencies {
   // If you want to use opencensus-scala inside an Akka HTTP project
   val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
-  val sl4j = "org.slf4j" % "slf4j-api" % "2.0.9" intransitive
+  val sl4j = "org.slf4j" % "slf4j-api" % "2.0.9"
   val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.16.1"
   val logback = "ch.qos.logback" % "logback-classic" % "1.2.12"
   val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.12"
