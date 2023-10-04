@@ -1,0 +1,6 @@
+{
+  "imports": ["$PWD"],
+  "mavenDependencies": [
+    "com.disneystreaming.smithy4s:smithy4s-protocol_2.13:latest.stable"
+  ]
+}

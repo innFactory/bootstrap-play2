@@ -1,0 +1,36 @@
+name: Run Tests
+on:
+  push:
+    branches: [ 'master' ]
+  pull_request:
+    branches: [ 'master' ]
+jobs:
+  generateSwagger:
+    name: Run swagger generation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 11
+      - name: Compile project
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUBLIC_GITHUB_TOKEN }}
+        run: sbt compile || true
+      - name: Run merge.sh
+        run: .bin/swagger/merge.sh
+        shell: bash
+      - name: Convert to yaml
+        uses: openapi-generators/openapitools-generator-action@v1
+        with:
+          generator: openapi-yaml
+          openapi-file: 'output.swagger.json'
+      - name: Move converted yaml
+        run: mv openapi-yaml-client/openapi/openapi.yaml doc-assets/api.swagger.yaml
+      - name: Update Pull Request with generated swagger file
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'feat: update api.swagger.yaml'
+          add: 'doc-assets/api.swagger.yaml'

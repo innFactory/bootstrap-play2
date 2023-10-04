@@ -2,6 +2,19 @@
 
 modules/play/logs/
 
+# setup/bootstrap script
+.bin/setup/.bsp
+.bin/setup/.idea
+.bin/setup/target
+.bin/setup/project/target
+.bin/schemaspy
+!.bin/schemaspy/schemaspy.properties
+
+# openapi yaml generation
+.bin/mock/yaml
+openapi-merge.json
+output.swagger.json
+
 # sbt specific
 .cache
 .history
@@ -38,6 +51,7 @@ test.mv.db
 
 #Firebase
 conf/firebase.json
+conf/gcp-backend-sa.json
 
 influx2.properties
 
@@ -57,3 +71,6 @@ out/doc
 
 .bin/postgis-volume
 .bloop/
+
+modules/api/src/main/scala/*
+*.smithy.lsp.log

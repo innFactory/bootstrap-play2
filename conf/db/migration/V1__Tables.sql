@@ -2,14 +2,14 @@
 
 CREATE TABLE "company"
 (
-    "id"                 bigserial NOT NULL,
-    "settings"           json      ,
+    "id"                 varchar      NOT NULL,
+    "settings"           json,
     "string_attribute_1" varchar,
     "string_attribute_2" varchar,
     "long_attribute_1"   bigint,
-    "boolean_attribute"  boolean ,
-    "created"            timestamp      NOT NULL,
-    "updated"            timestamp      NOT NULL,
+    "boolean_attribute"  boolean,
+    "created"            timestamp    NOT NULL,
+    "updated"            timestamp    NOT NULL,
     CONSTRAINT "PK_company" PRIMARY KEY ("id")
 );
 
@@ -17,8 +17,8 @@ CREATE TABLE "company"
 
 CREATE TABLE "location"
 (
-    "id"             bigserial NOT NULL,
-    "company"        bigint       NOT NULL,
+    "id"             varchar      NOT NULL,
+    "company"        varchar      NOT NULL,
     "name"           varchar(255),
     "settings"       json,
     "address_line_1" varchar(300),

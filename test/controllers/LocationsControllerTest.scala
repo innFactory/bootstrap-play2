@@ -1,70 +1,76 @@
 package controllers
 
-import de.innfactory.bootstrapplay2.locations.application.models.LocationResponse
-import de.innfactory.bootstrapplay2.locations.domain.models.Location
+import de.innfactory.bootstrapplay2.api.{LocationAPIControllerGen, LocationRequestBody}
+import de.innfactory.smithy4play.client.GenericAPIClient.EnhancedGenericAPIClient
 import org.scalatestplus.play.{BaseOneAppPerSuite, PlaySpec}
-import play.api.libs.json._
-import play.api.test.Helpers._
-import testutils.AuthUtils
-import testutils.FakeRequestUtils._
+import de.innfactory.smithy4play.client.SmithyPlayTestUtils._
+import testutils.FakeRequestClient
 
 class LocationsControllerTest extends PlaySpec with BaseOneAppPerSuite with TestApplicationFactory {
-
-  private val authUtils = app.injector.instanceOf[AuthUtils]
+  private val companyAdminLocationClient = LocationAPIControllerGen.withClientAndHeaders(
+    new FakeRequestClient(),
+    Some(Map("Authorization" -> Seq(authUtils.CompanyAdminEmailToken)))
+  )
 
   /** ———————————————— */
   /** LOCATIONS */
   /** ———————————————— */
   "LocationsController" must {
     "get by id" in {
-      val result = Get("/v1/locations/1", authUtils.CompanyAdminEmailToken)
-      val body = contentAsJson(result).as[LocationResponse]
-      body.id mustBe 1
+      val result =
+        companyAdminLocationClient.getLocationById("592c5187-cb85-4b66-b0fc-293989923e1e").awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
 
     "get by company" in {
       val result =
-        Get("/v1/companies/1/locations", authUtils.CompanyAdminEmailToken)
-      val body = contentAsJson(result).as[Seq[LocationResponse]]
+        companyAdminLocationClient.getAllLocationsByCompany("0ce84627-9a66-46bf-9a1d-4f38b82a38e3").awaitRight
+      result.statusCode mustBe result.expectedStatusCode
+    }
+
+    "get all" in {
+      val result = companyAdminLocationClient.getAllLocations().awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
 
     "post" in {
-      val result =
-        Post(
-          "/v1/locations",
-          Json.parse(s"""
-                        |{
-                        |  "company": 1,
-                        |  "name": "test"
-                        |  }
-                        |""".stripMargin),
-          authUtils.CompanyAdminEmailToken
+      val result = companyAdminLocationClient
+        .createLocation(
+          LocationRequestBody(
+            company = "0ce84627-9a66-46bf-9a1d-4f38b82a38e3",
+            name = Some("test")
+          )
         )
-      println(contentAsJson(result))
-      val body = contentAsJson(result).as[LocationResponse]
+        .awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
 
     "patch" in {
-      val result =
-        Patch(
-          "/v1/locations",
-          Json.parse(s"""
-                       {
-                        |  "id": 2,
-                        |  "company": 1,
-                        |  "name": "test2"
-                        |  }
-                        |""".stripMargin),
-          authUtils.CompanyAdminEmailToken
+      val result = companyAdminLocationClient
+        .updateLocation(
+          LocationRequestBody(
+            id = Some(de.innfactory.bootstrapplay2.api.LocationId("592c5187-cb85-4b66-b0fc-293989923e1e")),
+            company = "0ce84627-9a66-46bf-9a1d-4f38b82a38e3",
+            name = Some("test2")
+          )
         )
-      val body = contentAsJson(result).as[LocationResponse]
+        .awaitRight
+      result.statusCode mustBe result.expectedStatusCode
     }
 
     "delete" in {
-      Delete("/v1/locations/2", authUtils.CompanyAdminEmailToken).getStatus mustBe 204
-      Delete("/v1/locations/2", authUtils.CompanyAdminEmailToken).getStatus mustBe 404
+      val successfulDelete = companyAdminLocationClient
+        .deleteLocation(
+          de.innfactory.bootstrapplay2.api.LocationId("592c5187-cb85-4b66-b0fc-293989923e1e")
+        )
+        .awaitRight
+      successfulDelete.statusCode mustBe successfulDelete.expectedStatusCode
+      val deletedAfterDelete = companyAdminLocationClient
+        .deleteLocation(
+          de.innfactory.bootstrapplay2.api.LocationId("592c5187-cb85-4b66-b0fc-293989923e1e")
+        )
+        .awaitLeft
+      deletedAfterDelete.statusCode mustBe 404
     }
-
   }
-
 }

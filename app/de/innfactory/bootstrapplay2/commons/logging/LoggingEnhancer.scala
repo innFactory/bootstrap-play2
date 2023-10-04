@@ -1,13 +1,13 @@
 package de.innfactory.bootstrapplay2.commons.logging
 
-import io.opencensus.trace.Span
+import io.opentelemetry.api.trace.Span
 import org.slf4j.{Marker, MarkerFactory}
 import play.api.Logger
 
 object LoggingEnhancer {
 
   private def spanToMarker(span: Span): String =
-    "tracer=" + span.getContext.getTraceId.toLowerBase16
+    "tracer=" + span.getSpanContext.getTraceId
 
   private def getMarker(span: Span): Marker =
     MarkerFactory.getMarker(spanToMarker(span))

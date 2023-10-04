@@ -1,8 +1,8 @@
 package de.innfactory.bootstrapplay2.graphql.schema.queries
 
 import de.innfactory.bootstrapplay2.commons.RequestContext
-import de.innfactory.bootstrapplay2.commons.implicits.RequestToRequestContextImplicit.EnhancedRequest
 import de.innfactory.bootstrapplay2.graphql.GraphQLExecutionContext
+import de.innfactory.bootstrapplay2.graphql.RequestExecutor.EnhancedRequest
 import de.innfactory.bootstrapplay2.graphql.schema.models.Companies.CompanyType
 import de.innfactory.bootstrapplay2.graphql.schema.models.Arguments.FilterArg
 import sangria.schema.{Field, ListType}
