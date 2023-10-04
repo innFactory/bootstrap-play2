@@ -4,108 +4,9 @@ info:
   version: 1.0.0
 servers:
 - url: /
+security:
+- smithy.api.httpBearerAuth: []
 paths:
-  /v1/companies/{companyId}/locations:
-    get:
-      operationId: getAllLocationsByCompany
-      parameters:
-      - explode: false
-        in: path
-        name: companyId
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getAllLocationsByCompanyOutputPayload'
-          description: getAllLocationsByCompany 200 response
-      tags:
-      - LocationAPIController
-  /v1/locations:
-    get:
-      operationId: getAllLocations
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getAllLocationsOutputPayload'
-          description: getAllLocations 200 response
-      tags:
-      - LocationAPIController
-    patch:
-      operationId: updateLocation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LocationRequestBody'
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/updateLocationResponseContent'
-          description: updateLocation 200 response
-      tags:
-      - LocationAPIController
-    post:
-      operationId: createLocation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LocationRequestBody'
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/createLocationResponseContent'
-          description: createLocation 200 response
-      tags:
-      - LocationAPIController
-  /v1/locations/{locationId}:
-    delete:
-      operationId: deleteLocation
-      parameters:
-      - explode: false
-        in: path
-        name: locationId
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "204":
-          description: deleteLocation 204 response
-      tags:
-      - LocationAPIController
-    get:
-      operationId: getLocationById
-      parameters:
-      - explode: false
-        in: path
-        name: locationId
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getLocationByIdResponseContent'
-          description: getLocationById 200 response
-      tags:
-      - LocationAPIController
   /v1/public/helloworld/system/{query}:
     get:
       operationId: helloworldViaSystem
@@ -146,6 +47,188 @@ paths:
           description: helloworldViaSharding 200 response
       tags:
       - ActorShardingAPIController
+  /v1/companies/{companyId}/locations:
+    get:
+      operationId: getAllLocationsByCompany
+      parameters:
+      - examples:
+          Invoke getAllLocationsByCompany:
+            value: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+        explode: false
+        in: path
+        name: companyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Invoke getAllLocationsByCompany:
+                  value:
+                  - id: 592c5187-cb85-4b66-b0fc-293989923e1e
+                    company: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    name: Location-1
+                    settings:
+                      location: location
+                    addressLine1: location_1_address_line_1
+                    addressLine2: location_1_address_line_2
+                    zip: zip1
+                    city: city1
+                    country: country1
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
+              schema:
+                $ref: '#/components/schemas/getAllLocationsByCompanyOutputPayload'
+          description: getAllLocationsByCompany 200 response
+      tags:
+      - LocationAPIController
+  /v1/locations:
+    get:
+      operationId: getAllLocations
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Invoke getAllLocations:
+                  value:
+                  - id: 592c5187-cb85-4b66-b0fc-293989923e1e
+                    company: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    name: Location-1
+                    settings:
+                      location: location
+                    addressLine1: location_1_address_line_1
+                    addressLine2: location_1_address_line_2
+                    zip: zip1
+                    city: city1
+                    country: country1
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
+              schema:
+                $ref: '#/components/schemas/getAllLocationsOutputPayload'
+          description: getAllLocations 200 response
+      tags:
+      - LocationAPIController
+    patch:
+      operationId: updateLocation
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Invoke updateLocation:
+                value:
+                  id: 592c5187-cb85-4b66-b0fc-293989923e1e
+                  company: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                  name: test2
+            schema:
+              $ref: '#/components/schemas/LocationRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Invoke updateLocation:
+                  value:
+                    id: 592c5187-cb85-4b66-b0fc-293989923e1e
+                    company: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    name: test2
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
+              schema:
+                $ref: '#/components/schemas/updateLocationResponseContent'
+          description: updateLocation 200 response
+      tags:
+      - LocationAPIController
+    post:
+      operationId: createLocation
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Invoke createLocation:
+                value:
+                  company: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                  name: test
+            schema:
+              $ref: '#/components/schemas/LocationRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Invoke createLocation:
+                  value:
+                    id: 0ce84627-9a66-46bf-1234-4f38b82a38e3
+                    company: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    name: test
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
+              schema:
+                $ref: '#/components/schemas/createLocationResponseContent'
+          description: createLocation 200 response
+      tags:
+      - LocationAPIController
+  /v1/locations/{locationId}:
+    delete:
+      operationId: deleteLocation
+      parameters:
+      - examples:
+          Invoke deleteLocation:
+            value: 592c5187-cb85-4b66-b0fc-293989923e1e
+        explode: false
+        in: path
+        name: locationId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: deleteLocation 204 response
+      tags:
+      - LocationAPIController
+    get:
+      operationId: getLocationById
+      parameters:
+      - examples:
+          Invoke getLocationById:
+            value: 592c5187-cb85-4b66-b0fc-293989923e1e
+        explode: false
+        in: path
+        name: locationId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Invoke getLocationById:
+                  value:
+                    id: 592c5187-cb85-4b66-b0fc-293989923e1e
+                    company: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    name: Location-1
+                    settings:
+                      location: location
+                    addressLine1: location_1_address_line_1
+                    addressLine2: location_1_address_line_2
+                    zip: zip1
+                    city: city1
+                    country: country1
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
+              schema:
+                $ref: '#/components/schemas/getLocationByIdResponseContent'
+          description: getLocationById 200 response
+      tags:
+      - LocationAPIController
   /v1/companies:
     get:
       operationId: getAllCompanies
@@ -153,6 +236,18 @@ paths:
         "200":
           content:
             application/json:
+              examples:
+                Invoke getAllCompanies:
+                  value:
+                  - id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    settings:
+                      region: region
+                    stringAttribute1: test 1
+                    stringAttribute2: test 2
+                    longAttribute1: 1
+                    booleanAttribute: false
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
               schema:
                 $ref: '#/components/schemas/getAllCompaniesOutputPayload'
           description: getAllCompanies 200 response
@@ -163,23 +258,16 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/CompanyRequestBody'
-        required: true
-      responses:
-        "204":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/updateCompanyResponseContent'
-          description: updateCompany 204 response
-      tags:
-      - CompanyAPIController
-    post:
-      operationId: createCompany
-      requestBody:
-        content:
-          application/json:
+            examples:
+              Invoke updateCompany:
+                value:
+                  id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                  settings:
+                    test: test
+                  stringAttribute1: test
+                  stringAttribute2: test
+                  longAttribute1: 1
+                  booleanAttribute: true
             schema:
               $ref: '#/components/schemas/CompanyRequestBody'
         required: true
@@ -187,6 +275,56 @@ paths:
         "200":
           content:
             application/json:
+              examples:
+                Invoke updateCompany:
+                  value:
+                    id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    settings:
+                      test: test
+                    stringAttribute1: test
+                    stringAttribute2: test
+                    longAttribute1: 1
+                    booleanAttribute: true
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
+              schema:
+                $ref: '#/components/schemas/updateCompanyResponseContent'
+          description: updateCompany 200 response
+      tags:
+      - CompanyAPIController
+    post:
+      operationId: createCompany
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Invoke createCompany:
+                value:
+                  settings:
+                    test: test
+                  stringAttribute1: test
+                  stringAttribute2: test
+                  longAttribute1: 1
+                  booleanAttribute: true
+            schema:
+              $ref: '#/components/schemas/CompanyRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Invoke createCompany:
+                  value:
+                    id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    settings:
+                      test: test
+                    stringAttribute1: test
+                    stringAttribute2: test
+                    longAttribute1: 1
+                    booleanAttribute: true
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
               schema:
                 $ref: '#/components/schemas/createCompanyResponseContent'
           description: createCompany 200 response
@@ -196,7 +334,10 @@ paths:
     delete:
       operationId: deleteCompany
       parameters:
-      - explode: false
+      - examples:
+          Invoke deleteCompany:
+            value: 7059f786-4633-4ace-a412-2f2e90556f08
+        explode: false
         in: path
         name: companyId
         required: true
@@ -211,7 +352,10 @@ paths:
     get:
       operationId: getCompanyById
       parameters:
-      - explode: false
+      - examples:
+          Invoke getCompanyById:
+            value: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+        explode: false
         in: path
         name: companyId
         required: true
@@ -222,6 +366,18 @@ paths:
         "200":
           content:
             application/json:
+              examples:
+                Invoke getCompanyById:
+                  value:
+                    id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    settings:
+                      region: region
+                    stringAttribute1: test 1
+                    stringAttribute2: test 2
+                    longAttribute1: 1
+                    booleanAttribute: false
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
               schema:
                 $ref: '#/components/schemas/getCompanyByIdResponseContent'
           description: getCompanyById 200 response
@@ -253,6 +409,24 @@ paths:
       - HealthAPIController
 components:
   schemas:
+    helloworldViaSystemResponseContent:
+      example:
+        answer: answer
+      properties:
+        answer:
+          type: string
+      required:
+      - answer
+      type: object
+    helloworldViaShardingResponseContent:
+      example:
+        answer: answer
+      properties:
+        answer:
+          type: string
+      required:
+      - answer
+      type: object
     LocationRequestBody:
       example:
         zip: zip
@@ -481,24 +655,6 @@ components:
       - id
       - updated
       type: object
-    helloworldViaSystemResponseContent:
-      example:
-        answer: answer
-      properties:
-        answer:
-          type: string
-      required:
-      - answer
-      type: object
-    helloworldViaShardingResponseContent:
-      example:
-        answer: answer
-      properties:
-        answer:
-          type: string
-      required:
-      - answer
-      type: object
     CompanyRequestBody:
       example:
         settings: ""
@@ -517,10 +673,8 @@ components:
           type: string
         longAttribute1:
           format: int64
-          nullable: true
           type: integer
         booleanAttribute:
-          nullable: true
           type: boolean
       type: object
     CompanyResponse:
@@ -543,10 +697,8 @@ components:
           type: string
         longAttribute1:
           format: int64
-          nullable: true
           type: integer
         booleanAttribute:
-          nullable: true
           type: boolean
         created:
           description: ISO Date With Time
@@ -583,10 +735,8 @@ components:
           type: string
         longAttribute1:
           format: int64
-          nullable: true
           type: integer
         booleanAttribute:
-          nullable: true
           type: boolean
         created:
           description: ISO Date With Time
@@ -627,10 +777,8 @@ components:
           type: string
         longAttribute1:
           format: int64
-          nullable: true
           type: integer
         booleanAttribute:
-          nullable: true
           type: boolean
         created:
           description: ISO Date With Time
@@ -667,10 +815,8 @@ components:
           type: string
         longAttribute1:
           format: int64
-          nullable: true
           type: integer
         booleanAttribute:
-          nullable: true
           type: boolean
         created:
           description: ISO Date With Time
@@ -687,3 +833,8 @@ components:
       - id
       - updated
       type: object
+  securitySchemes:
+    smithy.api.httpBearerAuth:
+      description: HTTP Bearer authentication
+      scheme: Bearer
+      type: http
