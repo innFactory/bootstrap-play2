@@ -64,7 +64,7 @@ object Dependencies {
   val logback = "ch.qos.logback" % "logback-classic" % "1.2.12"
   val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.12"
 
-  val nimbusJwt = "com.nimbusds" % "nimbus-jose-jwt" % "9.15.2"
+  val nimbusJwt = "com.nimbusds" % "nimbus-jose-jwt" % "9.35"
 
   val firebase = "com.google.firebase" % "firebase-admin" % "8.1.0"
 
