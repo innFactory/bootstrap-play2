@@ -19,7 +19,7 @@
   </appender>
 
   <appender name="CLOUD" class="de.innfactory.play.logging.logback.LoggingAppender">
-    <credentialsFile>conf/firebase.json</credentialsFile>
+    <credentialsFile>conf/gcp-backend-sa.json</credentialsFile>
     <enhancer>de.innfactory.play.logging.logback.BaseEnhancer</enhancer>
   </appender>
 

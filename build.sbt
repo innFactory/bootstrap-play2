@@ -8,22 +8,6 @@ scalaVersion := Dependencies.scalaVersion
 
 resolvers += Resolver.githubPackages("innFactory")
 
-val token = sys.env.getOrElse("GITHUB_TOKEN", "")
-
-val githubSettings = Seq(
-  githubOwner := "innFactory",
-  githubRepository := "bootstrap-play2",
-  credentials :=
-    Seq(
-      Credentials(
-        "GitHub Package Registry",
-        "maven.pkg.github.com",
-        "innFactory",
-        token
-      )
-    )
-)
-
 val latest = sys.env.get("BRANCH") match {
   case Some(str) => if (str.equals("master")) true else false
   case None      => false
@@ -115,8 +99,8 @@ slickGen := Def.taskDyn(generateTablesTask((Global / dbConf).value)).value
 /*project definitions*/
 
 lazy val root = (project in file("."))
-  .enablePlugins(PlayScala, DockerPlugin, SwaggerPlugin)
-  .dependsOn(slick)
+  .enablePlugins(PlayScala, DockerPlugin)
+  .dependsOn(slick, api)
   .settings(
     scalaVersion := Dependencies.scalaVersion,
     dbConfSettings,
@@ -124,12 +108,9 @@ lazy val root = (project in file("."))
     // Adding Cache
     libraryDependencies ++= Seq(ehcache),
     dependencyOverrides += Dependencies.sl4j, // Override to avoid problems with HikariCP 4.x
-    swaggerDomainNameSpaces := Seq(
-      "models"
-    ), // New Models have to be added here to be referencable in routes
-    swaggerPrettyJson := true,
-    swaggerV3 := true,
-    githubSettings
+    GithubConfig.settings,
+    scalacOptions += "-Ymacro-annotations",
+    clean := clean.all(ScopeFilter(inAnyProject)).value
   )
   .settings(
     Seq(
@@ -138,7 +119,7 @@ lazy val root = (project in file("."))
       Docker / packageName := "bootstrap-play2",
       dockerUpdateLatest := latest,
       dockerRepository := dockerRegistry,
-      dockerExposedPorts := Seq(8080, 8080),
+      dockerExposedPorts := Seq(8080, 25520, 8558),
       dockerEntrypoint := Seq(""),
       dockerBaseImage := "openjdk:11.0.6-jre-slim",
       dockerEntrypoint := Seq("/opt/docker/bin/bootstrap-play2", "-Dplay.server.pidfile.path=/dev/null")
@@ -151,15 +132,26 @@ lazy val flyway = (project in file("modules/flyway"))
     scalaVersion := Dependencies.scalaVersion,
     libraryDependencies ++= Dependencies.list,
     flywaySettings,
-    githubSettings
+    GithubConfig.settings
   )
 
 lazy val slick = (project in file("modules/slick"))
   .settings(
     scalaVersion := Dependencies.scalaVersion,
     libraryDependencies ++= Dependencies.list,
-    githubSettings
+    GithubConfig.settings
   )
+
+lazy val api = (project in file("modules/api"))
+  .enablePlugins(Smithy4sCodegenPlugin)
+  .settings(
+    scalaVersion := Dependencies.scalaVersion,
+    libraryDependencies ++= Dependencies.list,
+    GithubConfig.settings,
+    Compile / smithy4sInputDirs := Seq((ThisBuild / baseDirectory).value / "modules" / "api-definition" / "src" / "main" / "resources" / "META-INF" / "smithy"),
+    Compile / smithy4sOutputDir := (ThisBuild / baseDirectory).value / "modules" / "api" / "src" / "main" / "scala"
+  )
+lazy val apiDefinition = project in file("modules/api-definition")
 
 lazy val globalResources = file("conf")
 

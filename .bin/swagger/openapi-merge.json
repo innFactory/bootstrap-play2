@@ -1,0 +1,8 @@
+{
+  "inputs": [
+    {
+      "inputFile": ".bin/swagger/base.swagger.json"
+    }
+  ],
+  "output": "./output.swagger.json"
+}

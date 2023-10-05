@@ -4,9 +4,10 @@ import akka.NotUsed
 import akka.stream.scaladsl.Source
 import cats.data.EitherT
 import de.innfactory.bootstrapplay2.commons.RequestContextWithUser
+import de.innfactory.bootstrapplay2.companies.domain.models.CompanyId
 import de.innfactory.play.controller.ResultStatus
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.{LocationRepository, LocationService}
-import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
+import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationId}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -15,10 +16,10 @@ private[locations] class DomainLocationService @Inject() (locationRepository: Lo
     ec: ExecutionContext
 ) extends LocationService {
 
-  def getAllByCompany(locationCompanyId: LocationCompanyId)(implicit
+  def getAllByCompany(companyId: CompanyId)(implicit
       rc: RequestContextWithUser
   ): EitherT[Future, ResultStatus, Seq[Location]] =
-    locationRepository.getAllLocationsByCompany(locationCompanyId)
+    locationRepository.getAllLocationsByCompany(companyId)
 
   def getAllAsStream()(implicit rc: RequestContextWithUser): EitherT[Future, ResultStatus, Source[Location, NotUsed]] =
     for {

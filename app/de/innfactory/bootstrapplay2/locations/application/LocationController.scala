@@ -1,82 +1,77 @@
 package de.innfactory.bootstrapplay2.locations.application
 
-import akka.NotUsed
-import akka.stream.scaladsl.Source
+import akka.stream.Materializer
 import cats.data.EitherT
-import de.innfactory.bootstrapplay2.commons.ReqConverterHelper.requestContextWithUser
-import de.innfactory.bootstrapplay2.commons.application.actions.TracingUserAction
-import de.innfactory.bootstrapplay2.commons.application.actions.models.RequestWithUser
-import de.innfactory.bootstrapplay2.commons.logging.ImplicitLogContext
-import de.innfactory.bootstrapplay2.commons.results.Results
-import de.innfactory.bootstrapplay2.locations.application.models.{LocationRequest, LocationResponse}
+import cats.implicits.catsSyntaxEitherId
+import de.innfactory.bootstrapplay2.application.controller.BaseController
+import de.innfactory.bootstrapplay2.api.{
+  LocationAPIController,
+  LocationRequestBody,
+  LocationResponse,
+  LocationsResponse
+}
+import de.innfactory.bootstrapplay2.companies.domain.models.CompanyId
+import de.innfactory.bootstrapplay2.locations.application.mapper.LocationMapper
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationService
-import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
-import de.innfactory.play.controller.BaseController
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationId}
+import de.innfactory.play.controller.ResultStatus
+import de.innfactory.smithy4play.{AutoRouting, ContextRoute}
+import play.api.Application
+import play.api.mvc.ControllerComponents
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
-class LocationController @Inject() (tracingUserAction: TracingUserAction, locationService: LocationService)(implicit
+@AutoRouting
+class LocationController @Inject() (locationService: LocationService)(implicit
     ec: ExecutionContext,
-    cc: ControllerComponents
+    app: Application,
+    cc: ControllerComponents,
+    mat: Materializer
 ) extends BaseController
-    with ImplicitLogContext {
+    with LocationAPIController[ContextRoute]
+    with LocationMapper {
 
-  implicit def inMapperLocation(locationRequest: LocationRequest) = locationRequest.toLocation()
+  override def getAllLocationsByCompany(
+      companyId: de.innfactory.bootstrapplay2.api.CompanyId
+  ): ContextRoute[LocationsResponse] =
+    Endpoint.withAuth
+      .execute(locationService.getAllByCompany(companyId)(_))
+      .complete
 
-  implicit val outMapperLocation: OutMapper[Location, LocationResponse] =
-    OutMapper(l => LocationResponse.fromLocation(l))
+  override def getAllLocations(): ContextRoute[LocationsResponse] =
+    Endpoint.withAuth
+      .execute(rc =>
+        for {
+          locationsStream <- locationService.getAllAsStream()(rc)
+          locations <- EitherT(
+            locationsStream
+              .runFold(Seq.empty[Location])((list, location) => list :+ location)
+              .map(_.asRight[ResultStatus])
+          )
+        } yield locations
+      )
+      .complete
 
-  implicit val outMapperSeqLocation: OutMapper[Seq[Location], Seq[LocationResponse]] =
-    OutMapper(l => l.map(LocationResponse.fromLocation))
+  override def getLocationById(
+      locationId: de.innfactory.bootstrapplay2.api.LocationId
+  ): ContextRoute[LocationResponse] =
+    Endpoint.withAuth
+      .execute(locationService.getById(locationId)(_))
+      .complete
 
-  implicit val outMapperSourceLocation: OutMapper[Source[Location, NotUsed], Source[LocationResponse, NotUsed]] =
-    OutMapper(l => l.map(LocationResponse.fromLocation))
+  override def createLocation(body: LocationRequestBody): ContextRoute[LocationResponse] =
+    Endpoint.withAuth
+      .execute(locationService.createLocation(body)(_))
+      .complete
 
-  implicit private val outMapperBoolean: OutMapper[Boolean, Boolean] =
-    OutMapper[Boolean, Boolean](b => b)
+  override def updateLocation(body: LocationRequestBody): ContextRoute[LocationResponse] =
+    Endpoint.withAuth
+      .execute(locationService.updateLocation(body)(_))
+      .complete
 
-  def getAllByCompany(companyId: Long): Action[AnyContent] =
-    Endpoint
-      .in[RequestWithUser](tracingUserAction())
-      .logic((_, r) => locationService.getAllByCompany(LocationCompanyId(companyId))(requestContextWithUser(r)))
-      .mapOutTo[Seq[LocationResponse]]
-      .result(_.completeResult())
-
-  def getAllCompaniesAsSource: Action[AnyContent] =
-    Endpoint
-      .in[RequestWithUser](tracingUserAction())
-      .logic((_, r) => locationService.getAllAsStream()(requestContextWithUser(r)))
-      .mapOutTo[Source[LocationResponse, NotUsed]]
-      .result(_.completeSourceChunked())
-
-  def getById(id: Long): Action[AnyContent] =
-    Endpoint
-      .in[RequestWithUser](tracingUserAction())
-      .logic((_, r) => locationService.getById(LocationId(id))(requestContextWithUser(r)))
-      .mapOutTo[LocationResponse]
-      .result(_.completeResult())
-
-  def create(): Action[LocationRequest] =
-    Endpoint
-      .in[LocationRequest, RequestWithUser, Location](tracingUserAction())
-      .logic((l, r) => locationService.createLocation(l)(requestContextWithUser(r)))
-      .mapOutTo[LocationResponse]
-      .result(_.completeResult())
-
-  def update(): Action[LocationRequest] =
-    Endpoint
-      .in[LocationRequest, RequestWithUser, Location](tracingUserAction())
-      .logic((l, r) => locationService.updateLocation(l)(requestContextWithUser(r)))
-      .mapOutTo[LocationResponse]
-      .result(_.completeResult())
-
-  def delete(id: Long): Action[AnyContent] =
-    Endpoint
-      .in[RequestWithUser](tracingUserAction())
-      .logic((_, r) => locationService.deleteLocation(LocationId(id))(requestContextWithUser(r)))
-      .mapOutTo[Boolean]
-      .result(_.completeResultWithoutBody(204))
-
+  override def deleteLocation(locationId: de.innfactory.bootstrapplay2.api.LocationId): ContextRoute[Unit] =
+    Endpoint.withAuth
+      .execute(locationService.deleteLocation(locationId)(_))
+      .complete
 }
