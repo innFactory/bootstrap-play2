@@ -66,7 +66,7 @@ object Dependencies {
 
   val nimbusJwt = "com.nimbusds" % "nimbus-jose-jwt" % "9.35"
 
-  val firebase = "com.google.firebase" % "firebase-admin" % "8.2.0"
+  val firebase = "com.google.firebase" % "firebase-admin" % "9.2.0"
 
   val testTraits = "software.amazon.smithy" % "smithy-protocol-test-traits" % "1.39.1"
 
