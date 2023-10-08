@@ -3,14 +3,14 @@ package de.innfactory.bootstrapplay2.locations.infrastructure
 import akka.NotUsed
 import akka.stream.scaladsl.Source
 import cats.data.{EitherT, Validated}
+import com.typesafe.config.Config
 import dbdata.Tables
-import de.innfactory.bootstrapplay2.commons.TraceContext
-import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickDAO
-import de.innfactory.bootstrapplay2.commons.results.Results
-import de.innfactory.bootstrapplay2.commons.results.errors.Errors.BadRequest
+import de.innfactory.play.tracing.TraceContext
+import de.innfactory.bootstrapplay2.commons.infrastructure.BaseSlickRepository
+import de.innfactory.bootstrapplay2.companies.domain.models.CompanyId
+import de.innfactory.play.results.errors.Errors.BadRequest
 import de.innfactory.bootstrapplay2.locations.domain.interfaces.LocationRepository
-import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationCompanyId, LocationId}
-import de.innfactory.bootstrapplay2.locations.domain.models.Location.patch
+import de.innfactory.bootstrapplay2.locations.domain.models.{Location, LocationId}
 import de.innfactory.bootstrapplay2.locations.infrastructure.mapper.LocationMapper._
 import de.innfactory.play.controller.ResultStatus
 import slick.jdbc.JdbcBackend.Database
@@ -23,20 +23,19 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 private[locations] class SlickLocationRepository @Inject() (db: Database, lifecycle: ApplicationLifecycle)(implicit
-    ec: ExecutionContext
-) extends BaseSlickDAO(db)
+    ec: ExecutionContext,
+    config: Config
+) extends BaseSlickRepository(db)
     with LocationRepository {
 
   private val queryById = (id: LocationId) => Compiled(Tables.Location.filter(_.id === id.value))
-  private val queryByCompanyId = (id: LocationCompanyId) => Compiled(Tables.Location.filter(_.company === id.value))
+  private val queryByCompanyId = (id: CompanyId) => Compiled(Tables.Location.filter(_.company === id.value))
 
   def getAllLocationsByCompany(
-      companyId: LocationCompanyId
+      companyId: CompanyId
   )(implicit rc: TraceContext): EitherT[Future, ResultStatus, Seq[Location]] =
-    EitherT(
-      lookupSequenceGeneric(
-        queryByCompanyId(companyId).result
-      )
+    lookupSequenceGeneric(
+      queryByCompanyId(companyId).result
     )
 
   def getAllLocationsAsSource(implicit rc: TraceContext): Source[Location, NotUsed] = {
@@ -55,36 +54,31 @@ private[locations] class SlickLocationRepository @Inject() (db: Database, lifecy
   }
 
   def getById(locationId: LocationId)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location] =
-    EitherT(lookupGeneric(queryById(locationId).result.headOption))
+    lookupGeneric(queryById(locationId).result.headOption)
 
   def createLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location] =
-    EitherT(
-      createGeneric(
-        location,
-        l => (Tables.Location returning Tables.Location) += l
-      )
+    createGeneric(
+      location,
+      l => (Tables.Location returning Tables.Location) += l
     )
 
   def updateLocation(location: Location)(implicit rc: TraceContext): EitherT[Future, ResultStatus, Location] =
     for {
-      _ <- EitherT(Future(Validated.cond(location.id.isDefined, (), BadRequest("")).toEither))
-      updated <- EitherT(
+      updated <-
         updateGeneric(
-          queryById(location.id.get).result.headOption,
+          queryById(location.id).result.headOption,
           (l: Location) => Tables.Location insertOrUpdate locationToLocationRow(l),
-          old => patch(location, old)
+          (old: Location) => old.patch(location)
         )
-      )
+
     } yield updated
 
   def deleteLocation(
       locationId: LocationId
   )(implicit rc: TraceContext): EitherT[Future, ResultStatus, Boolean] =
-    EitherT(
-      deleteGeneric(
-        queryById(locationId).result.headOption,
-        queryById(locationId).delete
-      )
+    deleteGeneric(
+      queryById(locationId).result.headOption,
+      queryById(locationId).delete
     )
 
   lifecycle.addStopHook(() =>

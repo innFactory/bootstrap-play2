@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  mock:
+    container_name: mock-server
+    image: stoplight/prism:4.10.3
+    command: >
+      mock -p 4010 --host 0.0.0.0 -m false /root/apis/openapi.yaml
+    ports:
+      - 9003:4010
+    volumes:
+      - ./yaml/openapi:/root/apis

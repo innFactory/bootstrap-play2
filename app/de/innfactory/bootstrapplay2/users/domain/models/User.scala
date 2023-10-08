@@ -10,6 +10,8 @@ case class User(
     emailVerified: Boolean,
     disabled: Boolean,
     claims: Claims,
+    firstName: Option[String],
+    lastName: Option[String],
     displayName: Option[String],
     lastSignIn: Option[Long],
     lastRefresh: Option[Long],

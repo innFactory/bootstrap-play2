@@ -7,6 +7,7 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.proc.{BadJWTException, DefaultJWTClaimsVerifier, DefaultJWTProcessor}
 import de.innfactory.bootstrapplay2.commons.jwt.algorithm.JWTAlgorithm
 import de.innfactory.bootstrapplay2.commons.jwt.algorithm.JWTAlgorithm.RS256
+import de.innfactory.play.smithy4play.JWTToken
 
 object ConfigurableJWTValidator {
   def apply(

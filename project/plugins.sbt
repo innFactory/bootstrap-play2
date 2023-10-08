@@ -12,12 +12,15 @@ addSbtPlugin("io.github.davidmweber" % "flyway-sbt" % "7.4.0")
 addSbtPlugin("com.github.tototoshi" % "sbt-slick-codegen" % "2.0.0")
 
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.16")
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.3")
-addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.9")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.9.0-RC3")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.9")
+addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.16")
+
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
 addSbtPlugin("com.iheart" % "sbt-play-swagger" % "1.0.2")
 
 addSbtPlugin("com.github.sbt" % "sbt-license-report" % "1.6.1")
 
 addSbtPlugin("com.codecommit" % "sbt-github-packages" % "0.5.3")
+
+addSbtPlugin("com.disneystreaming.smithy4s" % "smithy4s-sbt-codegen" % "0.17.19")

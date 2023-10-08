@@ -6,8 +6,8 @@ import akka.stream.scaladsl.Source
 import com.google.common.base.Charsets
 import com.google.common.io.BaseEncoding
 import com.google.firebase.auth.{ExportedUserRecord, FirebaseAuth, FirebaseAuthException, UserRecord}
-import de.innfactory.bootstrapplay2.commons.results.Results.Result
-import de.innfactory.bootstrapplay2.commons.results.errors.Errors.{BadRequest, NotFound}
+import de.innfactory.play.results.Results.Result
+import de.innfactory.play.results.errors.Errors.{BadRequest, NotFound}
 import org.joda.time.DateTime
 import play.api.libs.json.{JsNull, _}
 import cats.implicits._

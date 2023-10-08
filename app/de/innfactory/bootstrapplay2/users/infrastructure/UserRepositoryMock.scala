@@ -2,13 +2,16 @@ package de.innfactory.bootstrapplay2.users.infrastructure
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source
-import de.innfactory.bootstrapplay2.commons.results.Results.Result
-import de.innfactory.bootstrapplay2.users.domain.interfaces.{UserRepository, UserService}
+import cats.data.EitherT
+import cats.implicits.catsSyntaxEitherId
+import de.innfactory.bootstrapplay2.users.domain.interfaces.UserRepository
 import de.innfactory.bootstrapplay2.users.domain.models.{Claims, User, UserId}
+import de.innfactory.play.controller.ResultStatus
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class UserRepositoryMock extends UserRepository {
+class UserRepositoryMock @Inject() (implicit ec: ExecutionContext) extends UserRepository {
 
   private def defaultUser(userId: UserId = UserId("userId")) =
     User(
@@ -17,6 +20,8 @@ class UserRepositoryMock extends UserRepository {
       emailVerified = true,
       disabled = false,
       claims = Claims(),
+      firstName = None,
+      lastName = None,
       displayName = Some("defaultUser"),
       lastSignIn = None,
       lastRefresh = None,
@@ -25,25 +30,40 @@ class UserRepositoryMock extends UserRepository {
 
   def getAllUsersAsSource: Source[User, NotUsed] = Source.apply(Seq.empty[User])
 
-  def getUserByEmail(email: String): Result[User] = Right(defaultUser())
+  def getUserByEmail(email: String): EitherT[Future, ResultStatus, User] =
+    EitherT.rightT(defaultUser())
 
-  def getUserById(userId: UserId)(implicit ec: ExecutionContext): Future[Result[User]] = Future(
-    Right(defaultUser(userId))
+  def getUserById(userId: UserId): EitherT[Future, ResultStatus, User] = EitherT.rightT(
+    defaultUser(userId)
   )
 
-  def createUser(email: String): Result[User] = Right(defaultUser())
+  def createUser(email: String): EitherT[Future, ResultStatus, User] =
+    EitherT.rightT(defaultUser())
 
-  def upsertUser(user: User, oldUser: User): Result[User] = Right(defaultUser())
+  def upsertUser(user: User, oldUser: User): EitherT[Future, ResultStatus, User] = EitherT.rightT(
+    defaultUser()
+  )
 
-  def setUserClaims(userId: UserId, claims: Claims): Result[Boolean] = Right(true)
+  def setUserClaims(userId: UserId, claims: Claims): EitherT[Future, ResultStatus, Boolean] = EitherT.rightT(
+    true
+  )
 
-  def setUserPassword(userId: UserId, newPassword: String): Result[User] = Right(defaultUser())
+  def setUserPassword(userId: UserId, newPassword: String): EitherT[Future, ResultStatus, User] = EitherT.rightT(
+    defaultUser()
+  )
 
-  def setEmailVerifiedState(userId: UserId, state: Boolean): Result[Boolean] = Right(true)
+  def setEmailVerifiedState(userId: UserId, state: Boolean): EitherT[Future, ResultStatus, Boolean] = EitherT.rightT(
+    true
+  )
 
-  def setUserDisabledState(userId: UserId, state: Boolean): Result[Boolean] = Right(true)
+  def setUserDisabledState(userId: UserId, state: Boolean): EitherT[Future, ResultStatus, Boolean] = EitherT.rightT(
+    true
+  )
 
-  def setUserDisplayName(userId: UserId, displayName: String): Result[Boolean] = Right(true)
+  def setUserDisplayName(userId: UserId, displayName: String): EitherT[Future, ResultStatus, Boolean] = EitherT.rightT(
+    true
+  )
 
-  def setEmailVerified(userId: UserId): Result[Boolean] = Right(true)
+  def setEmailVerified(userId: UserId): EitherT[Future, ResultStatus, Boolean] =
+    EitherT.rightT(true)
 }

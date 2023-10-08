@@ -2,6 +2,7 @@ package de.innfactory.bootstrapplay2.commons.jwt
 
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.proc.BadJWTException
+import de.innfactory.play.smithy4play.JWTToken
 
 sealed abstract class ValidationError(message: String) extends BadJWTException(message)
 case object EmptyJwtTokenContent extends ValidationError("Empty JWT token")

@@ -1,0 +1,49 @@
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pod-reader
+  namespace: "$NAMESPACE"
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+  namespace: "$NAMESPACE"
+subjects:
+  - kind: User
+    name: "system:serviceaccount:$NAMESPACE:$SANAME"
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+
+# TODO add `automountServiceAccountToken: true` to pod deployment!
+
+ports:
+  - containerPort: 8080
+    name: http
+  - name: management
+    containerPort: 8558
+    protocol: TCP
+  - name: remote
+    containerPort: 25520
+    protocol: TCP
+readinessProbe:
+  httpGet:
+    path: "/ready"
+    port: management
+  periodSeconds: 10
+  failureThreshold: 10
+  initialDelaySeconds: 20
+livenessProbe:
+  httpGet:
+    path: "/alive"
+    port: management
+  periodSeconds: 10
+  failureThreshold: 10
+  initialDelaySeconds: 60

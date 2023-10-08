@@ -21,9 +21,7 @@ This project is built with:
    - Scala 2.13.X
    
   A PostgreSQL Database with activated postgis extensions is needed (for geolocation queries)
-   
-   **Swagger.json is available at /v1/swagger.json**
-   
+    
 ## Table of Contents:
 
 - [Play2-Bootstrap](#play2-bootstrap)
@@ -59,7 +57,7 @@ This is necessary to load the packages from Github-Package-Registry.
 #### Insomnia:
 
 - [Download Insomnia](https://insomnia.rest/download) | [Docs](https://support.insomnia.rest/)
-- Download and import Swagger.json to Insomnia:  
+- Download and import to Insomnia:  
 <a href="https://github.com/innFactory/bootstrap-play2/blob/master/doc-assets/insomnia-workspace.json" target="_blank"><img src="https://insomnia.rest/images/run.svg" alt="Run in Insomnia"></a>
 
 - Configure Environment in Insomnia to match with local or prod/staging services
@@ -159,6 +157,31 @@ sbt slickGen
 
 after that you will have to mark the folder target/scala-x.xx/scr_managed as "generated sources root"
 
+### Setup
+
+You can find a setup script in `.bin/setup`. Run it from your projects root with 
+```bash
+.bin/setup/setup.sh
+```
+
+It supports bootstrapping your project to rename the project and domain with 
+```bash
+.bin/setup/setup.sh bootstrap
+```
+
+As well as creating new packages with
+```bash
+.bin/setup/setup.sh package
+```
+
+You need to repackage the setup application, located in `.bin/setup`, if you made some changes to it
+```bash
+# Assuming you are located in your applications root
+cd .bin/setup
+sbt assembly
+cd ../..
+```
+
 ## Testing
 
 You can run functional tests against an in memory database and Slick easily with Play from a clean slate:
@@ -200,4 +223,5 @@ Changes Markdown: [Changes](doc/changes.md)
 ## Contributors:
 
 <a href="https://github.com/jona7o"><img src="https://avatars2.githubusercontent.com/u/8403631?s=460&u=831a4265651db985e3a043ad0fec697f68130c04&v=4" title="jona7o" width="80" height="80"></a>
-<a href="https://github.com/patsta32"><img src="https://avatars2.githubusercontent.com/u/12295003?s=460&u=5f79d4aac3414271cd5393c3b97f413a417925aa&v=4" title="jona7o" width="80" height="80"></a>
+<a href="https://github.com/patsta32"><img src="https://avatars2.githubusercontent.com/u/12295003?s=460&u=5f79d4aac3414271cd5393c3b97f413a417925aa&v=4" title="patsta32" width="80" height="80"></a>
+<a href="https://github.com/anderha"><img src="https://avatars.githubusercontent.com/u/36031262?s=96&v=4" title="anderha" width="80" height="80"></a>

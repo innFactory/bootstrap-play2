@@ -22,8 +22,6 @@ if test -f "$FILE"; then
     cd .bin
 fi
 
-
-
 (
 for i in `seq 1 10`;
             do
@@ -35,6 +33,6 @@ for i in `seq 1 10`;
 )
 
 
-firebase emulators:exec "cd .. && export FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' && sbt ciTests" --only auth --project bootstrap-play2 --import=./firebase-data
+firebase emulators:exec "cd .. && export FIREBASE_AUTH_EMULATOR_HOST='localhost:9099' && sbt ciTests" --only auth --project demo-bootstrap-play2 --import=./firebase-data
 docker stop bootstrapPlay2PGTest
 docker rm bootstrapPlay2PGTest
