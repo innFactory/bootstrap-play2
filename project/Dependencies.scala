@@ -61,8 +61,8 @@ object Dependencies {
 
   val sl4j = "org.slf4j" % "slf4j-api" % "2.0.9"
   val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.17.0"
-  val logback = "ch.qos.logback" % "logback-classic" % "1.2.12"
-  val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.12"
+  val logback = "ch.qos.logback" % "logback-classic" % "1.4.11"
+  val logbackCore = "ch.qos.logback" % "logback-core" % "1.4.11"
 
   val nimbusJwt = "com.nimbusds" % "nimbus-jose-jwt" % "9.35"
 
