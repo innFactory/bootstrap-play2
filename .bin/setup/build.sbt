@@ -9,7 +9,7 @@ lazy val root = (project in file("."))
     scalaVersion := "2.13.12",
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-core" % "2.8.0",
-      "com.typesafe.play" %% "play-json" % "2.9.2",
+      "org.playframework" %% "play-json" % "2.9.2",
       "org.rogach" %% "scallop" % "4.1.0"
     ),
     assembly / assemblyMergeStrategy := {
