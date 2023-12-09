@@ -7,6 +7,30 @@ servers:
 security:
 - smithy.api.httpBearerAuth: []
 paths:
+  /:
+    get:
+      operationId: ping
+      responses:
+        "200":
+          description: ping 200 response
+      tags:
+      - HealthAPIController
+  /liveness:
+    get:
+      operationId: liveness
+      responses:
+        "200":
+          description: liveness 200 response
+      tags:
+      - HealthAPIController
+  /readiness:
+    get:
+      operationId: readiness
+      responses:
+        "200":
+          description: readiness 200 response
+      tags:
+      - HealthAPIController
   /v1/public/helloworld/system/{query}:
     get:
       operationId: helloworldViaSystem
@@ -229,30 +253,6 @@ paths:
           description: getLocationById 200 response
       tags:
       - LocationAPIController
-  /:
-    get:
-      operationId: ping
-      responses:
-        "200":
-          description: ping 200 response
-      tags:
-      - HealthAPIController
-  /liveness:
-    get:
-      operationId: liveness
-      responses:
-        "200":
-          description: liveness 200 response
-      tags:
-      - HealthAPIController
-  /readiness:
-    get:
-      operationId: readiness
-      responses:
-        "200":
-          description: readiness 200 response
-      tags:
-      - HealthAPIController
   /v1/companies:
     get:
       operationId: getAllCompanies
