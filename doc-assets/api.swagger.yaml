@@ -7,50 +7,6 @@ servers:
 security:
 - smithy.api.httpBearerAuth: []
 paths:
-  /:
-    get:
-      operationId: ping
-      responses:
-        "200":
-          description: ping 200 response
-      tags:
-      - HealthAPIController
-  /liveness:
-    get:
-      operationId: liveness
-      responses:
-        "200":
-          description: liveness 200 response
-      tags:
-      - HealthAPIController
-  /readiness:
-    get:
-      operationId: readiness
-      responses:
-        "200":
-          description: readiness 200 response
-      tags:
-      - HealthAPIController
-  /v1/public/helloworld/system/{query}:
-    get:
-      operationId: helloworldViaSystem
-      parameters:
-      - explode: false
-        in: path
-        name: query
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/helloworldViaSystemResponseContent'
-          description: helloworldViaSystem 200 response
-      tags:
-      - ActorSystemAPIController
   /v1/public/helloworld/sharding/{query}:
     get:
       operationId: helloworldViaSharding
@@ -71,6 +27,26 @@ paths:
           description: helloworldViaSharding 200 response
       tags:
       - ActorShardingAPIController
+  /v1/public/helloworld/system/{query}:
+    get:
+      operationId: helloworldViaSystem
+      parameters:
+      - explode: false
+        in: path
+        name: query
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/helloworldViaSystemResponseContent'
+          description: helloworldViaSystem 200 response
+      tags:
+      - ActorSystemAPIController
   /v1/companies/{companyId}/locations:
     get:
       operationId: getAllLocationsByCompany
@@ -253,6 +229,30 @@ paths:
           description: getLocationById 200 response
       tags:
       - LocationAPIController
+  /:
+    get:
+      operationId: ping
+      responses:
+        "200":
+          description: ping 200 response
+      tags:
+      - HealthAPIController
+  /liveness:
+    get:
+      operationId: liveness
+      responses:
+        "200":
+          description: liveness 200 response
+      tags:
+      - HealthAPIController
+  /readiness:
+    get:
+      operationId: readiness
+      responses:
+        "200":
+          description: readiness 200 response
+      tags:
+      - HealthAPIController
   /v1/companies:
     get:
       operationId: getAllCompanies
@@ -409,7 +409,7 @@ paths:
       - CompanyAPIController
 components:
   schemas:
-    helloworldViaSystemResponseContent:
+    helloworldViaShardingResponseContent:
       example:
         answer: answer
       properties:
@@ -418,7 +418,7 @@ components:
       required:
       - answer
       type: object
-    helloworldViaShardingResponseContent:
+    helloworldViaSystemResponseContent:
       example:
         answer: answer
       properties:
