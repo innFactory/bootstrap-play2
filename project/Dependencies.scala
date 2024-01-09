@@ -59,7 +59,7 @@ object Dependencies {
   // If you want to use opencensus-scala inside an Akka HTTP project
   val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
-  val sl4j = "org.slf4j" % "slf4j-api" % "2.0.10"
+  val sl4j = "org.slf4j" % "slf4j-api" % "2.0.11"
   val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.21.0"
   val logback = "ch.qos.logback" % "logback-classic" % "1.4.14"
   val logbackCore = "ch.qos.logback" % "logback-core" % "1.4.14"
