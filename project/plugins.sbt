@@ -23,4 +23,4 @@ addSbtPlugin("com.github.sbt" % "sbt-license-report" % "1.6.1")
 
 addSbtPlugin("com.codecommit" % "sbt-github-packages" % "0.5.3")
 
-addSbtPlugin("com.disneystreaming.smithy4s" % "smithy4s-sbt-codegen" % "0.17.19")
+addSbtPlugin("com.disneystreaming.smithy4s" % "smithy4s-sbt-codegen" % "0.18.6")
