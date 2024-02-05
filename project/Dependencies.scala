@@ -37,7 +37,7 @@ object Dependencies {
   val slick = "com.typesafe.slick" %% "slick" % "3.3.3"
   val slickCodegen = "com.typesafe.slick" %% "slick-codegen" % "3.3.3"
   val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % "3.3.3"
-  val joda = "joda-time" % "joda-time" % "2.12.6"
+  val joda = "joda-time" % "joda-time" % "2.12.7"
   val hikariCP = "com.zaxxer" % "HikariCP" % "5.1.0"
 
   val postgresql = "org.postgresql" % "postgresql" % "42.7.1"
