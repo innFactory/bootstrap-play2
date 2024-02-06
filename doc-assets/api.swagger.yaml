@@ -7,46 +7,30 @@ servers:
 security:
 - smithy.api.httpBearerAuth: []
 paths:
-  /v1/public/helloworld/sharding/{query}:
+  /:
     get:
-      operationId: helloworldViaSharding
-      parameters:
-      - explode: false
-        in: path
-        name: query
-        required: true
-        schema:
-          type: string
-        style: simple
+      operationId: ping
       responses:
         "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/helloworldViaShardingResponseContent'
-          description: helloworldViaSharding 200 response
+          description: ping 200 response
       tags:
-      - ActorShardingAPIController
-  /v1/public/helloworld/system/{query}:
+      - HealthAPIController
+  /liveness:
     get:
-      operationId: helloworldViaSystem
-      parameters:
-      - explode: false
-        in: path
-        name: query
-        required: true
-        schema:
-          type: string
-        style: simple
+      operationId: liveness
       responses:
         "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/helloworldViaSystemResponseContent'
-          description: helloworldViaSystem 200 response
+          description: liveness 200 response
       tags:
-      - ActorSystemAPIController
+      - HealthAPIController
+  /readiness:
+    get:
+      operationId: readiness
+      responses:
+        "200":
+          description: readiness 200 response
+      tags:
+      - HealthAPIController
   /v1/companies/{companyId}/locations:
     get:
       operationId: getAllLocationsByCompany
@@ -229,30 +213,26 @@ paths:
           description: getLocationById 200 response
       tags:
       - LocationAPIController
-  /:
+  /v1/public/helloworld/sharding/{query}:
     get:
-      operationId: ping
+      operationId: helloworldViaSharding
+      parameters:
+      - explode: false
+        in: path
+        name: query
+        required: true
+        schema:
+          type: string
+        style: simple
       responses:
         "200":
-          description: ping 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/helloworldViaShardingResponseContent'
+          description: helloworldViaSharding 200 response
       tags:
-      - HealthAPIController
-  /liveness:
-    get:
-      operationId: liveness
-      responses:
-        "200":
-          description: liveness 200 response
-      tags:
-      - HealthAPIController
-  /readiness:
-    get:
-      operationId: readiness
-      responses:
-        "200":
-          description: readiness 200 response
-      tags:
-      - HealthAPIController
+      - ActorShardingAPIController
   /v1/companies:
     get:
       operationId: getAllCompanies
@@ -407,26 +387,28 @@ paths:
           description: getCompanyById 200 response
       tags:
       - CompanyAPIController
+  /v1/public/helloworld/system/{query}:
+    get:
+      operationId: helloworldViaSystem
+      parameters:
+      - explode: false
+        in: path
+        name: query
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/helloworldViaSystemResponseContent'
+          description: helloworldViaSystem 200 response
+      tags:
+      - ActorSystemAPIController
 components:
   schemas:
-    helloworldViaShardingResponseContent:
-      example:
-        answer: answer
-      properties:
-        answer:
-          type: string
-      required:
-      - answer
-      type: object
-    helloworldViaSystemResponseContent:
-      example:
-        answer: answer
-      properties:
-        answer:
-          type: string
-      required:
-      - answer
-      type: object
     LocationRequestBody:
       example:
         zip: zip
@@ -655,6 +637,15 @@ components:
       - id
       - updated
       type: object
+    helloworldViaShardingResponseContent:
+      example:
+        answer: answer
+      properties:
+        answer:
+          type: string
+      required:
+      - answer
+      type: object
     CompanyRequestBody:
       example:
         settings: ""
@@ -832,6 +823,15 @@ components:
       - created
       - id
       - updated
+      type: object
+    helloworldViaSystemResponseContent:
+      example:
+        answer: answer
+      properties:
+        answer:
+          type: string
+      required:
+      - answer
       type: object
   securitySchemes:
     smithy.api.httpBearerAuth:
