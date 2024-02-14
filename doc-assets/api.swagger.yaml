@@ -7,30 +7,180 @@ servers:
 security:
 - smithy.api.httpBearerAuth: []
 paths:
-  /:
+  /v1/public/helloworld/sharding/{query}:
     get:
-      operationId: ping
+      operationId: helloworldViaSharding
+      parameters:
+      - explode: false
+        in: path
+        name: query
+        required: true
+        schema:
+          type: string
+        style: simple
       responses:
         "200":
-          description: ping 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/helloworldViaShardingResponseContent'
+          description: helloworldViaSharding 200 response
       tags:
-      - HealthAPIController
-  /liveness:
+      - ActorShardingAPIController
+  /v1/companies:
     get:
-      operationId: liveness
+      operationId: getAllCompanies
       responses:
         "200":
-          description: liveness 200 response
+          content:
+            application/json:
+              examples:
+                Invoke getAllCompanies:
+                  value:
+                  - id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    settings:
+                      region: region
+                    stringAttribute1: test 1
+                    stringAttribute2: test 2
+                    longAttribute1: 1
+                    booleanAttribute: false
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
+              schema:
+                $ref: '#/components/schemas/getAllCompaniesOutputPayload'
+          description: getAllCompanies 200 response
       tags:
-      - HealthAPIController
-  /readiness:
-    get:
-      operationId: readiness
+      - CompanyAPIController
+    patch:
+      operationId: updateCompany
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Invoke updateCompany:
+                value:
+                  id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                  settings:
+                    test: test
+                  stringAttribute1: test
+                  stringAttribute2: test
+                  longAttribute1: 1
+                  booleanAttribute: true
+            schema:
+              $ref: '#/components/schemas/CompanyRequestBody'
+        required: true
       responses:
         "200":
-          description: readiness 200 response
+          content:
+            application/json:
+              examples:
+                Invoke updateCompany:
+                  value:
+                    id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    settings:
+                      test: test
+                    stringAttribute1: test
+                    stringAttribute2: test
+                    longAttribute1: 1
+                    booleanAttribute: true
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
+              schema:
+                $ref: '#/components/schemas/updateCompanyResponseContent'
+          description: updateCompany 200 response
       tags:
-      - HealthAPIController
+      - CompanyAPIController
+    post:
+      operationId: createCompany
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Invoke createCompany:
+                value:
+                  settings:
+                    test: test
+                  stringAttribute1: test
+                  stringAttribute2: test
+                  longAttribute1: 1
+                  booleanAttribute: true
+            schema:
+              $ref: '#/components/schemas/CompanyRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Invoke createCompany:
+                  value:
+                    id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    settings:
+                      test: test
+                    stringAttribute1: test
+                    stringAttribute2: test
+                    longAttribute1: 1
+                    booleanAttribute: true
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
+              schema:
+                $ref: '#/components/schemas/createCompanyResponseContent'
+          description: createCompany 200 response
+      tags:
+      - CompanyAPIController
+  /v1/companies/{companyId}:
+    delete:
+      operationId: deleteCompany
+      parameters:
+      - examples:
+          Invoke deleteCompany:
+            value: 7059f786-4633-4ace-a412-2f2e90556f08
+        explode: false
+        in: path
+        name: companyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: deleteCompany 204 response
+      tags:
+      - CompanyAPIController
+    get:
+      operationId: getCompanyById
+      parameters:
+      - examples:
+          Invoke getCompanyById:
+            value: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+        explode: false
+        in: path
+        name: companyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Invoke getCompanyById:
+                  value:
+                    id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
+                    settings:
+                      region: region
+                    stringAttribute1: test 1
+                    stringAttribute2: test 2
+                    longAttribute1: 1
+                    booleanAttribute: false
+                    created: 2022-03-07T00:00:00.001Z
+                    updated: 2022-03-07T00:00:00.001Z
+              schema:
+                $ref: '#/components/schemas/getCompanyByIdResponseContent'
+          description: getCompanyById 200 response
+      tags:
+      - CompanyAPIController
   /v1/companies/{companyId}/locations:
     get:
       operationId: getAllLocationsByCompany
@@ -213,180 +363,6 @@ paths:
           description: getLocationById 200 response
       tags:
       - LocationAPIController
-  /v1/public/helloworld/sharding/{query}:
-    get:
-      operationId: helloworldViaSharding
-      parameters:
-      - explode: false
-        in: path
-        name: query
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/helloworldViaShardingResponseContent'
-          description: helloworldViaSharding 200 response
-      tags:
-      - ActorShardingAPIController
-  /v1/companies:
-    get:
-      operationId: getAllCompanies
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                Invoke getAllCompanies:
-                  value:
-                  - id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
-                    settings:
-                      region: region
-                    stringAttribute1: test 1
-                    stringAttribute2: test 2
-                    longAttribute1: 1
-                    booleanAttribute: false
-                    created: 2022-03-07T00:00:00.001Z
-                    updated: 2022-03-07T00:00:00.001Z
-              schema:
-                $ref: '#/components/schemas/getAllCompaniesOutputPayload'
-          description: getAllCompanies 200 response
-      tags:
-      - CompanyAPIController
-    patch:
-      operationId: updateCompany
-      requestBody:
-        content:
-          application/json:
-            examples:
-              Invoke updateCompany:
-                value:
-                  id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
-                  settings:
-                    test: test
-                  stringAttribute1: test
-                  stringAttribute2: test
-                  longAttribute1: 1
-                  booleanAttribute: true
-            schema:
-              $ref: '#/components/schemas/CompanyRequestBody'
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                Invoke updateCompany:
-                  value:
-                    id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
-                    settings:
-                      test: test
-                    stringAttribute1: test
-                    stringAttribute2: test
-                    longAttribute1: 1
-                    booleanAttribute: true
-                    created: 2022-03-07T00:00:00.001Z
-                    updated: 2022-03-07T00:00:00.001Z
-              schema:
-                $ref: '#/components/schemas/updateCompanyResponseContent'
-          description: updateCompany 200 response
-      tags:
-      - CompanyAPIController
-    post:
-      operationId: createCompany
-      requestBody:
-        content:
-          application/json:
-            examples:
-              Invoke createCompany:
-                value:
-                  settings:
-                    test: test
-                  stringAttribute1: test
-                  stringAttribute2: test
-                  longAttribute1: 1
-                  booleanAttribute: true
-            schema:
-              $ref: '#/components/schemas/CompanyRequestBody'
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                Invoke createCompany:
-                  value:
-                    id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
-                    settings:
-                      test: test
-                    stringAttribute1: test
-                    stringAttribute2: test
-                    longAttribute1: 1
-                    booleanAttribute: true
-                    created: 2022-03-07T00:00:00.001Z
-                    updated: 2022-03-07T00:00:00.001Z
-              schema:
-                $ref: '#/components/schemas/createCompanyResponseContent'
-          description: createCompany 200 response
-      tags:
-      - CompanyAPIController
-  /v1/companies/{companyId}:
-    delete:
-      operationId: deleteCompany
-      parameters:
-      - examples:
-          Invoke deleteCompany:
-            value: 7059f786-4633-4ace-a412-2f2e90556f08
-        explode: false
-        in: path
-        name: companyId
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "204":
-          description: deleteCompany 204 response
-      tags:
-      - CompanyAPIController
-    get:
-      operationId: getCompanyById
-      parameters:
-      - examples:
-          Invoke getCompanyById:
-            value: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
-        explode: false
-        in: path
-        name: companyId
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                Invoke getCompanyById:
-                  value:
-                    id: 0ce84627-9a66-46bf-9a1d-4f38b82a38e3
-                    settings:
-                      region: region
-                    stringAttribute1: test 1
-                    stringAttribute2: test 2
-                    longAttribute1: 1
-                    booleanAttribute: false
-                    created: 2022-03-07T00:00:00.001Z
-                    updated: 2022-03-07T00:00:00.001Z
-              schema:
-                $ref: '#/components/schemas/getCompanyByIdResponseContent'
-          description: getCompanyById 200 response
-      tags:
-      - CompanyAPIController
   /v1/public/helloworld/system/{query}:
     get:
       operationId: helloworldViaSystem
@@ -407,8 +383,219 @@ paths:
           description: helloworldViaSystem 200 response
       tags:
       - ActorSystemAPIController
+  /:
+    get:
+      operationId: ping
+      responses:
+        "200":
+          description: ping 200 response
+      tags:
+      - HealthAPIController
+  /liveness:
+    get:
+      operationId: liveness
+      responses:
+        "200":
+          description: liveness 200 response
+      tags:
+      - HealthAPIController
+  /readiness:
+    get:
+      operationId: readiness
+      responses:
+        "200":
+          description: readiness 200 response
+      tags:
+      - HealthAPIController
 components:
   schemas:
+    helloworldViaShardingResponseContent:
+      example:
+        answer: answer
+      properties:
+        answer:
+          type: string
+      required:
+      - answer
+      type: object
+    CompanyRequestBody:
+      example:
+        settings: ""
+        booleanAttribute: true
+        longAttribute1: 0
+        stringAttribute1: stringAttribute1
+        id: id
+        stringAttribute2: stringAttribute2
+      properties:
+        id:
+          type: string
+        settings: {}
+        stringAttribute1:
+          type: string
+        stringAttribute2:
+          type: string
+        longAttribute1:
+          format: int64
+          type: integer
+        booleanAttribute:
+          type: boolean
+      type: object
+    CompanyResponse:
+      example:
+        settings: ""
+        booleanAttribute: true
+        created: created
+        longAttribute1: 0
+        stringAttribute1: stringAttribute1
+        id: id
+        stringAttribute2: stringAttribute2
+        updated: updated
+      properties:
+        id:
+          type: string
+        settings: {}
+        stringAttribute1:
+          type: string
+        stringAttribute2:
+          type: string
+        longAttribute1:
+          format: int64
+          type: integer
+        booleanAttribute:
+          type: boolean
+        created:
+          description: ISO Date With Time
+          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
+            d:\\d\\d)|Z)?$"
+          type: string
+        updated:
+          description: ISO Date With Time
+          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
+            d:\\d\\d)|Z)?$"
+          type: string
+      required:
+      - created
+      - id
+      - updated
+      type: object
+    createCompanyResponseContent:
+      example:
+        settings: ""
+        booleanAttribute: true
+        created: created
+        longAttribute1: 0
+        stringAttribute1: stringAttribute1
+        id: id
+        stringAttribute2: stringAttribute2
+        updated: updated
+      properties:
+        id:
+          type: string
+        settings: {}
+        stringAttribute1:
+          type: string
+        stringAttribute2:
+          type: string
+        longAttribute1:
+          format: int64
+          type: integer
+        booleanAttribute:
+          type: boolean
+        created:
+          description: ISO Date With Time
+          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
+            d:\\d\\d)|Z)?$"
+          type: string
+        updated:
+          description: ISO Date With Time
+          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
+            d:\\d\\d)|Z)?$"
+          type: string
+      required:
+      - created
+      - id
+      - updated
+      type: object
+    getAllCompaniesOutputPayload:
+      items:
+        $ref: '#/components/schemas/CompanyResponse'
+      type: array
+    getCompanyByIdResponseContent:
+      example:
+        settings: ""
+        booleanAttribute: true
+        created: created
+        longAttribute1: 0
+        stringAttribute1: stringAttribute1
+        id: id
+        stringAttribute2: stringAttribute2
+        updated: updated
+      properties:
+        id:
+          type: string
+        settings: {}
+        stringAttribute1:
+          type: string
+        stringAttribute2:
+          type: string
+        longAttribute1:
+          format: int64
+          type: integer
+        booleanAttribute:
+          type: boolean
+        created:
+          description: ISO Date With Time
+          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
+            d:\\d\\d)|Z)?$"
+          type: string
+        updated:
+          description: ISO Date With Time
+          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
+            d:\\d\\d)|Z)?$"
+          type: string
+      required:
+      - created
+      - id
+      - updated
+      type: object
+    updateCompanyResponseContent:
+      example:
+        settings: ""
+        booleanAttribute: true
+        created: created
+        longAttribute1: 0
+        stringAttribute1: stringAttribute1
+        id: id
+        stringAttribute2: stringAttribute2
+        updated: updated
+      properties:
+        id:
+          type: string
+        settings: {}
+        stringAttribute1:
+          type: string
+        stringAttribute2:
+          type: string
+        longAttribute1:
+          format: int64
+          type: integer
+        booleanAttribute:
+          type: boolean
+        created:
+          description: ISO Date With Time
+          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
+            d:\\d\\d)|Z)?$"
+          type: string
+        updated:
+          description: ISO Date With Time
+          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
+            d:\\d\\d)|Z)?$"
+          type: string
+      required:
+      - created
+      - id
+      - updated
+      type: object
     LocationRequestBody:
       example:
         zip: zip
@@ -633,193 +820,6 @@ components:
           type: string
       required:
       - company
-      - created
-      - id
-      - updated
-      type: object
-    helloworldViaShardingResponseContent:
-      example:
-        answer: answer
-      properties:
-        answer:
-          type: string
-      required:
-      - answer
-      type: object
-    CompanyRequestBody:
-      example:
-        settings: ""
-        booleanAttribute: true
-        longAttribute1: 0
-        stringAttribute1: stringAttribute1
-        id: id
-        stringAttribute2: stringAttribute2
-      properties:
-        id:
-          type: string
-        settings: {}
-        stringAttribute1:
-          type: string
-        stringAttribute2:
-          type: string
-        longAttribute1:
-          format: int64
-          type: integer
-        booleanAttribute:
-          type: boolean
-      type: object
-    CompanyResponse:
-      example:
-        settings: ""
-        booleanAttribute: true
-        created: created
-        longAttribute1: 0
-        stringAttribute1: stringAttribute1
-        id: id
-        stringAttribute2: stringAttribute2
-        updated: updated
-      properties:
-        id:
-          type: string
-        settings: {}
-        stringAttribute1:
-          type: string
-        stringAttribute2:
-          type: string
-        longAttribute1:
-          format: int64
-          type: integer
-        booleanAttribute:
-          type: boolean
-        created:
-          description: ISO Date With Time
-          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
-            d:\\d\\d)|Z)?$"
-          type: string
-        updated:
-          description: ISO Date With Time
-          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
-            d:\\d\\d)|Z)?$"
-          type: string
-      required:
-      - created
-      - id
-      - updated
-      type: object
-    createCompanyResponseContent:
-      example:
-        settings: ""
-        booleanAttribute: true
-        created: created
-        longAttribute1: 0
-        stringAttribute1: stringAttribute1
-        id: id
-        stringAttribute2: stringAttribute2
-        updated: updated
-      properties:
-        id:
-          type: string
-        settings: {}
-        stringAttribute1:
-          type: string
-        stringAttribute2:
-          type: string
-        longAttribute1:
-          format: int64
-          type: integer
-        booleanAttribute:
-          type: boolean
-        created:
-          description: ISO Date With Time
-          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
-            d:\\d\\d)|Z)?$"
-          type: string
-        updated:
-          description: ISO Date With Time
-          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
-            d:\\d\\d)|Z)?$"
-          type: string
-      required:
-      - created
-      - id
-      - updated
-      type: object
-    getAllCompaniesOutputPayload:
-      items:
-        $ref: '#/components/schemas/CompanyResponse'
-      type: array
-    getCompanyByIdResponseContent:
-      example:
-        settings: ""
-        booleanAttribute: true
-        created: created
-        longAttribute1: 0
-        stringAttribute1: stringAttribute1
-        id: id
-        stringAttribute2: stringAttribute2
-        updated: updated
-      properties:
-        id:
-          type: string
-        settings: {}
-        stringAttribute1:
-          type: string
-        stringAttribute2:
-          type: string
-        longAttribute1:
-          format: int64
-          type: integer
-        booleanAttribute:
-          type: boolean
-        created:
-          description: ISO Date With Time
-          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
-            d:\\d\\d)|Z)?$"
-          type: string
-        updated:
-          description: ISO Date With Time
-          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
-            d:\\d\\d)|Z)?$"
-          type: string
-      required:
-      - created
-      - id
-      - updated
-      type: object
-    updateCompanyResponseContent:
-      example:
-        settings: ""
-        booleanAttribute: true
-        created: created
-        longAttribute1: 0
-        stringAttribute1: stringAttribute1
-        id: id
-        stringAttribute2: stringAttribute2
-        updated: updated
-      properties:
-        id:
-          type: string
-        settings: {}
-        stringAttribute1:
-          type: string
-        stringAttribute2:
-          type: string
-        longAttribute1:
-          format: int64
-          type: integer
-        booleanAttribute:
-          type: boolean
-        created:
-          description: ISO Date With Time
-          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
-            d:\\d\\d)|Z)?$"
-          type: string
-        updated:
-          description: ISO Date With Time
-          pattern: "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\\
-            d:\\d\\d)|Z)?$"
-          type: string
-      required:
       - created
       - id
       - updated
