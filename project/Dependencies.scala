@@ -47,7 +47,7 @@ object Dependencies {
   val chimney = "io.scalaland" %% "chimney" % "0.7.5"
 
   // Test
-  val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.9.1" % Test
+  val playAhcWS = "org.playframework" %% "play-ahc-ws" % "3.0.1" % Test
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   // opentelemetry
