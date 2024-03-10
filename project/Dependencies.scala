@@ -31,7 +31,7 @@ object Dependencies {
   val slickPg = "com.github.tminglei" %% "slick-pg" % "0.20.4"
   val slickPgPlayJson = "com.github.tminglei" %% "slick-pg_play-json" % "0.20.4"
   val slickPgJts = "com.github.tminglei" %% "slick-pg_jts" % "0.20.4"
-  val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper" % "2.4.2"
+  val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper" % "2.9.0"
   val playJson = "org.playframework" %% "play-json" % "3.0.2"
   val playJsonJoda = "org.playframework" %% "play-json-joda" % "3.0.2"
   val slick = "com.typesafe.slick" %% "slick" % "3.3.3"
