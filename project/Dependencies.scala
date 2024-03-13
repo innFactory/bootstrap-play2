@@ -28,9 +28,9 @@ object Dependencies {
   val smithy4play = "de.innfactory" %% "smithy4play" % "0.4.4-beta"
 
   // Prod
-  val slickPg = "com.github.tminglei" %% "slick-pg" % "0.20.4"
-  val slickPgPlayJson = "com.github.tminglei" %% "slick-pg_play-json" % "0.20.4"
-  val slickPgJts = "com.github.tminglei" %% "slick-pg_jts" % "0.20.4"
+  val slickPg = "com.github.tminglei" %% "slick-pg" % "0.22.0"
+  val slickPgPlayJson = "com.github.tminglei" %% "slick-pg_play-json" % "0.22.0"
+  val slickPgJts = "com.github.tminglei" %% "slick-pg_jts" % "0.22.0"
   val slickJodaMapper = "com.github.tototoshi" %% "slick-joda-mapper" % "2.4.2"
   val playJson = "org.playframework" %% "play-json" % "3.0.2"
   val playJsonJoda = "org.playframework" %% "play-json-joda" % "3.0.2"
