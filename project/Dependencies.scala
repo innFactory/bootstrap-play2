@@ -41,7 +41,7 @@ object Dependencies {
   val hikariCP = "com.zaxxer" % "HikariCP" % "5.1.0"
 
   val postgresql = "org.postgresql" % "postgresql" % "42.7.3"
-  val cats = "org.typelevel" %% "cats-core" % "2.10.0"
+  val cats = "org.typelevel" %% "cats-core" % "2.12.0"
   val henkanConvert = "com.kailuowang" %% "henkan-convert" % "0.6.5"
   val henkanOptional = "com.kailuowang" %% "henkan-optional" % "0.6.5"
   val chimney = "io.scalaland" %% "chimney" % "0.7.5"
