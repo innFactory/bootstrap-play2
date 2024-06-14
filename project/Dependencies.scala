@@ -44,7 +44,7 @@ object Dependencies {
   val cats = "org.typelevel" %% "cats-core" % "2.12.0"
   val henkanConvert = "com.kailuowang" %% "henkan-convert" % "0.6.5"
   val henkanOptional = "com.kailuowang" %% "henkan-optional" % "0.6.5"
-  val chimney = "io.scalaland" %% "chimney" % "0.7.5"
+  val chimney = "io.scalaland" %% "chimney" % "0.8.1"
 
   // Test
   val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.9.3" % Test
