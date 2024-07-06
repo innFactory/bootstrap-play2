@@ -51,8 +51,8 @@ object Dependencies {
   val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
   // opentelemetry
-  val opentelemetryApi = "io.opentelemetry" % "opentelemetry-api" % "1.39.0"
-  val opentelemetryBom = "io.opentelemetry" % "opentelemetry-bom" % "1.39.0"
+  val opentelemetryApi = "io.opentelemetry" % "opentelemetry-api" % "1.40.0"
+  val opentelemetryBom = "io.opentelemetry" % "opentelemetry-bom" % "1.40.0"
 
   val opencensusStatsStackdriver = "io.opencensus" % "opencensus-exporter-stats-stackdriver" % "0.31.1"
 
