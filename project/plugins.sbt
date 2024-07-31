@@ -14,7 +14,7 @@ addSbtPlugin("com.github.tototoshi" % "sbt-slick-codegen" % "2.2.0")
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.9.5")
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.1.0")
-addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.0")
+addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.4")
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
 addSbtPlugin("io.github.play-swagger" % "sbt-play-swagger" % "2.0.2")
