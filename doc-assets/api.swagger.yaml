@@ -7,6 +7,46 @@ servers:
 security:
 - smithy.api.httpBearerAuth: []
 paths:
+  /v1/public/helloworld/system/{query}:
+    get:
+      operationId: helloworldViaSystem
+      parameters:
+      - explode: false
+        in: path
+        name: query
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/helloworldViaSystemResponseContent'
+          description: helloworldViaSystem 200 response
+      tags:
+      - ActorSystemAPIController
+  /v1/public/helloworld/sharding/{query}:
+    get:
+      operationId: helloworldViaSharding
+      parameters:
+      - explode: false
+        in: path
+        name: query
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/helloworldViaShardingResponseContent'
+          description: helloworldViaSharding 200 response
+      tags:
+      - ActorShardingAPIController
   /v1/companies:
     get:
       operationId: getAllCompanies
@@ -161,46 +201,6 @@ paths:
           description: getCompanyById 200 response
       tags:
       - CompanyAPIController
-  /v1/public/helloworld/system/{query}:
-    get:
-      operationId: helloworldViaSystem
-      parameters:
-      - explode: false
-        in: path
-        name: query
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/helloworldViaSystemResponseContent'
-          description: helloworldViaSystem 200 response
-      tags:
-      - ActorSystemAPIController
-  /v1/public/helloworld/sharding/{query}:
-    get:
-      operationId: helloworldViaSharding
-      parameters:
-      - explode: false
-        in: path
-        name: query
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/helloworldViaShardingResponseContent'
-          description: helloworldViaSharding 200 response
-      tags:
-      - ActorShardingAPIController
   /:
     get:
       operationId: ping
@@ -409,6 +409,24 @@ paths:
       - LocationAPIController
 components:
   schemas:
+    helloworldViaSystemResponseContent:
+      example:
+        answer: answer
+      properties:
+        answer:
+          type: string
+      required:
+      - answer
+      type: object
+    helloworldViaShardingResponseContent:
+      example:
+        answer: answer
+      properties:
+        answer:
+          type: string
+      required:
+      - answer
+      type: object
     CompanyRequestBody:
       example:
         settings: ""
@@ -586,24 +604,6 @@ components:
       - created
       - id
       - updated
-      type: object
-    helloworldViaSystemResponseContent:
-      example:
-        answer: answer
-      properties:
-        answer:
-          type: string
-      required:
-      - answer
-      type: object
-    helloworldViaShardingResponseContent:
-      example:
-        answer: answer
-      properties:
-        answer:
-          type: string
-      required:
-      - answer
       type: object
     LocationRequestBody:
       example:
