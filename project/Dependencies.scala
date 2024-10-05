@@ -60,7 +60,7 @@ object Dependencies {
   val opencensusAkkaHttp = "com.github.sebruck" %% "opencensus-scala-akka-http" % "0.7.2"
 
   val sl4j = "org.slf4j" % "slf4j-api" % "2.0.16"
-  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.36.1"
+  val sharedDeps = "com.google.cloud" % "google-cloud-shared-dependencies" % "3.37.0"
   val logback = "ch.qos.logback" % "logback-classic" % "1.5.8"
   val logbackCore = "ch.qos.logback" % "logback-core" % "1.5.8"
 
