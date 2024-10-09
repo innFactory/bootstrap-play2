@@ -1,5 +1,5 @@
 import sbt._
 
 object Dependencies {
-  val scalaVersion = "2.13.13"
+  val scalaVersion = "2.13.15"
 }
