@@ -68,7 +68,7 @@ object Dependencies {
 
   val firebase = "com.google.firebase" % "firebase-admin" % "9.3.0"
 
-  val testTraits = "software.amazon.smithy" % "smithy-protocol-test-traits" % "1.51.0"
+  val testTraits = "software.amazon.smithy" % "smithy-protocol-test-traits" % "1.52.0"
 
   lazy val list = Seq(
     scalaUtil,
