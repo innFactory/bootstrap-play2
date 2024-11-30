@@ -48,7 +48,7 @@ object Dependencies {
 
   // Test
   val playAhcWS = "com.typesafe.play" %% "play-ahc-ws" % "2.9.6" % Test
-  val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
+  val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test
 
   // opentelemetry
   val opentelemetryApi = "io.opentelemetry" % "opentelemetry-api" % "1.44.1"
