@@ -16,7 +16,7 @@ addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.9.6")
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.2.2")
 addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.4")
 
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.6")
 addSbtPlugin("io.github.play-swagger" % "sbt-play-swagger" % "2.0.4")
 
 addSbtPlugin("com.github.sbt" % "sbt-license-report" % "1.7.0")
