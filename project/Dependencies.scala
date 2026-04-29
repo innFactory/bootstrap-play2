@@ -40,7 +40,7 @@ object Dependencies {
   val joda = "joda-time" % "joda-time" % "2.13.0"
   val hikariCP = "com.zaxxer" % "HikariCP" % "6.2.1"
 
-  val postgresql = "org.postgresql" % "postgresql" % "42.7.4"
+  val postgresql = "org.postgresql" % "postgresql" % "42.7.11"
   val cats = "org.typelevel" %% "cats-core" % "2.12.0"
   val henkanConvert = "com.kailuowang" %% "henkan-convert" % "0.6.5"
   val henkanOptional = "com.kailuowang" %% "henkan-optional" % "0.6.5"
